@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/utils/button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ride_with_me/utils/text_field.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,23 +14,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: "Ride With Me",
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
+        textTheme: GoogleFonts.comfortaaTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
+
+// TODO We can delete the rest later
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -79,20 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
@@ -102,6 +87,24 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            //
+            //
+            //   `
+            // `
+            // `
+            // `
+            // `
+            // ` Here is our stuff so far TODO
+            // `
+            // `
+            // `
+            // `
+            // `
+            // `
+            // `
+            SubmitButton("Submit"),
+            InputField("Username", false),
+            InputField("Password", true),
           ],
         ),
       ),
