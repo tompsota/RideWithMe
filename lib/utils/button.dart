@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-TextButton SubmitButton(String value) {
+TextButton SubmitButton(BuildContext context, String value) {
   return TextButton(
     child: Text(
       value,
@@ -8,8 +8,9 @@ TextButton SubmitButton(String value) {
     ),
     style: TextButton.styleFrom(
       primary: Colors.white,
-      backgroundColor: Colors.teal,
+      backgroundColor: Theme.of(context).primaryColor,
       padding: EdgeInsets.symmetric(horizontal: 40),
+      minimumSize: Size(100, 55),
       // textStyle:
     ),
     onPressed: () {},
