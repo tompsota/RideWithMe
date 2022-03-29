@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/pages/filter_rides_page.dart';
 import 'package:ride_with_me/pages/initial_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: InitialPage(),
+      // home: FilterRidesPage(),
     );
   }
 }
