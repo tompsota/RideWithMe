@@ -18,12 +18,13 @@ class MyApp extends StatelessWidget {
       title: "Ride With Me",
       theme: ThemeData(
         primarySwatch: Colors.teal,
+        primaryColorDark: Color(0xFF152F29),
         textTheme: GoogleFonts.comfortaaTextTheme(
           Theme.of(context).textTheme,
         ),
       ),
-      home: InitialPage(),
-      // home: FilterRidesPage(),
+      // home: InitialPage(),
+      home: FilterRidesPage(),
     );
   }
 }
