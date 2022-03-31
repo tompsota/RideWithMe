@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/utils/address_search.dart';
+import 'package:ride_with_me/utils/button.dart';
+import 'package:ride_with_me/utils/date_picker.dart';
 import 'package:ride_with_me/utils/dropdown.dart';
 import 'package:ride_with_me/utils/text.dart';
 import 'package:ride_with_me/utils/time_picker.dart';
 import 'package:ride_with_me/utils/two_way_slider.dart';
+
+//TODO make this scrollable, fix overflows in Time Schedule
 
 class FilterRidesPage extends StatelessWidget {
   FilterRidesPage({Key? key}) : super(key: key);
@@ -30,12 +34,13 @@ class FilterRidesPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-
             MediumText("Time Schedule"),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text("Date:"),
+                DatePicker(),
+                Spacer(),
                 Text("Starts after:"),
                 TimePicker(),
                 Spacer(),
@@ -44,6 +49,9 @@ class FilterRidesPage extends StatelessWidget {
               ],
             ),
 
+            SizedBox(height: 20),
+            MediumText("Start Location"),
+            AddressSearch(),
 
             SizedBox(height: 20),
             MediumText("Distance"),
@@ -51,9 +59,20 @@ class FilterRidesPage extends StatelessWidget {
               span: 120,
             ),
 
+            SizedBox(height: 20),
+            MediumText("Climbing"),
+            TwoWaySlider(
+              span: 120,
+            ),
 
             SizedBox(height: 20),
             MediumText("Duration"),
+            TwoWaySlider(
+              span: 120,
+            ),
+
+            SizedBox(height: 20),
+            MediumText("Expected average speed"),
             TwoWaySlider(
               span: 120,
             ),
@@ -63,9 +82,17 @@ class FilterRidesPage extends StatelessWidget {
             TwoWaySlider(
               span: 120,
             ),
-            AddressSearch(title: "test",),
 
-            Dropdown(),
+            Spacer(),
+
+            SizedBox(
+              width: double.infinity,
+              child: SubmitButton(context, "APPLY FILTERS"),
+            )
+
+            // SizedBox(height: 20),
+            // MediumText("Random Dropdown"),
+            // Dropdown(),
           ],
         ),
       ),

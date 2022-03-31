@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimePicker extends StatefulWidget {
   const TimePicker({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _TimePickerState extends State<TimePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(selectedTime.format(context)),
+        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(selectedTime.format(context)))),
       ),
     );
   }
