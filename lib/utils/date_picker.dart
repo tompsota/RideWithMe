@@ -33,7 +33,6 @@ class _DatePickerState extends State<DatePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        // child: Text("${selectedDate.toLocal()}".split(' ')[0]),
         child: Text(DateFormat.MMMEd().format(selectedDate)),
       ),
     );
