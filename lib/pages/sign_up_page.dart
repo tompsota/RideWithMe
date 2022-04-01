@@ -14,19 +14,19 @@ class SignUpPage extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(8, 60, 8, 8),
-          child: InputField(context, "Email", false),
+          child: InputField(placeholder: "Email", isPassword: false),
         ),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: InputField(context, "Username", false),
+          child: InputField(placeholder: "Username", isPassword: false),
         ),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: InputField(context, "Password", true),
+          child: InputField(placeholder: "Password", isPassword: true),
         ),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: SubmitButton(context, "Submit"),
+          child: SubmitButton(value: "SIGN UP", callback: () {}),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

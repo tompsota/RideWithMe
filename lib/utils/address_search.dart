@@ -16,10 +16,10 @@ final homeScaffoldKey = GlobalKey<ScaffoldState>();
 final searchScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _AddressSearchState extends State<AddressSearch> {
-  var _controller = TextEditingController();
-  bool _is_visible_listview = true;
+  final _controller = TextEditingController();
+  bool _isVisibleListview = true;
   var uuid = new Uuid();
-  late String _sessionToken = uuid.v4();
+  late final String _sessionToken = uuid.v4();
   List<dynamic> _placeList = [];
 
   @override
@@ -31,21 +31,16 @@ class _AddressSearchState extends State<AddressSearch> {
   }
 
   _onChanged() {
-    if (_sessionToken == null) {
-      setState(() {
-        _sessionToken = uuid.v4();
-      });
-    }
-    _is_visible_listview = true;
+    _isVisibleListview = true;
     getSuggestion(_controller.text);
   }
 
   void getSuggestion(String input) async {
-    String kPLACES_API_KEY = kGoogleApiKey;
-    String type = '(regions)';
+    String kPLACESAPIKEY = kGoogleApiKey;
+    String type = '(regions)'; //TODO maybe add this to query
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
-        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '%28cities%29' to request
+        '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '%28cities%29' to request
     final response = await http.get(Uri.parse(request), headers: {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*",
@@ -87,12 +82,12 @@ class _AddressSearchState extends State<AddressSearch> {
                     borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Colors.transparent, width: 3.0)),
               ),
               onSubmitted: (value) {
-                _is_visible_listview = false;
+                _isVisibleListview = false;
               },
             ),
           ),
           Visibility(
-            visible: _is_visible_listview,
+            visible: _isVisibleListview,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -102,7 +97,7 @@ class _AddressSearchState extends State<AddressSearch> {
                   title: Text(_placeList[index]["description"]),
                   onTap: () {
                     _controller.text = _placeList[index]["description"];
-                    _is_visible_listview = false;
+                    _isVisibleListview = false;
                   },
                 );
               },

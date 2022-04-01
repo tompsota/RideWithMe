@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'sign_up_page.dart';
-import 'log_in_page.dart';
+import 'package:ride_with_me/pages/dashboard_page.dart';
 
-class InitialPage extends StatelessWidget {
-  const InitialPage({Key? key}) : super(key: key);
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class InitialPage extends StatelessWidget {
             elevation: 0,
             backgroundColor: Colors.transparent,
             title: TabBar(
-              tabs: [Tab(text: "Log In"), Tab(text: "Sign Up")],
+              tabs: [Tab(text: "Dashboard"), Tab(text: "Profile")],
               labelStyle: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, fontFamily: GoogleFonts.comfortaa().fontFamily),
               unselectedLabelStyle:
                   TextStyle(fontSize: 22.0, fontWeight: FontWeight.normal, fontFamily: GoogleFonts.comfortaa().fontFamily),
@@ -26,8 +25,8 @@ class InitialPage extends StatelessWidget {
             )),
         body: const TabBarView(
           children: [
-            LogInPage(),
-            SignUpPage(),
+            DashboardPage(),
+            DashboardPage(), //TODO change to profile when implemented
           ],
         ),
       ),

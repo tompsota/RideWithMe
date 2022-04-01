@@ -6,6 +6,7 @@ import 'package:ride_with_me/utils/ride_number_picker.dart';
 
 import '../utils/address_search.dart';
 import '../utils/button.dart';
+import '../utils/copy_link_button.dart';
 import '../utils/duration_picker.dart';
 import '../utils/text.dart';
 
@@ -19,7 +20,7 @@ class RideViewPage extends StatefulWidget {
 }
 
 class _RideViewPageState extends State<RideViewPage> {
-  String _ride_title = "Nove Mlyny";
+  String _rideTitle = "Nove Mlyny";
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +29,23 @@ class _RideViewPageState extends State<RideViewPage> {
             toolbarHeight: 80,
             elevation: 0,
             backgroundColor: Colors.transparent,
-            title: Container(
-              child: Text(
-                "Trip to " + _ride_title,
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 36,
+            automaticallyImplyLeading: false,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Trip to " + _rideTitle,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 36,
+                  ),
                 ),
-              ),
+                IconButton(
+                  icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
             )),
         body: Padding(
           padding: const EdgeInsets.all(20),
@@ -104,7 +113,7 @@ class _RideViewPageState extends State<RideViewPage> {
               MediumText("Link to share with friends"),
               SizedBox(
                 width: double.infinity,
-                child: CopyLinkButton(context, "ridewith.me/gh4jj5"),
+                child: CopyLinkButton(value: "ridewith.me/gh4jj5"),
               ),
               SizedBox(height: 20),
               MediumText("Contact host"),
@@ -125,7 +134,12 @@ class _RideViewPageState extends State<RideViewPage> {
               Spacer(),
               SizedBox(
                 width: double.infinity,
-                child: SubmitButton(context, "I'LL PARTICIPATE"),
+                //TODO add listener
+                child: SubmitButton(
+                    value: "I'LL PARTICIPATE",
+                    callback: () {
+                      Navigator.of(context).pop();
+                    }),
               )
             ],
           ),

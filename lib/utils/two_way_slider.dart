@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class TwoWaySlider extends StatefulWidget {
   final double span;
 
-  TwoWaySlider({Key? key, required this.span,}) : super(key: key);
+  TwoWaySlider({
+    Key? key,
+    required this.span,
+  }) : super(key: key);
 
   @override
   _TwoWaySliderState createState() => _TwoWaySliderState();

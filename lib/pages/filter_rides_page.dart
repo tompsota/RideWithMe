@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/date_picker.dart';
-import 'package:ride_with_me/utils/dropdown.dart';
 import 'package:ride_with_me/utils/text.dart';
 import 'package:ride_with_me/utils/time_picker.dart';
 import 'package:ride_with_me/utils/two_way_slider.dart';
@@ -19,15 +18,23 @@ class FilterRidesPage extends StatelessWidget {
           toolbarHeight: 80,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: Container(
-            child: Text(
-              "Filter Rides",
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 36,
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Filter Rides",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36,
+                ),
               ),
-            ),
+              IconButton(
+                icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
           )),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -87,7 +94,12 @@ class FilterRidesPage extends StatelessWidget {
 
             SizedBox(
               width: double.infinity,
-              child: SubmitButton(context, "APPLY FILTERS"),
+              //TODO add listener
+              child: SubmitButton(
+                  value: "APPLY FILTERS",
+                  callback: () {
+                    () => Navigator.of(context).pop();
+                  }),
             )
 
             // SizedBox(height: 20),
