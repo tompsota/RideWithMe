@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-Material InputField(BuildContext context, String placeholder, bool isPassword) {
+Widget InputField(BuildContext context, String placeholder, bool isPassword) {
   return Material(
     elevation: 10.0,
     shadowColor: Colors.blue,

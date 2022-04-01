@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ride_with_me/utils/checkbox_dialog.dart';
+import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 
+import '../utils/address_search.dart';
+import '../utils/button.dart';
 import '../utils/duration_picker.dart';
 import '../utils/text.dart';
 
@@ -76,21 +81,52 @@ class _RideViewPageState extends State<RideViewPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 50),
               MediumText("Total distance"),
               RideNumberPicker(minValue: 0, maxValue: 1000, units: "km"),
-
               SizedBox(height: 20),
               MediumText("Expected average speed"),
               RideNumberPicker(minValue: 15, maxValue: 40, units: "km/h"),
-
               SizedBox(height: 20),
               MediumText("Total climbing"),
               RideNumberPicker(minValue: 0, maxValue: 10000, units: "m"),
-
               SizedBox(height: 20),
               MediumText("Expected duration"),
               DurationPicker(),
+              SizedBox(height: 20),
+              MediumText("Start Location"),
+              AddressSearch(),
+              SizedBox(height: 20),
+              SizedBox(height: 20),
+              MediumText("Tags"),
+              Flexible(child: CheckboxDialog()),
+              SizedBox(height: 20),
+              MediumText("Link to share with friends"),
+              SizedBox(
+                width: double.infinity,
+                child: CopyLinkButton(context, "ridewith.me/gh4jj5"),
+              ),
+              SizedBox(height: 20),
+              MediumText("Contact host"),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RideIconButton(icon: FontAwesomeIcons.facebook),
+                    RideIconButton(icon: FontAwesomeIcons.strava),
+                    RideIconButton(icon: FontAwesomeIcons.instagram),
+                    RideIconButton(icon: FontAwesomeIcons.google),
+                    RideIconButton(icon: FontAwesomeIcons.slack),
+                    RideIconButton(icon: FontAwesomeIcons.envelope),
+                  ],
+                ),
+              ),
+              Spacer(),
+              SizedBox(
+                width: double.infinity,
+                child: SubmitButton(context, "I'LL PARTICIPATE"),
+              )
             ],
           ),
         ));
