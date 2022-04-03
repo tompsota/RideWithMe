@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/utils/callback_types.dart';
 
 class TwoWaySlider extends StatefulWidget {
+  RangeValuesCallback callback;
   final double span;
 
   TwoWaySlider({
     Key? key,
     required this.span,
+    required this.callback,
   }) : super(key: key);
 
   @override
@@ -38,6 +41,7 @@ class _TwoWaySliderState extends State<TwoWaySlider> {
       onChanged: (RangeValues values) {
         setState(() {
           _currentRangeValues = values;
+          widget.callback(_currentRangeValues);
         });
       },
     );

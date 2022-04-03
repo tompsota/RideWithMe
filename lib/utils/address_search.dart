@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/utils/callback_types.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,19 +7,18 @@ import 'dart:convert';
 const kGoogleApiKey = "";
 
 class AddressSearch extends StatefulWidget {
-  AddressSearch({Key? key}) : super(key: key);
+  DynamicCallback callback;
+
+  AddressSearch({Key? key, required this.callback}) : super(key: key);
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
 }
 
-final homeScaffoldKey = GlobalKey<ScaffoldState>();
-final searchScaffoldKey = GlobalKey<ScaffoldState>();
-
 class _AddressSearchState extends State<AddressSearch> {
   final _controller = TextEditingController();
   bool _isVisibleListview = true;
-  var uuid = new Uuid();
+  var uuid = Uuid();
   late final String _sessionToken = uuid.v4();
   List<dynamic> _placeList = [];
 
@@ -40,7 +40,7 @@ class _AddressSearchState extends State<AddressSearch> {
     String type = '(regions)'; //TODO maybe add this to query
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
-        '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '%28cities%29' to request
+        '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '&types=%28cities%29' to request
     final response = await http.get(Uri.parse(request), headers: {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*",
@@ -97,6 +97,7 @@ class _AddressSearchState extends State<AddressSearch> {
                   title: Text(_placeList[index]["description"]),
                   onTap: () {
                     _controller.text = _placeList[index]["description"];
+                    widget.callback(_placeList[index]);
                     _isVisibleListview = false;
                   },
                 );

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/date_picker.dart';
+import 'package:ride_with_me/utils/ride_filter.dart';
 import 'package:ride_with_me/utils/text.dart';
 import 'package:ride_with_me/utils/time_picker.dart';
 import 'package:ride_with_me/utils/two_way_slider.dart';
@@ -52,55 +53,60 @@ class FilterRidesPage extends StatelessWidget {
                     child: Text("Date:"),
                   ),
                   Expanded(
-                    child: DatePicker(),
+                    child: DatePicker(callback: (date) => Provider.of<RideFilter>(context, listen: false).updateDate(date)),
                   ),
                 ],
               ),
               Row(
                 children: [
                   Expanded(child: Text("Starts after:")),
-                  Expanded(child: TimePicker()),
+                  Expanded(child: TimePicker(callback: (time) => Provider.of<RideFilter>(context, listen: false).updateStartTime(time))),
                 ],
               ),
               Row(
                 children: [
                   Expanded(child: Text("Finishes by:")),
-                  Expanded(child: TimePicker()),
+                  Expanded(child: TimePicker(callback: (time) => Provider.of<RideFilter>(context, listen: false).updateFinishTime(time))),
                 ],
               ),
 
               SizedBox(height: 20),
               MediumText("Start Location"),
-              AddressSearch(),
+              AddressSearch(callback: (location) => Provider.of<RideFilter>(context, listen: false).updateLocation(location)),
 
               SizedBox(height: 20),
               MediumText("Distance"),
               TwoWaySlider(
                 span: 120,
+                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateDistance(range),
               ),
 
               SizedBox(height: 20),
               MediumText("Climbing"),
               TwoWaySlider(
                 span: 120,
+                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateClimbing(range),
               ),
 
               SizedBox(height: 20),
               MediumText("Duration"),
               TwoWaySlider(
                 span: 120,
+                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateDuration(range),
               ),
 
               SizedBox(height: 20),
               MediumText("Expected average speed"),
               TwoWaySlider(
                 span: 120,
+                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateAvgSpeed(range),
               ),
 
               SizedBox(height: 20),
               MediumText("Participants"),
               TwoWaySlider(
                 span: 120,
+                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateNrParticipants(range),
               ),
 
               // SizedBox(height: 20),

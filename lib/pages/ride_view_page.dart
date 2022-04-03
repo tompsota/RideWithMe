@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
+import 'package:ride_with_me/utils/title_button.dart';
 
 import '../utils/address_search.dart';
 import '../utils/button.dart';
@@ -35,6 +36,8 @@ class _RideViewPageState extends State<RideViewPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //TODO make this button
+                // Expanded(child: TitleButton()),
                 Text(
                   "Trip to " + _rideTitle,
                   style: TextStyle(
@@ -106,7 +109,7 @@ class _RideViewPageState extends State<RideViewPage> {
               DurationPicker(),
               SizedBox(height: 20),
               MediumText("Start Location"),
-              AddressSearch(),
+              AddressSearch(callback: (_) {}), //TODO add callback
               SizedBox(height: 20),
               MediumText("Tags"),
               CheckboxDialog(),
