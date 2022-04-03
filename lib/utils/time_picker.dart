@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ride_with_me/utils/callback_types.dart';
 
 class TimePicker extends StatefulWidget {
-  const TimePicker({Key? key}) : super(key: key);
+  TimeOfDayCallback callback;
+
+  TimePicker({Key? key, required this.callback}) : super(key: key);
 
   @override
   _TimePickerState createState() => _TimePickerState();
 }
 
 class _TimePickerState extends State<TimePicker> {
-  TimeOfDay selectedTime = TimeOfDay.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return Align(
+      alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
           _selectTime(context);
@@ -23,7 +26,7 @@ class _TimePickerState extends State<TimePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(selectedTime.format(context)))),
+        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(_selectedTime.format(context)))),
       ),
     );
   }
@@ -31,12 +34,13 @@ class _TimePickerState extends State<TimePicker> {
   _selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: _selectedTime,
       initialEntryMode: TimePickerEntryMode.dial,
     );
-    if (timeOfDay != null && timeOfDay != selectedTime) {
+    if (timeOfDay != null && timeOfDay != _selectedTime) {
       setState(() {
-        selectedTime = timeOfDay;
+        _selectedTime = timeOfDay;
+        widget.callback(_selectedTime);
       });
     }
   }

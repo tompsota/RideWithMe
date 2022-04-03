@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
+import 'package:ride_with_me/utils/title_button.dart';
 
 import '../utils/address_search.dart';
 import '../utils/button.dart';
@@ -25,14 +26,18 @@ class _RideViewPageState extends State<RideViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            toolbarHeight: 80,
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            automaticallyImplyLeading: false,
-            title: Row(
+      appBar: AppBar(
+          toolbarHeight: 80,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          title: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //TODO make this button
+                // Expanded(child: TitleButton()),
                 Text(
                   "Trip to " + _rideTitle,
                   style: TextStyle(
@@ -46,8 +51,10 @@ class _RideViewPageState extends State<RideViewPage> {
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
-            )),
-        body: Padding(
+            ),
+          )),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,27 +73,25 @@ class _RideViewPageState extends State<RideViewPage> {
               ),
               SizedBox(height: 20),
               MediumText("With"),
-              Flexible(
-                child: Container(
-                  constraints: BoxConstraints(maxHeight: 36, minWidth: double.infinity),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Stack(
-                      children: [
-                        ...List.generate(
-                          12,
-                          (index) => Positioned(
-                            left: index * 12,
-                            child: CircleAvatar(
-                              backgroundImage: index.isEven
-                                  ? NetworkImage('https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg')
-                                  : NetworkImage('https://portswigger.net/cms/images/63/12/0c8b-article-211117-linux-rng.jpg'),
-                              maxRadius: 12,
-                            ),
+              Container(
+                constraints: BoxConstraints(maxHeight: 36, minWidth: double.infinity),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Stack(
+                    children: [
+                      ...List.generate(
+                        12,
+                        (index) => Positioned(
+                          left: index * 12,
+                          child: CircleAvatar(
+                            backgroundImage: index.isEven
+                                ? NetworkImage('https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg')
+                                : NetworkImage('https://portswigger.net/cms/images/63/12/0c8b-article-211117-linux-rng.jpg'),
+                            maxRadius: 12,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -104,11 +109,10 @@ class _RideViewPageState extends State<RideViewPage> {
               DurationPicker(),
               SizedBox(height: 20),
               MediumText("Start Location"),
-              AddressSearch(),
-              SizedBox(height: 20),
+              AddressSearch(callback: (_) {}), //TODO add callback
               SizedBox(height: 20),
               MediumText("Tags"),
-              Flexible(child: CheckboxDialog()),
+              CheckboxDialog(),
               SizedBox(height: 20),
               MediumText("Link to share with friends"),
               SizedBox(
@@ -119,30 +123,33 @@ class _RideViewPageState extends State<RideViewPage> {
               MediumText("Contact host"),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RideIconButton(icon: FontAwesomeIcons.facebook),
-                    RideIconButton(icon: FontAwesomeIcons.strava),
-                    RideIconButton(icon: FontAwesomeIcons.instagram),
-                    RideIconButton(icon: FontAwesomeIcons.google),
-                    RideIconButton(icon: FontAwesomeIcons.slack),
-                    RideIconButton(icon: FontAwesomeIcons.envelope),
-                  ],
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RideIconButton(icon: FontAwesomeIcons.facebook),
+                      RideIconButton(icon: FontAwesomeIcons.strava),
+                      RideIconButton(icon: FontAwesomeIcons.instagram),
+                      RideIconButton(icon: FontAwesomeIcons.google),
+                      RideIconButton(icon: FontAwesomeIcons.slack),
+                      RideIconButton(icon: FontAwesomeIcons.envelope),
+                    ],
+                  ),
                 ),
               ),
-              Spacer(),
-              SizedBox(
-                width: double.infinity,
-                //TODO add listener
-                child: SubmitButton(
-                    value: "I'LL PARTICIPATE",
-                    callback: () {
-                      Navigator.of(context).pop();
-                    }),
-              )
             ],
           ),
-        ));
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: SubmitButton(
+            value: "I'LL PARTICIPATE",
+            callback: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+    );
   }
 }

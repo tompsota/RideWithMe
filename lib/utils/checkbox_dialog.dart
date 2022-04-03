@@ -14,33 +14,40 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          child: ListView.builder(
-              itemCount: selectedCities.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(title: Text(selectedCities[index]));
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: selectedCities.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(title: Text(selectedCities[index]));
+                }),
+          ),
+          ElevatedButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DialogWindow(
+                          cities: allCities,
+                          selectedCities: selectedCities,
+                          onSelectedCitiesListChanged: (cities) {
+                            setState(
+                              () => selectedCities = cities,
+                            );
+                          });
+                    });
               }),
-        ),
-        ElevatedButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return DialogWindow(
-                        cities: allCities,
-                        selectedCities: selectedCities,
-                        onSelectedCitiesListChanged: (cities) {
-                          setState(
-                            () => selectedCities = cities,
-                          );
-                        });
-                  });
-            }),
-      ],
+        ],
+      ),
     );
   }
 }
