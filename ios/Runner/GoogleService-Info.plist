@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>487095794997-j15sagoo0nt8cuqd2o2q4qai57fs3j9j.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.487095794997-j15sagoo0nt8cuqd2o2q4qai57fs3j9j</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDOYwkFZDoiM4hHr5A-bjdTV1mvbAnMNDg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>487095794997</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>cz.muni.fi.pv239.rideWithMe</string>
+	<key>PROJECT_ID</key>
+	<string>ridewithme-26d2b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ridewithme-26d2b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:487095794997:ios:d1dacbd5d57491ee80a07c</string>
+</dict>
+</plist>
