@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/date_picker.dart';
@@ -36,77 +37,86 @@ class FilterRidesPage extends StatelessWidget {
               ),
             ],
           )),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MediumText("Time Schedule"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Date:"),
-                DatePicker(),
-                Spacer(),
-                Text("Starts after:"),
-                TimePicker(),
-                Spacer(),
-                Text("Finishes by:"),
-                TimePicker(),
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MediumText("Time Schedule"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // TODO tu sa nejak nevedia zrovnat, date je vypaddovany, idk why
+                  Expanded(
+                    child: Text("Date:"),
+                  ),
+                  Expanded(
+                    child: DatePicker(),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: Text("Starts after:")),
+                  Expanded(child: TimePicker()),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: Text("Finishes by:")),
+                  Expanded(child: TimePicker()),
+                ],
+              ),
 
-            SizedBox(height: 20),
-            MediumText("Start Location"),
-            AddressSearch(),
+              SizedBox(height: 20),
+              MediumText("Start Location"),
+              AddressSearch(),
 
-            SizedBox(height: 20),
-            MediumText("Distance"),
-            TwoWaySlider(
-              span: 120,
-            ),
+              SizedBox(height: 20),
+              MediumText("Distance"),
+              TwoWaySlider(
+                span: 120,
+              ),
 
-            SizedBox(height: 20),
-            MediumText("Climbing"),
-            TwoWaySlider(
-              span: 120,
-            ),
+              SizedBox(height: 20),
+              MediumText("Climbing"),
+              TwoWaySlider(
+                span: 120,
+              ),
 
-            SizedBox(height: 20),
-            MediumText("Duration"),
-            TwoWaySlider(
-              span: 120,
-            ),
+              SizedBox(height: 20),
+              MediumText("Duration"),
+              TwoWaySlider(
+                span: 120,
+              ),
 
-            SizedBox(height: 20),
-            MediumText("Expected average speed"),
-            TwoWaySlider(
-              span: 120,
-            ),
+              SizedBox(height: 20),
+              MediumText("Expected average speed"),
+              TwoWaySlider(
+                span: 120,
+              ),
 
-            SizedBox(height: 20),
-            MediumText("Participants"),
-            TwoWaySlider(
-              span: 120,
-            ),
+              SizedBox(height: 20),
+              MediumText("Participants"),
+              TwoWaySlider(
+                span: 120,
+              ),
 
-            Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              //TODO add listener
-              child: SubmitButton(
-                  value: "APPLY FILTERS",
-                  callback: () {
-                    () => Navigator.of(context).pop();
-                  }),
-            )
-
-            // SizedBox(height: 20),
-            // MediumText("Random Dropdown"),
-            // Dropdown(),
-          ],
+              // SizedBox(height: 20),
+              // MediumText("Random Dropdown"),
+              // Dropdown(),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: SubmitButton(
+            value: "APPLY FILTERS",
+            callback: () {
+              () => Navigator.of(context).pop();
+            }),
       ),
     );
   }

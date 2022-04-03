@@ -23,8 +23,8 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return Align(
+      alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
           _selectDate(context);
@@ -33,7 +33,7 @@ class _DatePickerState extends State<DatePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(DateFormat.MMMEd().format(selectedDate)),
+        child: Text("  " + DateFormat.MMMEd().format(selectedDate)),
       ),
     );
   }

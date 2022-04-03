@@ -13,8 +13,8 @@ class _TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return Align(
+      alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
           _selectTime(context);
@@ -23,7 +23,7 @@ class _TimePickerState extends State<TimePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(selectedTime.format(context)))),
+        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(selectedTime.format(context))).trim()),
       ),
     );
   }
