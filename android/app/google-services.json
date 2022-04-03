@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "487095794997",
+    "project_id": "ridewithme-26d2b",
+    "storage_bucket": "ridewithme-26d2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487095794997:android:a17ae52d67e33b9480a07c",
+        "android_client_info": {
+          "package_name": "cz.muni.fi.pv239.ride_with_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487095794997-tgvr075ja49uqmm1ma9qh1t7l10ilf27.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDctlKPN7d5KN25f4FfxnXVToKtBH4Ypcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487095794997-tgvr075ja49uqmm1ma9qh1t7l10ilf27.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
