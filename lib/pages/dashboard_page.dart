@@ -29,7 +29,6 @@ class DashboardPage extends StatelessWidget {
 
               addRide();
             }),
-        // Spacer(),
 
         StreamBuilder<QuerySnapshot>(
           stream: _ridesStream,
@@ -60,6 +59,9 @@ class DashboardPage extends StatelessWidget {
             );
           },
         ),
+
+        Spacer(),
+
         SizedBox(
           width: double.infinity,
           child: SubmitButton(

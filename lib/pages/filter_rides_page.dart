@@ -3,12 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/date_picker.dart';
-import 'package:ride_with_me/utils/ride_filter.dart';
+import 'package:ride_with_me/models/ride_filter.dart';
 import 'package:ride_with_me/utils/text.dart';
 import 'package:ride_with_me/utils/time_picker.dart';
 import 'package:ride_with_me/utils/two_way_slider.dart';
-
-//TODO make this scrollable, fix overflows in Time Schedule
 
 class FilterRidesPage extends StatelessWidget {
   FilterRidesPage({Key? key}) : super(key: key);

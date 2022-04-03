@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//TODO ask how to name this: RideFilterController / RideFilterModel / RideFilter ?
+
 class RideFilter extends ChangeNotifier {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedStartTime = TimeOfDay.now();
