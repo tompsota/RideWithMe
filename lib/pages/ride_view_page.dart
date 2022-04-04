@@ -31,27 +31,28 @@ class _RideViewPageState extends State<RideViewPage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
-          title: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //TODO make this button
-                // Expanded(child: TitleButton()),
-                Text(
-                  "Trip to " + _rideTitle,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 36,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //TODO make this readonly if ride is viewed
+              Expanded(
+                  child: TitleButton()),
+              // FittedBox(
+              //   fit: BoxFit.fitWidth,
+              //   child: Text(
+              //     "Trip to " + _rideTitle,
+              //     style: TextStyle(
+              //       color: Theme.of(context).primaryColor,
+              //       fontWeight: FontWeight.bold,
+              //       fontSize: 36,
+              //     ),
+              //   ),
+              // ),
+              IconButton(
+                icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
           )),
       body: SingleChildScrollView(
         child: Padding(
