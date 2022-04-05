@@ -1,11 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/initial_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_with_me/models/ride_filter.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ride_with_me/pages/main_page.dart';
 import 'firebase_options.dart';
+import 'models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +38,9 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        // home: InitialPage(),
+        // switch directly to MainPage() is user is signed in?
+        // home: FirebaseAuth.instance.currentUser == null ? InitialPage() :
+        // ChangeNotifierProvider(create: (_) => UserStateController(user: FirebaseAuth.instance.currentUser), child: MainPage()),
         home: InitialPage(),
       ),
     );

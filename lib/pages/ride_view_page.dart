@@ -12,6 +12,7 @@ import '../utils/duration_picker.dart';
 import '../utils/text.dart';
 
 //TODO zistit ci sa da pridat widget s mapou, ktora ma preddefinovanu route alebo to robit ako redirect go google maps appky / browseru
+// TODO: compare ride.authorId vs currentUser.id - if currentUser is the author, he can edit info, otherwise it's read-only
 
 class RideViewPage extends StatefulWidget {
   const RideViewPage({Key? key}) : super(key: key);

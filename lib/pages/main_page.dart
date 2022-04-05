@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/dashboard_page.dart';
+import 'package:ride_with_me/pages/profile_page.dart';
+
+import '../models/user_model.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -23,10 +29,19 @@ class MainPage extends StatelessWidget {
               labelColor: Theme.of(context).primaryColor,
               indicatorWeight: 3,
             )),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             DashboardPage(),
-            DashboardPage(), //TODO change to profile when implemented
+            // TODO: use ChangeNotifierProvider to supply CustomUser?
+            // TODO: question: should we add CustomUser class that contains User class (from Firebase) ?
+            //       and supply it to MainPage context?
+            // TODO: should retrieve CustomUser from DB, or create it first, shouldn't use CustomUserModel constructor IMO
+            ChangeNotifierProvider(
+                create: (_) => UserStateController(
+                  user: FirebaseAuth.instance.currentUser,
+                ),
+                child: ProfilePage(),
+            )
           ],
         ),
       ),
