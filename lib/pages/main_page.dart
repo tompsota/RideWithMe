@@ -36,12 +36,13 @@ class MainPage extends StatelessWidget {
             // TODO: question: should we add CustomUser class that contains User class (from Firebase) ?
             //       and supply it to MainPage context?
             // TODO: should retrieve CustomUser from DB, or create it first, shouldn't use CustomUserModel constructor IMO
-            ChangeNotifierProvider(
-                create: (_) => UserStateController(
-                  user: FirebaseAuth.instance.currentUser,
-                ),
-                child: ProfilePage(),
-            )
+            // ChangeNotifierProvider(
+            //     create: (_) => UserStateController(
+            //       user: FirebaseAuth.instance.currentUser,
+            //     ),
+            //     child: ProfilePage(),
+            // )
+            ProfilePage()
           ],
         ),
       ),

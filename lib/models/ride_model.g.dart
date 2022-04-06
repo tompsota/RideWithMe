@@ -13,5 +13,5 @@ RideModel _$RideModelFromJson(Map<String, dynamic> json) => RideModel(
 
 Map<String, dynamic> _$RideModelToJson(RideModel instance) => <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'name': instance.title,
     };
