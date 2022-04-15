@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TitleButton extends StatefulWidget {
-  const TitleButton({Key? key}) : super(key: key);
+  bool isEnabled;
+
+  TitleButton({Key? key, required this.isEnabled}) : super(key: key);
 
   @override
   _TitleButtonState createState() => _TitleButtonState();
@@ -15,13 +17,14 @@ class _TitleButtonState extends State<TitleButton> {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: TextFormField(
+          enabled: widget.isEnabled,
           controller: _textController,
           onFieldSubmitted: (text) {
             _textController.text = text;
           },
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: InputBorder.none,
-            suffixIcon: Icon(Icons.edit),
+            suffixIcon: widget.isEnabled ? Icon(Icons.edit) : null,
           ),
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
         ));

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/settings/filter_defaults.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/date_picker.dart';
-import 'package:ride_with_me/models/ride_filter.dart';
+import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/utils/text.dart';
 import 'package:ride_with_me/utils/time_picker.dart';
 import 'package:ride_with_me/utils/two_way_slider.dart';
 
+//TODO pridat reset tlacitko
 class FilterRidesPage extends StatelessWidget {
   FilterRidesPage({Key? key}) : super(key: key);
 
@@ -32,7 +34,10 @@ class FilterRidesPage extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Provider.of<RideFilterController>(context, listen: false).resetCurrentFilter();
+                },
               ),
             ],
           )),
@@ -43,68 +48,112 @@ class FilterRidesPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MediumText("Time Schedule"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // TODO tu sa nejak nevedia zrovnat, date je vypaddovany, idk why
-                  Expanded(
-                    child: Text("Date:"),
-                  ),
-                  Expanded(
-                    child: DatePicker(callback: (date) => Provider.of<RideFilter>(context, listen: false).updateDate(date)),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // TODO tu sa nejak nevedia zrovnat, date je vypaddovany, idk why
+                    Expanded(
+                      child: Text(
+                        "Date:",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Expanded(
+                      child: DatePicker(
+                        callback: (date) => Provider.of<RideFilterController>(context, listen: false).updateDate(date),
+                        initialValue: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedDate,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(child: Text("Starts after:")),
-                  Expanded(child: TimePicker(callback: (time) => Provider.of<RideFilter>(context, listen: false).updateStartTime(time))),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      "Starts after:",
+                      style: TextStyle(fontSize: 16),
+                    )), //TODO add provider for initial value
+                    Expanded(
+                        child: TimePicker(
+                      callback: (time) => Provider.of<RideFilterController>(context, listen: false).updateStartTime(time),
+                      time: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedStartTime,
+                    )),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Expanded(child: Text("Finishes by:")),
-                  Expanded(child: TimePicker(callback: (time) => Provider.of<RideFilter>(context, listen: false).updateFinishTime(time))),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      "Finishes by:",
+                      style: TextStyle(fontSize: 16),
+                    )),
+                    Expanded(
+                        child: TimePicker(
+                      callback: (time) => Provider.of<RideFilterController>(context, listen: false).updateFinishTime(time),
+                      time: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedFinishTime,
+                    )),
+                  ],
+                ),
               ),
 
               SizedBox(height: 20),
               MediumText("Start Location"),
-              AddressSearch(callback: (location) => Provider.of<RideFilter>(context, listen: false).updateLocation(location)),
+              AddressSearch(
+                  initialValue: Provider.of<RideFilterController>(context, listen: false).getFilterLocation(),
+                  callback: (location) => Provider.of<RideFilterController>(context, listen: false).updateLocation(location),
+                  isEditable: true),
 
               SizedBox(height: 20),
               MediumText("Distance"),
               TwoWaySlider(
-                span: 120,
-                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateDistance(range),
+                span: defaultDistance,
+                initialSpan: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedDistance,
+                callback: (range) => Provider.of<RideFilterController>(context, listen: false).updateDistance(range),
+                units: "km",
               ),
 
               SizedBox(height: 20),
               MediumText("Climbing"),
               TwoWaySlider(
-                span: 120,
-                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateClimbing(range),
+                span: defaultClimbing,
+                initialSpan: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedClimbing,
+                callback: (range) => Provider.of<RideFilterController>(context, listen: false).updateClimbing(range),
+                units: "m",
               ),
 
               SizedBox(height: 20),
               MediumText("Duration"),
               TwoWaySlider(
-                span: 120,
-                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateDuration(range),
+                span: defaultDuration,
+                initialSpan: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedDuration,
+                callback: (range) => Provider.of<RideFilterController>(context, listen: false).updateDuration(range),
+                units: "h",
               ),
 
               SizedBox(height: 20),
               MediumText("Expected average speed"),
               TwoWaySlider(
-                span: 120,
-                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateAvgSpeed(range),
+                span: defaultAvgSpeed,
+                initialSpan: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedAvgSpeed,
+                callback: (range) => Provider.of<RideFilterController>(context, listen: false).updateAvgSpeed(range),
+                units: "km/h",
               ),
 
               SizedBox(height: 20),
               MediumText("Participants"),
               TwoWaySlider(
-                span: 120,
-                callback: (range) => Provider.of<RideFilter>(context, listen: false).updateNrParticipants(range),
+                span: defaultNrParticipants,
+                initialSpan: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedNrParticipants,
+                callback: (range) => Provider.of<RideFilterController>(context, listen: false).updateNrParticipants(range),
+                units: "",
               ),
 
               // SizedBox(height: 20),
@@ -119,7 +168,8 @@ class FilterRidesPage extends StatelessWidget {
         child: SubmitButton(
             value: "APPLY FILTERS",
             callback: () {
-              () => Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Provider.of<RideFilterController>(context, listen: false).applyFilter();
             }),
       ),
     );

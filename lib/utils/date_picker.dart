@@ -4,8 +4,9 @@ import 'callback_types.dart';
 
 class DatePicker extends StatefulWidget {
   DateTimeCallback callback;
+  DateTime initialValue;
 
-  DatePicker({Key? key, required this.callback}) : super(key: key);
+  DatePicker({Key? key, required this.callback, required this.initialValue}) : super(key: key);
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -13,6 +14,11 @@ class DatePicker extends StatefulWidget {
 
 class _DatePickerState extends State<DatePicker> {
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    _selectedDate = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,10 @@ class _DatePickerState extends State<DatePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(DateFormat.MMMEd().format(_selectedDate)),
+        child: Text(
+          DateFormat.MMMEd().format(_selectedDate),
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }

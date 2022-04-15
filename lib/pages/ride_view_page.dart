@@ -4,6 +4,8 @@ import 'package:ride_with_me/utils/checkbox_dialog.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 import 'package:ride_with_me/utils/title_button.dart';
+import 'package:webview_flutter/platform_interface.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../utils/address_search.dart';
 import '../utils/button.dart';
@@ -14,6 +16,8 @@ import '../utils/text.dart';
 //TODO zistit ci sa da pridat widget s mapou, ktora ma preddefinovanu route alebo to robit ako redirect go google maps appky / browseru
 // TODO: compare ride.authorId vs currentUser.id - if currentUser is the author, he can edit info, otherwise it's read-only
 
+//TODO asi by som zakazal editovat uz vytvorene jazdy, need to think about this
+
 class RideViewPage extends StatefulWidget {
   const RideViewPage({Key? key}) : super(key: key);
 
@@ -22,7 +26,7 @@ class RideViewPage extends StatefulWidget {
 }
 
 class _RideViewPageState extends State<RideViewPage> {
-  String _rideTitle = "Nove Mlyny";
+  final bool _isNewRide = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,9 @@ class _RideViewPageState extends State<RideViewPage> {
             children: [
               //TODO make this readonly if ride is viewed
               Expanded(
-                  child: TitleButton()),
+                  child: TitleButton(
+                isEnabled: _isNewRide,
+              )),
               // FittedBox(
               //   fit: BoxFit.fitWidth,
               //   child: Text(
@@ -73,6 +79,18 @@ class _RideViewPageState extends State<RideViewPage> {
                   LargeText("by Lucas Ronald"),
                 ],
               ),
+              SizedBox(
+                height: 180,
+                width: 800,
+                child: Container(
+                    child: WebView(
+                  initialUrl: Uri.dataFromString(
+                          '<html><body><iframe style="border:none" src="https://en.frame.mapy.cz/s/gozajafofo" width="700" height="466" frameborder="0"></iframe></body></html>',
+                          mimeType: 'text/html')
+                      .toString(),
+                  javascriptMode: JavascriptMode.unrestricted,
+                )),
+              ),
               SizedBox(height: 20),
               MediumText("With"),
               Container(
@@ -99,47 +117,49 @@ class _RideViewPageState extends State<RideViewPage> {
               ),
               SizedBox(height: 50),
               MediumText("Total distance"),
-              RideNumberPicker(minValue: 0, maxValue: 1000, units: "km"),
+              RideNumberPicker(minValue: 0, maxValue: 1000, units: "km", isEditable: _isNewRide),
               SizedBox(height: 20),
               MediumText("Expected average speed"),
-              RideNumberPicker(minValue: 15, maxValue: 40, units: "km/h"),
+              RideNumberPicker(minValue: 15, maxValue: 40, units: "km/h", isEditable: _isNewRide),
               SizedBox(height: 20),
               MediumText("Total climbing"),
-              RideNumberPicker(minValue: 0, maxValue: 10000, units: "m"),
+              RideNumberPicker(minValue: 0, maxValue: 10000, units: "m", isEditable: _isNewRide),
               SizedBox(height: 20),
               MediumText("Expected duration"),
-              DurationPicker(),
+              DurationPicker(isEditable: _isNewRide),
               SizedBox(height: 20),
               MediumText("Start Location"),
-              AddressSearch(callback: (_) {}), //TODO add callback
+              AddressSearch(initialValue: "", callback: (_) {}, isEditable: _isNewRide), //TODO add callback
               SizedBox(height: 20),
               MediumText("Tags"),
-              CheckboxDialog(),
-              SizedBox(height: 20),
-              MediumText("Link to share with friends"),
-              SizedBox(
-                width: double.infinity,
-                child: CopyLinkButton(value: "ridewith.me/gh4jj5"),
-              ),
-              SizedBox(height: 20),
-              MediumText("Contact host"),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RideIconButton(icon: FontAwesomeIcons.facebook),
-                      RideIconButton(icon: FontAwesomeIcons.strava),
-                      RideIconButton(icon: FontAwesomeIcons.instagram),
-                      RideIconButton(icon: FontAwesomeIcons.google),
-                      RideIconButton(icon: FontAwesomeIcons.slack),
-                      RideIconButton(icon: FontAwesomeIcons.envelope),
-                    ],
+              CheckboxDialog(isEditable: _isNewRide),
+              if (!_isNewRide) ...[
+                SizedBox(height: 20),
+                MediumText("Link to share with friends"),
+                SizedBox(
+                  width: double.infinity,
+                  child: CopyLinkButton(value: "ridewith.me/gh4jj5"),
+                ),
+                SizedBox(height: 20),
+                MediumText("Contact host"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RideIconButton(icon: FontAwesomeIcons.facebook),
+                        RideIconButton(icon: FontAwesomeIcons.strava),
+                        RideIconButton(icon: FontAwesomeIcons.instagram),
+                        RideIconButton(icon: FontAwesomeIcons.google),
+                        RideIconButton(icon: FontAwesomeIcons.slack),
+                        RideIconButton(icon: FontAwesomeIcons.envelope),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
@@ -147,10 +167,14 @@ class _RideViewPageState extends State<RideViewPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
         child: SubmitButton(
-            value: "I'LL PARTICIPATE",
-            callback: () {
-              Navigator.of(context).pop();
-            }),
+            value: _isNewRide ? "CREATE RIDE" : "I'LL PARTICIPATE",
+            callback: _isNewRide
+                ? () {
+                    Navigator.of(context).pop();
+                  }
+                : () {
+                    Navigator.of(context).pop(); //TODO add write to DB
+                  }),
       ),
     );
   }

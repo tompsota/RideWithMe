@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CheckboxDialog extends StatefulWidget {
-  const CheckboxDialog({Key? key}) : super(key: key);
+  bool isEditable;
+
+  CheckboxDialog({Key? key, required this.isEditable}) : super(key: key);
 
   @override
   _CheckboxDialogState createState() => _CheckboxDialogState();
 }
 
 class _CheckboxDialogState extends State<CheckboxDialog> {
-  bool checkboxValueCity = false;
-  List<String> allCities = ['Coffee stop', 'Recovery ride', 'Chill ride', 'Race', 'Only roads', 'KOM hunting', 'Hills', 'Flat'];
-  List<String> selectedCities = [];
+  List<String> allTags = ['Coffee stop', 'Recovery ride', 'Chill ride', 'Race', 'Only roads', 'KOM hunting', 'Hills', 'Flat'];
+  List<String> selectedTags = [];
 
   @override
   Widget build(BuildContext context) {
@@ -25,27 +26,28 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
           Flexible(
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: selectedCities.length,
+                itemCount: selectedTags.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(title: Text(selectedCities[index]));
+                  return ListTile(title: Text(selectedTags[index]));
                 }),
           ),
-          ElevatedButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return DialogWindow(
-                          cities: allCities,
-                          selectedCities: selectedCities,
-                          onSelectedCitiesListChanged: (cities) {
-                            setState(
-                              () => selectedCities = cities,
-                            );
-                          });
-                    });
-              }),
+          if (widget.isEditable)
+            ElevatedButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return DialogWindow(
+                            cities: allTags,
+                            selectedCities: selectedTags,
+                            onSelectedCitiesListChanged: (cities) {
+                              setState(
+                                () => selectedTags = cities,
+                              );
+                            });
+                      });
+                }),
         ],
       ),
     );

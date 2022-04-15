@@ -3,9 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:ride_with_me/utils/callback_types.dart';
 
 class TimePicker extends StatefulWidget {
-  TimeOfDayCallback callback;
+  final TimeOfDayCallback callback;
+  final TimeOfDay time;
 
-  TimePicker({Key? key, required this.callback}) : super(key: key);
+  TimePicker({Key? key, required this.callback, required this.time}) : super(key: key);
 
   @override
   _TimePickerState createState() => _TimePickerState();
@@ -13,6 +14,11 @@ class TimePicker extends StatefulWidget {
 
 class _TimePickerState extends State<TimePicker> {
   TimeOfDay _selectedTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    _selectedTime = widget.time;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,10 @@ class _TimePickerState extends State<TimePicker> {
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(DateFormat.Hm().format(DateFormat.jm().parse(_selectedTime.format(context)))),
+        child: Text(
+          DateFormat.Hm().format(DateFormat.jm().parse(_selectedTime.format(context))),
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }
