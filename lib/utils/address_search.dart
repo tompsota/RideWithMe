@@ -8,8 +8,10 @@ const kGoogleApiKey = "";
 
 class AddressSearch extends StatefulWidget {
   DynamicCallback callback;
+  String initialValue;
+  bool isEditable;
 
-  AddressSearch({Key? key, required this.callback}) : super(key: key);
+  AddressSearch({Key? key, required this.callback, required this.isEditable, required this.initialValue}) : super(key: key);
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
@@ -28,6 +30,8 @@ class _AddressSearchState extends State<AddressSearch> {
     _controller.addListener(() {
       _onChanged();
     });
+    _controller.text = widget.initialValue;
+    _isVisibleListview = false;
   }
 
   _onChanged() {
@@ -56,56 +60,62 @@ class _AddressSearchState extends State<AddressSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topCenter,
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                hintText: "Seek your location here",
-                focusColor: Colors.white,
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                prefixIcon: Icon(Icons.map),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: () => _controller.clear(),
+    if (widget.isEditable) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  hintText: "Seek your location here",
+                  focusColor: Colors.white,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  prefixIcon: Icon(Icons.map),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      _controller.clear();
+                      widget.callback(null);
+                    },
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Colors.transparent, width: 3.0)),
                 ),
-                fillColor: Colors.white,
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Colors.transparent, width: 3.0)),
+                onSubmitted: (value) {
+                  _isVisibleListview = false;
+                },
               ),
-              onSubmitted: (value) {
-                _isVisibleListview = false;
-              },
             ),
-          ),
-          Visibility(
-            visible: _isVisibleListview,
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _placeList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_placeList[index]["description"]),
-                  onTap: () {
-                    _controller.text = _placeList[index]["description"];
-                    widget.callback(_placeList[index]);
-                    _isVisibleListview = false;
-                  },
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
+            Visibility(
+              visible: _isVisibleListview,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _placeList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(_placeList[index]["description"]),
+                    onTap: () {
+                      _controller.text = _placeList[index]["description"];
+                      widget.callback(_placeList[index]);
+                      _isVisibleListview = false;
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return Container();
   }
 }

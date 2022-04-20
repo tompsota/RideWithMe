@@ -3,7 +3,9 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:ride_with_me/utils/text.dart';
 
 class DurationPicker extends StatefulWidget {
-  DurationPicker({Key? key}) : super(key: key);
+  bool isEditable;
+
+  DurationPicker({Key? key, required this.isEditable}) : super(key: key);
 
   @override
   State<DurationPicker> createState() => _DurationPickerState();
@@ -18,17 +20,28 @@ class _DurationPickerState extends State<DurationPicker> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: TextButton(
+        child: OutlinedButton(
           onPressed: () {
-            _showDialog();
+            widget.isEditable ? _showDialog() : null;
           },
-          style: TextButton.styleFrom(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(width: 2.0, color: Colors.transparent),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
             backgroundColor: Colors.transparent,
             primary: Colors.black,
           ),
-          child: Text(
-            _currentValueHours.toString() + " h   " + _currentValueMins.toString() + " min",
-            style: TextStyle(color: Colors.grey),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+            child: Row(
+              children: [
+                Text(
+                  _currentValueHours.toString() + " h   " + _currentValueMins.toString() + " min",
+                  style: TextStyle(color: Colors.grey, fontSize: 20),
+                ),
+                if (widget.isEditable) Spacer(),
+                if (widget.isEditable) Icon(Icons.edit, color: Colors.grey),
+              ],
+            ),
           ),
         ));
   }

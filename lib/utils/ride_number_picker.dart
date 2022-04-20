@@ -6,8 +6,10 @@ class RideNumberPicker extends StatefulWidget {
   int minValue;
   int maxValue;
   String units;
+  bool isEditable;
 
-  RideNumberPicker({Key? key, required this.minValue, required this.maxValue, required this.units}) : super(key: key);
+  RideNumberPicker({Key? key, required this.minValue, required this.maxValue, required this.units, required this.isEditable})
+      : super(key: key);
 
   @override
   State<RideNumberPicker> createState() => _RideNumberPickerState();
@@ -21,17 +23,28 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextButton(
+      child: OutlinedButton(
         onPressed: () {
-          _showDialog();
+          widget.isEditable ? _showDialog() : null;
         },
-        style: TextButton.styleFrom(
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(width: 2.0, color: Colors.transparent),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
-        child: Text(
-          _currentValue.toString() + " " + widget.units,
-          style: TextStyle(color: Colors.grey),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
+          child: Row(
+            children: [
+              Text(
+                _currentValue.toString() + " " + widget.units,
+                style: TextStyle(color: Colors.grey, fontSize: 20),
+              ),
+              if (widget.isEditable) Spacer(),
+              if (widget.isEditable) Icon(Icons.edit, color: Colors.grey),
+            ],
+          ),
         ),
       ),
     );
