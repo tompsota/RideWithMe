@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class TitleButton extends StatefulWidget {
   bool isEnabled;
-  ValueChanged<String> titleChangedCallback;
-  var textController;
+  ValueChanged<String> callback;
+  TextEditingController textController;
 
 
-  TitleButton({Key? key, required this.isEnabled, required this.titleChangedCallback, this.textController}) : super(key: key);
+  TitleButton({Key? key, required this.isEnabled, required this.callback, required this.textController}) : super(key: key);
 
   @override
   _TitleButtonState createState() => _TitleButtonState();
@@ -24,7 +24,7 @@ class _TitleButtonState extends State<TitleButton> {
           controller: widget.textController,
           onFieldSubmitted: (text) {
             widget.textController.text = text;
-            widget.titleChangedCallback(text);
+            widget.callback(text);
           },
           decoration: InputDecoration(
             border: InputBorder.none,

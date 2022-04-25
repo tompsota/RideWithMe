@@ -140,7 +140,13 @@ Future<void> joinRide(RideModel ride, UserStateController userController) async 
       isCompleted: ride.isCompleted,
       title: ride.title,
       authorId: ride.authorId,
-      id: ride.id
+      id: ride.id,
+      climbing: ride.climbing,
+      duration: ride.duration,
+      distance: ride.distance,
+      averageSpeed: ride.averageSpeed,
+      createdAt: ride.createdAt,
+      tags: ride.tags
   );
   await updateRide(updatedRide.id, updatedRide);
 }
@@ -171,7 +177,13 @@ Future<void> leaveRide(RideModel ride, UserStateController userController) async
       isCompleted: ride.isCompleted,
       title: ride.title,
       authorId: ride.authorId,
-      id: ride.id
+      id: ride.id,
+      climbing: ride.climbing,
+      duration: ride.duration,
+      distance: ride.distance,
+      averageSpeed: ride.averageSpeed,
+      createdAt: ride.createdAt,
+      tags: ride.tags
   );
   await updateRide(updatedRide.id, updatedRide);
 }
@@ -188,7 +200,13 @@ Future<void> completeRide(RideModel ride) async {
       isCompleted: true,
       title: ride.title,
       authorId: ride.authorId,
-      id: ride.id
+      id: ride.id,
+      climbing: ride.climbing,
+      duration: ride.duration,
+      distance: ride.distance,
+      averageSpeed: ride.averageSpeed,
+      createdAt: ride.createdAt,
+      tags: ride.tags
   );
   await updateRide(updatedRide.id, updatedRide);
 

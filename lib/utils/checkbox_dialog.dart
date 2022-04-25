@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class CheckboxDialog extends StatefulWidget {
   bool isEditable;
+  ValueChanged<List<String>> callback;
 
-  CheckboxDialog({Key? key, required this.isEditable}) : super(key: key);
+  CheckboxDialog({Key? key, required this.isEditable, required this.callback}) : super(key: key);
 
   @override
   _CheckboxDialogState createState() => _CheckboxDialogState();
@@ -45,6 +46,7 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
                               setState(
                                 () => selectedTags = cities,
                               );
+                              widget.callback(selectedTags);
                             });
                       });
                 }),

@@ -9,6 +9,9 @@ part 'ride_model.g.dart';
 // use this command to generate json_serializable stuff:
 // flutter pub run build_runner build
 
+
+typedef Unit = int;
+
 // TODO: needs to be immutable? then we need to create a new instance every time we want to change an attribute (e.g. add new participant)
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
@@ -29,13 +32,13 @@ class RideModel {
   //      - List<UserModel> participants (fetched from DB based on ride.participants)
   //   and we keep List<RideInfo> in a ChangeNotifier class?
 
-
   @JsonKey(name: 'authorId')
   final String authorId;
-  //
-  // final DateTime createdAt;
-  //
-  // // // ID's (emails) of participants/users
+
+  @JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+
+  // ID's (emails) of participants/users
   @JsonKey(name: 'participantsIds')
   final List<String> participantsIds;
 
@@ -44,49 +47,62 @@ class RideModel {
 
   // TODO: change data type? (to dynamic? will DB accept this? maybe 'json' data type?)
   // final String location;
-  //
-  // // in km/h
-  // final double avgSpeed;
-  // // in km
-  // final double distance;
-  // // in meters
-  // final double climbing;
-  // // e.g. 4h 20min
-  // final Duration duration;
-  //
-  // final List<String> tags;
+
+  // in km/h
+  @JsonKey(name: 'averageSpeed')
+  final Unit averageSpeed;
+
+  // in km
+  @JsonKey(name: 'distance')
+  final Unit distance;
+
+  // in meters
+  @JsonKey(name: 'climbing')
+  final Unit climbing;
+
+  // e.g. 4h 20min
+  @JsonKey(name: 'duration')
+  final Duration duration;
+
+  @JsonKey(name: 'tags')
+  final List<String> tags;
 
   @JsonKey(ignore: true)
   late UserModel? author;
   @JsonKey(ignore: true)
   late List<UserModel> participants;
 
-  RideModel({required this.participantsIds, this.participants = const [], required this.isCompleted, required this.title, required this.authorId, this.author, required this.id});
-  RideModel.id({required this.participantsIds, this.participants = const [], required this.isCompleted, required this.title, required this.authorId, this.author}): id = Uuid().v1();
+  RideModel({
+    required this.createdAt,
+    required this.averageSpeed,
+    required this.distance,
+    required this.climbing,
+    required this.duration,
+    required this.tags,
+    required this.participantsIds,
+    required this.isCompleted,
+    required this.title,
+    required this.authorId,
+    required this.id,
+    this.author,
+    this.participants = const [],
+  });
+
+  RideModel.id({
+    required this.createdAt,
+    required this.averageSpeed,
+    required this.distance,
+    required this.climbing,
+    required this.duration,
+    required this.tags,
+    required this.participantsIds,
+    required this.isCompleted,
+    required this.title,
+    required this.authorId,
+    this.author,
+    this.participants = const [],
+  }): id = Uuid().v1();
 
   factory RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
   Map<String, dynamic> toJson() => _$RideModelToJson(this);
-
-
-  // RideModel _$RideModelFromJson(Map<String, dynamic> json) => RideModel(
-//       json['id'] as String,
-//       json['name'] as String,
-//     );
-//
-// Map<String, dynamic> _$RideModelToJson(RideModel instance) => <String, dynamic>{
-//       'id': instance.id,
-//       'name': instance.title,
-//     };
-
-
-//   factory RideModel.fromJson(Map<String, dynamic> json) => RideModel(
-//     id: json['id'] as String,
-//     title: json['title'] as String,
-//     authorId: json['authorId'] as String,
-//     author: null,
-//     participantsIds: json['participantsIds'] as List<String>,
-//     participants: null,
-//     isCompleted: json['isCompleted'] as bool
-//   );
-
 }

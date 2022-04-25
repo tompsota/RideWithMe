@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class RideIconButton extends StatelessWidget {
   IconData icon;
 
+  // TODO: add link to ctor and use it in onPressed
   RideIconButton({Key? key, required this.icon}) : super(key: key);
 
   @override

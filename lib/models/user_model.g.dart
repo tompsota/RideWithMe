@@ -24,15 +24,6 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
               .toList() ??
           const [],
     );
-      // ..createdRides = (json['createdRides'] as List<dynamic>)
-      //     .map((e) => RideModel.fromJson(e as Map<String, dynamic>))
-      //     .toList()
-      // ..joinedRides = (json['joinedRides'] as List<dynamic>)
-      //     .map((e) => RideModel.fromJson(e as Map<String, dynamic>))
-      //     .toList()
-      // ..completedRides = (json['completedRides'] as List<dynamic>)
-      //     .map((e) => RideModel.fromJson(e as Map<String, dynamic>))
-      //     .toList();
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'email': instance.email,
@@ -42,7 +33,4 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'createdRidesIds': instance.createdRidesIds,
       'joinedRidesIds': instance.joinedRidesIds,
       'completedRidesIds': instance.completedRidesIds,
-      // 'createdRides': instance.createdRides.map((e) => e.toJson()).toList(),
-      // 'joinedRides': instance.joinedRides.map((e) => e.toJson()).toList(),
-      // 'completedRides': instance.completedRides.map((e) => e.toJson()).toList(),
     };

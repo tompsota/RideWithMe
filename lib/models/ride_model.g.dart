@@ -7,38 +7,31 @@ part of 'ride_model.dart';
 // **************************************************************************
 
 RideModel _$RideModelFromJson(Map<String, dynamic> json) => RideModel(
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      averageSpeed: json['averageSpeed'] as int,
+      distance: json['distance'] as int,
+      climbing: json['climbing'] as int,
+      duration: Duration(microseconds: json['duration'] as int),
+      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
       participantsIds: (json['participantsIds'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      // participants: (json['participants'] as List<dynamic>?)
-      //         ?.map((e) => UserModel.fromJson(e as Map<String, dynamic>))
-      //         .toList() ??
-      //     const [],
       isCompleted: json['isCompleted'] as bool,
       title: json['title'] as String,
       authorId: json['authorId'] as String,
-      // author: json['author'] == null
-      //     ? null
-      //     : UserModel.fromJson(json['author'] as Map<String, dynamic>),
       id: json['id'] as String,
     );
 
-Map<String, dynamic> _$RideModelToJson(RideModel instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'title': instance.title,
-    'authorId': instance.authorId,
-    'participantsIds': instance.participantsIds,
-    'isCompleted': instance.isCompleted,
-  };
-
-  // void writeNotNull(String key, dynamic value) {
-  //   if (value != null) {
-  //     val[key] = value;
-  //   }
-  // }
-  //
-  // writeNotNull('author', instance.author?.toJson());
-  // val['participants'] = instance.participants.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$RideModelToJson(RideModel instance) => <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'authorId': instance.authorId,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'participantsIds': instance.participantsIds,
+      'isCompleted': instance.isCompleted,
+      'averageSpeed': instance.averageSpeed,
+      'distance': instance.distance,
+      'climbing': instance.climbing,
+      'duration': instance.duration.inMicroseconds,
+      'tags': instance.tags,
+    };

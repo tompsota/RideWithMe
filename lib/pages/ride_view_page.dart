@@ -46,6 +46,13 @@ class RideViewPage extends StatelessWidget {
 
               final showCompleteRideButton = userIsAuthor && (ride != null && !ride.isCompleted);
 
+              Duration rideDuration = Duration();
+              // TODO: change to double ?
+              int rideDistance = 0;
+              int rideAverageSpeed = 0;
+              int rideClimbing = 0;
+              List<String> rideTags = [];
+
               return Scaffold(
                 appBar: AppBar(
                     toolbarHeight: 80,
@@ -56,10 +63,11 @@ class RideViewPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //TODO make this readonly if ride is viewed
+                        // TODO: keep either callback or textController, not both
                         Expanded(
                             child: TitleButton(
                               isEnabled: isBeingCreated,
-                              titleChangedCallback: (title) {
+                              callback: (title) {
                                 rideTitle = title;
                               },
                               textController: titleController,
@@ -149,22 +157,43 @@ class RideViewPage extends StatelessWidget {
                         SizedBox(height: 50),
                         MediumText("Total distance"),
                         // TODO: how to obtain the value so that it can be passed to createRide() / RideModel ctor? use callback?
-                        RideNumberPicker(minValue: 0, maxValue: 1000, units: "km", isEditable: canBeEdited),
+                        RideNumberPicker(minValue: 0, maxValue: 1000, units: "km", isEditable: canBeEdited,
+                          callback: (distance) {
+                            rideDistance = distance;
+                          }
+                        ),
                         SizedBox(height: 20),
                         MediumText("Expected average speed"),
-                        RideNumberPicker(minValue: 15, maxValue: 40, units: "km/h", isEditable: canBeEdited),
+                        RideNumberPicker(minValue: 15, maxValue: 40, units: "km/h", isEditable: canBeEdited,
+                            callback: (speed) {
+                              rideAverageSpeed = speed;
+                            }
+                        ),
                         SizedBox(height: 20),
                         MediumText("Total climbing"),
-                        RideNumberPicker(minValue: 0, maxValue: 10000, units: "m", isEditable: canBeEdited),
+                        RideNumberPicker(minValue: 0, maxValue: 10000, units: "m", isEditable: canBeEdited,
+                          callback: (climbing) {
+                            rideClimbing = climbing;
+                          }
+                        ),
                         SizedBox(height: 20),
                         MediumText("Expected duration"),
-                        DurationPicker(isEditable: canBeEdited),
+                        DurationPicker(
+                            isEditable: canBeEdited,
+                            callback: (duration) {
+                              rideDuration = duration;
+                            }
+                        ),
                         SizedBox(height: 20),
                         MediumText("Start Location"),
                         AddressSearch(initialValue: "", callback: (_) {}, isEditable: canBeEdited), //TODO add callback
                         SizedBox(height: 20),
                         MediumText("Tags"),
-                        CheckboxDialog(isEditable: canBeEdited),
+                        CheckboxDialog(isEditable: canBeEdited,
+                          callback: (tags) {
+                            rideTags = tags;
+                          }
+                        ),
 
                         // link to share with friends should be displayed always? (or not when ride is complete? - to look at results?)
                         // author/host contact info should be displayed at all times?
@@ -223,7 +252,18 @@ class RideViewPage extends StatelessWidget {
                                 // createRide in DB
                                 await createRide(
                                   // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
-                                  RideModel.id(participantsIds: [userId], isCompleted: false, title: titleController.text, authorId: userId),
+                                  RideModel.id(
+                                    participantsIds: [userId],
+                                    isCompleted: false,
+                                    title: titleController.text,
+                                    authorId: userId,
+                                    distance: rideDistance,
+                                    climbing: rideClimbing,
+                                    createdAt: DateTime.now(),
+                                    tags: rideTags,
+                                    averageSpeed: rideAverageSpeed,
+                                    duration: rideDuration,
+                                  ),
                                   userController
                                 );
                                 Navigator.of(context).pop();
