@@ -41,15 +41,6 @@ class DashboardPage extends StatelessWidget {
           }
         ),
 
-        // SubmitButton(
-        //     value: "Add ride",
-        //     callback: () => Navigator.of(context).push(
-        //         MaterialPageRoute(
-        //             builder: (_) => RideViewPage()
-        //         )
-        //     ),
-        // ),
-
         StreamBuilder<QuerySnapshot>(
           stream: _ridesStream,
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

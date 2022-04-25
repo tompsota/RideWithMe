@@ -48,6 +48,9 @@ class RideModel {
   // TODO: change data type? (to dynamic? will DB accept this? maybe 'json' data type?)
   // final String location;
 
+  // final double latitude;
+  // final double longitude;
+
   // in km/h
   @JsonKey(name: 'averageSpeed')
   final Unit averageSpeed;

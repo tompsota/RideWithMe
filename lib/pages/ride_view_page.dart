@@ -198,7 +198,7 @@ class RideViewPage extends StatelessWidget {
                         // link to share with friends should be displayed always? (or not when ride is complete? - to look at results?)
                         // author/host contact info should be displayed at all times?
                         // change 'author' to 'host' in display?
-                        if (!canBeEdited) ...[
+                        if (!isBeingCreated) ...[
                           SizedBox(height: 20),
                           MediumText("Link to share with friends"),
                           SizedBox(
@@ -232,7 +232,7 @@ class RideViewPage extends StatelessWidget {
                               await completeRide(ride);
                               Navigator.of(context).pop();
                             },
-                        )
+                          )
                       ],
                     ),
                   ),
