@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:ride_with_me/models/ride_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'user_model.g.dart';
@@ -31,13 +32,13 @@ class UserModel {
   final String aboutMe;
 
   // TODO: how to save links? (do we have a defined set of allowed domains, such as facebook, instagram, twitter etc. ?)
+  // is it a map/JSON object in the format: { "instagram": "instagram.com/michalSali", "twitter": null, "facebook": ... } ??
   //  - if user can choose any domain (e.g. his own site), what icon do we display? (since domains like FB, IG have specific icons)
   //    - maybe we can let user choose from predefined set of domains that have icons (FB, IG, ...), and if he adds a different domain,
   //      we give some default icon?
 
   // ID's of rides that a user has created
-  // change to 'initiatedRides' (Figma) ?
-  // final List<String> createdRides;
+  final List<String> createdRidesIds;
 
   // ID's of rides the user took part in
   // 'completedRides' / 'joinedRides' (Figma) ?
@@ -52,17 +53,30 @@ class UserModel {
   // - maybe the easiest/smartest solution would be to make author label the ride as finished (ride could have attribute 'state': {finished, cancelled, pending, ...}),
   //    which will trigger the update
   //    - author also has the ability to cancel the race / postpone it (e.g. because of bad weather conditions / whatever)
-  // final List<String> joinedRides;
+  final List<String> joinedRidesIds;
 
-  // TODO: remove late
-  // final List<String> completedRides;
+  // rides the user has finished
+  final List<String> completedRidesIds;
 
+  @JsonKey(ignore: true)
+  late List<RideModel> createdRides;
+  @JsonKey(ignore: true)
+  late List<RideModel> joinedRides;
+  @JsonKey(ignore: true)
+  late List<RideModel> completedRides;
 
   // TODO: save image to 'firebase/storage'
   // TODO: use RouteMaster ?
 
-  const UserModel({required this.email, required this.firstName, required this.lastName, this.aboutMe = 'No info'});
+  UserModel({required this.email, required this.firstName, required this.lastName, this.aboutMe = 'No info',
+    this.createdRidesIds = const [],
+    this.joinedRidesIds = const [],
+    this.completedRidesIds = const []
+  });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
+
+  String getFullName() => firstName + " " + lastName;
+  String getId() => email;
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/filter_rides_page.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ride_with_me/utils/db_utils.dart';
 import '../models/ride_model.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -21,20 +24,31 @@ class DashboardPage extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SubmitButton(
-            value: "Add ride",
-            callback: () {
-              CollectionReference rides = FirebaseFirestore.instance.collection('rides');
-              Future<void> addRide() {
-                return rides
-                    .add(RideModel("don't use", "ride #2",).toJson()
-                )
-                    .then((value) => print("Ride Added"))
-                    .catchError((error) => print("Failed to add ride: $error"));
-              }
+        Consumer<UserStateController>(
+          builder: (context, userController, child) {
+            return SubmitButton(
+              value: "Add ride",
+              callback: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    // builder: (_) => RideViewPage()
+                    // TODO: why the fuck do I have to wrap it in another ChangeNotifierProvider, when this widget/Page can access UserStateController ?????
+                      builder: (_) => ChangeNotifierProvider.value(
+                          value: userController, child: RideViewPage()
+                      )
+                  )
+              ),
+            );
+          }
+        ),
 
-              addRide();
-            }),
+        // SubmitButton(
+        //     value: "Add ride",
+        //     callback: () => Navigator.of(context).push(
+        //         MaterialPageRoute(
+        //             builder: (_) => RideViewPage()
+        //         )
+        //     ),
+        // ),
 
         StreamBuilder<QuerySnapshot>(
           stream: _ridesStream,
@@ -53,15 +67,31 @@ class DashboardPage extends StatelessWidget {
                 Map<String, dynamic> json = document.data()! as Map<String, dynamic>;
                 RideModel rideModel = RideModel.fromJson(json);
                 // TODO: where to apply filter? (gotta Consume<RideFilter> there)
-                return ListTile(
-                    title: Text(rideModel.title),
-                    subtitle: Text(rideModel.id),
-                    onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => const RideViewPage()
-                        )
-                    )
-                );
+                return FutureBuilder<RideModel?>(
+                  // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
+                  // we 'include' author for display
+                  // getFullRide(rideModel) fetches both author and participants
+                  // future: getFullRide(rideModel),
+                  future: getRideWithAuthor(rideModel),
+                  initialData: rideModel,
+                  builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
+                    final ride = snapshot.data!;
+                    return ListTile(
+                        title: Text(ride.title),
+                        subtitle: Text("author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
+                        onTap: () =>
+                            Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  // builder: (_) => RideViewPage(rideBeingEdited: rideModel)
+                                    builder: (_) =>
+                                        ChangeNotifierProvider.value(
+                                            value: Provider.of<UserStateController>(context),
+                                            child: RideViewPage(rideBeingEdited: ride),
+                                        )
+                                )
+                            )
+                    );
+                  });
               }).toList(),
             );
           },
