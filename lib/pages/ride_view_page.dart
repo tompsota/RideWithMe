@@ -44,6 +44,8 @@ class RideViewPage extends StatelessWidget {
               var rideTitle = isBeingCreated ? "$authorName's ride" : ride?.title ?? "Loading...";
               var titleController = TextEditingController(text: rideTitle);
 
+              final showCompleteRideButton = userIsAuthor && (ride != null && !ride.isCompleted);
+
               return Scaffold(
                 appBar: AppBar(
                     toolbarHeight: 80,
@@ -163,6 +165,10 @@ class RideViewPage extends StatelessWidget {
                         SizedBox(height: 20),
                         MediumText("Tags"),
                         CheckboxDialog(isEditable: canBeEdited),
+
+                        // link to share with friends should be displayed always? (or not when ride is complete? - to look at results?)
+                        // author/host contact info should be displayed at all times?
+                        // change 'author' to 'host' in display?
                         if (!canBeEdited) ...[
                           SizedBox(height: 20),
                           MediumText("Link to share with friends"),
@@ -190,6 +196,14 @@ class RideViewPage extends StatelessWidget {
                             ),
                           ),
                         ],
+                        if (showCompleteRideButton)
+                          SubmitButton(
+                            value: "Mark ride as complete",
+                            callback: () async {
+                              await completeRide(ride);
+                              Navigator.of(context).pop();
+                            },
+                        )
                       ],
                     ),
                   ),
@@ -198,31 +212,34 @@ class RideViewPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                   //  also, ride should have a bool "finished/completed", which can be set (once?) by the author ("Mark ride as finished/complete") - if this is set,
                   //  no info can be edited anymore and the ride's ID is added to participant's "completedRides"
-                  child: SubmitButton(
-                      value: isBeingCreated ? "CREATE RIDE" : (userIsParticipating ? "LEAVE RIDE" : "I'LL PARTICIPATE"),
-                      callback:
-                        isBeingCreated
-                          ? () async {
-                            // createRide in DB
-                            await createRide(
-                              // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
-                              RideModel.id(participantsIds: [userId], isCompleted: false, title: titleController.text, authorId: userId),
-                              userController
-                            );
-                            Navigator.of(context).pop();
-                          }
-                          : (userIsParticipating
+                  child: (ride != null && ride.isCompleted)
+                    // TODO: improve design - maybe grayed out?
+                      ? Text('Ride is already completed')
+                      : SubmitButton(
+                          value: isBeingCreated ? "CREATE RIDE" : (userIsParticipating ? "LEAVE RIDE" : "I'LL PARTICIPATE"),
+                          callback:
+                            isBeingCreated
                               ? () async {
-                                  // user that is participating clicked on "Leave ride"
-                                  await leaveRide(ride!, userController);
-                                  Navigator.of(context).pop();
-                                }
-                              : () async {
-                                  await joinRide(ride!, userController);
-                                  Navigator.of(context).pop();
-                                }
-                            )
-                       ),
+                                // createRide in DB
+                                await createRide(
+                                  // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
+                                  RideModel.id(participantsIds: [userId], isCompleted: false, title: titleController.text, authorId: userId),
+                                  userController
+                                );
+                                Navigator.of(context).pop();
+                              }
+                              : (userIsParticipating
+                                  ? () async {
+                                      // user that is participating clicked on "Leave ride"
+                                      await leaveRide(ride!, userController);
+                                      Navigator.of(context).pop();
+                                    }
+                                  : () async {
+                                      await joinRide(ride!, userController);
+                                      Navigator.of(context).pop();
+                                    }
+                                )
+                           ),
                 ),
               );
             }

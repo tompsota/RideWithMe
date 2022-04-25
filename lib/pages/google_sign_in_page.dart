@@ -95,10 +95,10 @@ class GoogleSignInPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         // TODO: uncomment after adding assets
-                        Image(
-                          image: AssetImage("assets/google_logo.png"),
-                          height: 35.0,
-                        ),
+                        // Image(
+                        //   image: AssetImage("assets/google_logo.png"),
+                        //   height: 35.0,
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(

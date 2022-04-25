@@ -66,7 +66,15 @@ class DashboardPage extends StatelessWidget {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> json = document.data()! as Map<String, dynamic>;
                 RideModel rideModel = RideModel.fromJson(json);
+
+
+
+
                 // TODO: where to apply filter? (gotta Consume<RideFilter> there)
+
+
+
+
                 return FutureBuilder<RideModel?>(
                   // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
                   // we 'include' author for display
@@ -77,7 +85,7 @@ class DashboardPage extends StatelessWidget {
                   builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
                     final ride = snapshot.data!;
                     return ListTile(
-                        title: Text(ride.title),
+                        title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
                         subtitle: Text("author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
                         onTap: () =>
                             Navigator.of(context).push(

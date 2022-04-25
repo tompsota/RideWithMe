@@ -4,10 +4,14 @@ import 'db_utils.dart';
 
 Future<RideModel> rideFromJsonFull(Map<String, dynamic> json) async {
   var ride = RideModel.fromJson(json);
-  final author = await getUserById(ride.authorId);
-  final participants = await getUsersById(ride.participantsIds);
-  ride.author = author;
-  ride.participants = participants;
+  ride.author = await getUserById(ride.authorId);
+  ride.participants = await getUsersById(ride.participantsIds);
+  return ride;
+}
+
+Future<RideModel> rideFromJsonWithAuthor(Map<String, dynamic> json) async {
+  var ride = RideModel.fromJson(json);
+  ride.author = await getUserById(ride.authorId);
   return ride;
 }
 

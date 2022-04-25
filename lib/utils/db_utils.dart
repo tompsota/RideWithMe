@@ -27,6 +27,21 @@ Future<UserModel?> getFullUserById(String id) async {
   }
 }
 
+// returns full user with all rides, where all rides have author
+Future<UserModel?> getFullUserWithAuthorById(String id) async {
+  final userSnapshot = await FirebaseFirestore.instance.collection('users').doc(id).get();
+  if (userSnapshot.exists) {
+    var user = UserModel.fromJson(userSnapshot.data()!);
+    user.createdRides = await getRidesWithAuthorByIds(user.createdRidesIds);
+    user.joinedRides = await getRidesWithAuthorByIds(user.joinedRidesIds);
+    user.completedRides = await getRidesWithAuthorByIds(user.completedRidesIds);
+    return user;
+  } else {
+    return null;
+  }
+}
+
+// returns full user with rides (rides only have basic attributes - no author or participants)
 Future<UserModel> getFullUser(UserModel user) async {
   user.createdRides = await getRidesByIds(user.createdRidesIds);
   user.joinedRides = await getRidesByIds(user.joinedRidesIds);
@@ -55,6 +70,12 @@ Future<List<RideModel>> getRidesByIds(List<String> ids) async {
   final rideSnapshots = await FirebaseFirestore.instance.collection('rides').get();
   final filteredDocs = rideSnapshots.docs.where((doc) => ids.contains(doc.id));
   return filteredDocs.map((doc) => RideModel.fromJson(doc.data())).toList();
+}
+
+Future<List<RideModel>> getRidesWithAuthorByIds(List<String> ids) async {
+  final rideSnapshots = await FirebaseFirestore.instance.collection('rides').get();
+  final filteredDocs = rideSnapshots.docs.where((doc) => ids.contains(doc.id));
+  return await Future.wait(filteredDocs.map((doc) async => await rideFromJsonWithAuthor(doc.data())).toList());
 }
 
 Future<List<RideModel>> getFullRidesByIds(List<String> ids) async {
@@ -161,8 +182,33 @@ Future<void> leaveRide(RideModel ride, UserStateController userController) async
 //   - remove rideId from user.joinedRides
 //   - add rideId to user.completedRides
 // TODO: could directly update UserStateController.user.completedRides
-Future<void> completeRide(RideModel rideId) async {
+Future<void> completeRide(RideModel ride) async {
+  final updatedRide = RideModel(
+      participantsIds: ride.participantsIds,
+      isCompleted: true,
+      title: ride.title,
+      authorId: ride.authorId,
+      id: ride.id
+  );
+  await updateRide(updatedRide.id, updatedRide);
 
+  ride.participants.forEach((user) async {
+    var updatedJoinedRidesIds = user.joinedRidesIds;
+    updatedJoinedRidesIds.remove(ride.id);
+    var updatedCompletedRidesIds = user.completedRidesIds;
+    updatedCompletedRidesIds.add(ride.id);
+
+    final updatedUser = UserModel(
+      lastName: user.lastName,
+      firstName: user.firstName,
+      email: user.email,
+      aboutMe: user.aboutMe,
+      createdRidesIds: user.createdRidesIds,
+      completedRidesIds: updatedCompletedRidesIds,
+      joinedRidesIds: updatedJoinedRidesIds,
+    );
+    await updateUser(user.getId(), updatedUser);
+  });
 }
 
 Future<void> userUpdateAboutMe(UserStateController userController, String aboutMe) async {
