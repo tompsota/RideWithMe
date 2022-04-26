@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:ride_with_me/utils/callback_types.dart';
 
 class TimePicker extends StatefulWidget {
-  final TimeOfDayCallback callback;
+  final callback;
   final TimeOfDay time;
   bool isEditable;
 

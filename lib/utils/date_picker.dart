@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'callback_types.dart';
 
 class DatePicker extends StatefulWidget {
-  DateTimeCallback callback;
+  final callback;
   DateTime initialValue;
   bool isEditable;
 

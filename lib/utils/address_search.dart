@@ -7,7 +7,7 @@ import 'dart:convert';
 const kGoogleApiKey = "";
 
 class AddressSearch extends StatefulWidget {
-  DynamicCallback callback;
+  final callback;
   String initialValue;
   bool isEditable;
 
