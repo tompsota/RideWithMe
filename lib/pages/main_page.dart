@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/dashboard_page.dart';
 import 'package:ride_with_me/pages/profile_page.dart';
@@ -13,6 +14,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -31,7 +33,11 @@ class MainPage extends StatelessWidget {
             )),
         body: TabBarView(
           children: [
-            DashboardPage(),
+            ChangeNotifierProvider(
+              create: (_) => RideFilterController(),
+              child: DashboardPage(),
+            ),
+            // DashboardPage(),
             ProfilePage()
           ],
         ),

@@ -7,51 +7,56 @@ class RideFilterController extends ChangeNotifier {
 
   void updateDate(DateTime newValue) {
     _currentFilter.selectedDate = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateStartTime(TimeOfDay newValue) {
     _currentFilter.selectedStartTime = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateFinishTime(TimeOfDay newValue) {
     _currentFilter.selectedFinishTime = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateLocation(dynamic newValue) {
     _currentFilter.selectedLocation = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateDistance(RangeValues newValue) {
     _currentFilter.selectedDistance = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateClimbing(RangeValues newValue) {
     _currentFilter.selectedClimbing = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateDuration(RangeValues newValue) {
     _currentFilter.selectedDuration = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void updateAvgSpeed(RangeValues newValue) {
     _currentFilter.selectedAvgSpeed = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
+  // TODO: commented out all the notifyListeners() in these updateXYZ methods
   void updateNrParticipants(RangeValues newValue) {
     _currentFilter.selectedNrParticipants = newValue;
-    notifyListeners();
+    // notifyListeners();
   }
 
+  // TODO: shouldn't notifyListeners() be only here and in resetFilters() ?
+  // otherwise we reload the Consumer widget with every update
   void applyFilter() {
     _appliedFilter.update(_currentFilter);
+    print('applies filter: $_appliedFilter');
+    notifyListeners();
   }
 
   // resets the current filter to last applied filter (when filter window is closed)
@@ -63,6 +68,7 @@ class RideFilterController extends ChangeNotifier {
   void resetFilters() {
     _currentFilter.reset();
     _appliedFilter.reset();
+    notifyListeners();
   }
 
   FilterModel getAppliedFilter() {

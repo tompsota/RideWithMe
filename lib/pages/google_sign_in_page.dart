@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 
 import '../utils/button.dart';
@@ -131,10 +132,19 @@ class GoogleSignInPage extends StatelessWidget {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) =>
-                      ChangeNotifierProvider.value(
-                        value: userStateController,
-                        child: const MainPage()
-                      )),
+                        // MultiProvider(
+                        //   providers: [
+                        //     ChangeNotifierProvider.value(
+                        //       value: userStateController,
+                        //     ),
+                        //     ChangeNotifierProvider(create: (_) => RideFilterController()),
+                        //   ],
+                        //   child: const MainPage(),
+                        // )),
+                        ChangeNotifierProvider.value(
+                          value: userStateController,
+                          child: const MainPage()
+                        )),
                       (_) => false,
                     );
 
