@@ -103,6 +103,7 @@ Future<void> createRide(RideModel ride, UserStateController userController) asyn
     createdRidesIds: updatedCreatedRidesIds,
     completedRidesIds: user.completedRidesIds,
     joinedRidesIds: user.joinedRidesIds,
+    avatarURL: user.avatarURL,
   );
   userController.addCreatedRide(ride.id);
   await updateUser(user.getId(), updatedUser);
@@ -129,6 +130,7 @@ Future<void> joinRide(RideModel ride, UserStateController userController) async 
     createdRidesIds: user.createdRidesIds,
     completedRidesIds: user.completedRidesIds,
     joinedRidesIds: updatedRidesIds,
+    avatarURL: user.avatarURL,
   );
   // userController.addCreatedRide(ride.id);
   await updateUser(user.getId(), updatedUser);
@@ -165,6 +167,7 @@ Future<void> leaveRide(RideModel ride, UserStateController userController) async
     createdRidesIds: user.createdRidesIds,
     completedRidesIds: user.completedRidesIds,
     joinedRidesIds: updatedRidesIds,
+    avatarURL: user.avatarURL,
   );
   // TODO: add method
   // userController.removeLeftRide(ride.id);
@@ -221,6 +224,7 @@ Future<void> completeRide(RideModel ride) async {
       firstName: user.firstName,
       email: user.email,
       aboutMe: user.aboutMe,
+      avatarURL: user.avatarURL,
       createdRidesIds: user.createdRidesIds,
       completedRidesIds: updatedCompletedRidesIds,
       joinedRidesIds: updatedJoinedRidesIds,
@@ -235,6 +239,7 @@ Future<void> userUpdateAboutMe(UserStateController userController, String aboutM
     lastName: user.lastName,
     firstName: user.firstName,
     email: user.email,
+    avatarURL: user.avatarURL,
     aboutMe: aboutMe,
     completedRidesIds: user.completedRidesIds,
     createdRidesIds: user.createdRidesIds,

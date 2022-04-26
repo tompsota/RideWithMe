@@ -126,6 +126,9 @@ class GoogleSignInPage extends StatelessWidget {
                     // // we can't create the controller inside ChangeNotifierProvider.create callback
                     // TODO: could first check, if there exists a document in 'users' collection with id = authUser.email
                     //   - if not, user has to input his first/last name etc., otherwise can just feed it into UserStateController
+
+                    // TODO: add 'ensureCreated' that returns UserModel (creates new document if there is not a document with authUser.email)
+
                     final userStateController = await UserStateController.create();
                     Navigator.pushAndRemoveUntil(
                       context,
