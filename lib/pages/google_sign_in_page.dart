@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/ride_filter_controller.dart';
+import 'package:ride_with_me/controllers/user_state_controller.dart';
 
 import '../utils/button.dart';
 import 'main_page.dart';
@@ -116,12 +119,26 @@ class GoogleSignInPage extends StatelessWidget {
                     const bool isWeb = kIsWeb;
                     // final platform = DefaultTargetPlatform.platform;
                     // final platform = defaultTargetPlatform;
+
+                    // TODO: uncomment after testing
                     final userCredential = isWeb ? await signInWithGoogleWeb() : await signInWithGoogleNative();
+
+                    // // we can't create the controller inside ChangeNotifierProvider.create callback
+                    // TODO: could first check, if there exists a document in 'users' collection with id = authUser.email
+                    //   - if not, user has to input his first/last name etc., otherwise can just feed it into UserStateController
+                    final userStateController = await UserStateController.create();
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const MainPage()),
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
                       (_) => false,
                     );
+
+                    // Navigator.pushAndRemoveUntil(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const MainPage()),
+                    //       (_) => false,
+                    // );
                   }),
             ),
             Padding(

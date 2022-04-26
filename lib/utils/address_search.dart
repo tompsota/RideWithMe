@@ -41,7 +41,7 @@ class _AddressSearchState extends State<AddressSearch> {
 
   void getSuggestion(String input) async {
     String kPLACESAPIKEY = kGoogleApiKey;
-    String type = '(regions)'; //TODO maybe add this to query
+    // String type = '(regions)'; //TODO maybe add this to query
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
         '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '&types=%28cities%29' to request
@@ -115,7 +115,14 @@ class _AddressSearchState extends State<AddressSearch> {
           ],
         ),
       );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        child: Text(
+          widget.initialValue,
+          style: TextStyle(color: Colors.grey, fontSize: 20),
+        ),
+      );
     }
-    return Container();
   }
 }

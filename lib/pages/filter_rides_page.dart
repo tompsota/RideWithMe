@@ -64,6 +64,7 @@ class FilterRidesPage extends StatelessWidget {
                       child: DatePicker(
                         callback: (date) => Provider.of<RideFilterController>(context, listen: false).updateDate(date),
                         initialValue: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedDate,
+                        isEditable: true,
                       ),
                     ),
                   ],
@@ -82,6 +83,7 @@ class FilterRidesPage extends StatelessWidget {
                         child: TimePicker(
                       callback: (time) => Provider.of<RideFilterController>(context, listen: false).updateStartTime(time),
                       time: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedStartTime,
+                      isEditable: true,
                     )),
                   ],
                 ),
@@ -99,6 +101,7 @@ class FilterRidesPage extends StatelessWidget {
                         child: TimePicker(
                       callback: (time) => Provider.of<RideFilterController>(context, listen: false).updateFinishTime(time),
                       time: Provider.of<RideFilterController>(context, listen: false).getAppliedFilter().selectedFinishTime,
+                      isEditable: true,
                     )),
                   ],
                 ),

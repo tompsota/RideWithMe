@@ -4,8 +4,9 @@ import 'package:ride_with_me/utils/text.dart';
 
 class DurationPicker extends StatefulWidget {
   bool isEditable;
+  ValueChanged<Duration> callback;
 
-  DurationPicker({Key? key, required this.isEditable}) : super(key: key);
+  DurationPicker({Key? key, required this.isEditable, required this.callback}) : super(key: key);
 
   @override
   State<DurationPicker> createState() => _DurationPickerState();
@@ -62,6 +63,7 @@ class _DurationPickerState extends State<DurationPicker> {
                       onChanged: (value) {
                         setState(() => _currentValueHours = value); // to change on widget level state
                         builderSetState(() => _currentValueHours = value); //* to change on dialog state
+                        widget.callback(Duration(hours: _currentValueHours, minutes: _currentValueMins));
                       }),
                   MediumText("h"),
                   NumberPicker(
@@ -71,6 +73,7 @@ class _DurationPickerState extends State<DurationPicker> {
                       onChanged: (value) {
                         setState(() => _currentValueMins = value); // to change on widget level state
                         builderSetState(() => _currentValueMins = value); //* to change on dialog state
+                        widget.callback(Duration(hours: _currentValueHours, minutes: _currentValueMins));
                       }),
                   MediumText("min"),
                 ],

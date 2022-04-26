@@ -1,27 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_model.dart';
+import '../utils/db_utils.dart';
 
 class UserStateController extends ChangeNotifier {
-  // TODO: is it necessary to keep reference to User (FirebaseAuth.User) ??
 
-  // either provide UserModel directly in ctor or pass only email/uid and call init()
   // waiting to get UserModel from DB might be too slow sometimes
   late UserModel user;
-  String? documentId;
-  // DocumentReference? userDocument;
+
+  // TODO extra: could create variable 'stateChanged: bool', and then we wouldn't have to reload user every time we switch to ProfilePage
+  //      however, we don't have information about CompletedRides, since it's created independently of that user's actions
+  //      - it's created when ride's author marks the ride as completed
 
   // create default/empty user so that we don't have to deal with nullable
   // but then we have to use 'late' keyword
-  UserStateController._create() {
-    // user = UserModel(); //email: '', firstName: '', lastName: '');
-  }
-  // UserStateController._create();
+  UserStateController._create() {}
 
   /// Public factory
-  Future<UserStateController> create() async {
+  static Future<UserStateController> create() async {
     final authUser = FirebaseAuth.instance.currentUser;
     final email = authUser?.email;
     var controller = UserStateController._create();
@@ -30,54 +29,82 @@ class UserStateController extends ChangeNotifier {
       return controller;
     }
 
-    // could we use documentId to find the user faster?
-    //
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-    Query query = users.where("email", isEqualTo: authUser.email!);
-    QuerySnapshot querySnapshot = await query.get();
-    final userDocument = querySnapshot.docs.single;
-
-    if (userDocument.exists) {
-      user = UserModel.fromJson(userDocument.data()! as Map<String, dynamic>);
-      documentId = userDocument.id;
+    // TODO: add try catch?
+    final users = FirebaseFirestore.instance.collection('users');
+    final userSnapshot = await users.doc(email).get();
+    if (userSnapshot.exists) {
+      // we load the full user, so that when we enter ProfilePage, we already have precise InitialData (and the fetch will only update some values, if any)
+      final user = UserModel.fromJson(userSnapshot.data()!);
+      controller.user = await getFullUser(user);
     } else {
-      // create new UserModel
-      Future<void> addUser() {
+      Future<void> addUser(UserModel user) {
         return users
-            .add(UserModel(firstName: authUser.displayName!, email: email!, lastName: '').toJson()
-        )
-            .then((value) => documentId = value.id)
-            .catchError((error) => print("Failed to add user: $error"));
+            .doc(email)
+            .set(user.toJson())
+            .then((value) => print("User added - ${user.email}."))
+            .catchError((error) => print("Failed to add user - ${user.email}: $error"));
       }
 
-      await addUser();
+      final newUser = UserModel(email: email ?? "N/A", firstName: authUser.displayName ?? "N/A", lastName: "N/A", aboutMe: "No info.");
+      // TODO: use photoURL (some default user pic if it's null)
+      await addUser(newUser);
+      controller.user = newUser;
     }
 
-    // TODO: should notifyListeners() ? probably not necessary
     return controller;
   }
 
-  // UserStateController({required this.user, required this.email});
 
-// creates CustomUser in DB if he doesn't exist yet (based on user.uid)
-// CustomUserModel.fromDB({required this.user}) {}
-
-// TODO: make changes in DB as well (should be easy, since we have user.uid)
-// TODO: do we only allow users to specify profile pic URL? (or also upload image and we save it/host it somewhere?)
-  Future<void> updateAboutMe(String aboutMeText) async {
-    // gotta create new instance, since attributes are immutable (the whole class is immutable)
-    UserModel newUser = UserModel(lastName: user.lastName, firstName: user.firstName, email: '', aboutMe: aboutMeText);
-    // UPDATE DB
-    await updateDB(newUser);
+  // adds rideId to a list of create rides - we are the author (after clicking on 'Create ride' button)
+  // Future<void> addCreatedRide(String rideId) async {
+  void addCreatedRide(String rideId) async {
+    var updatedCreatedRidesIds = user.createdRidesIds;
+    updatedCreatedRidesIds.add(rideId);
+    UserModel newUser = UserModel(
+        lastName: user.lastName,
+        firstName: user.firstName,
+        email: user.email,
+        aboutMe: user.aboutMe,
+        createdRidesIds: updatedCreatedRidesIds,
+        completedRidesIds: user.completedRidesIds,
+        joinedRidesIds: user.joinedRidesIds,
+    );
+    // await updateDB(newUser);
+    user = newUser;
     notifyListeners();
   }
 
-  Future<void> updateDB(UserModel updatedUser) async {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(documentId)
-        .update(updatedUser.toJson())
-        .then((_) => print('Updated'))
-        .catchError((error) => print('Update failed: $error'));
+  // adds rideId to a list of joined rides (after clicking on 'I will participate' button)
+  // Future<void> addJoinedRide(String rideId) async {
+  void addJoinedRide(String rideId) async {
+    var updatedJoinedRidesIds = user.joinedRidesIds;
+    updatedJoinedRidesIds.add(rideId);
+    UserModel newUser = UserModel(
+        lastName: user.lastName,
+        firstName: user.firstName,
+        email: user.email,
+        aboutMe: user.aboutMe,
+        createdRidesIds: user.createdRidesIds,
+        completedRidesIds: user.completedRidesIds,
+        joinedRidesIds: updatedJoinedRidesIds
+    );
+    // await updateDB(newUser);
+    user = newUser;
+    notifyListeners();
+  }
+
+  // DB shouldn't be handled inside state controller IMO,
+  // Future<void> updateDB(UserModel updatedUser) async {
+  //   return FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(user.getId())
+  //       .update(updatedUser.toJson())
+  //       .then((_) => print('Updated user - ${updatedUser.email}'))
+  //       .catchError((error) => print('Update failed: $error'));
+  // }
+
+  void updateUser(UserModel newUser) {
+    user = newUser;
+    notifyListeners();
   }
 }

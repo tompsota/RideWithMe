@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ride_with_me/models/user_model.dart';
+import 'package:ride_with_me/utils/db_utils.dart';
 import 'package:uuid/uuid.dart';
 
 part 'ride_model.g.dart';
@@ -8,8 +9,11 @@ part 'ride_model.g.dart';
 // use this command to generate json_serializable stuff:
 // flutter pub run build_runner build
 
+
+typedef Unit = int;
+
 // TODO: needs to be immutable? then we need to create a new instance every time we want to change an attribute (e.g. add new participant)
-// @immutable
+@immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class RideModel {
   @JsonKey(name: 'id')
@@ -28,31 +32,79 @@ class RideModel {
   //      - List<UserModel> participants (fetched from DB based on ride.participants)
   //   and we keep List<RideInfo> in a ChangeNotifier class?
 
+  @JsonKey(name: 'authorId')
+  final String authorId;
 
-  // @JsonKey(name: 'author')
-  // final String author;
-  // // final UserModel? author;
-  //
-  // // ID's (emails) of participants/users
-  // @JsonKey(name: 'participants')
-  // final List<String> participants;
-  // // final List<UserModel> participants;
+  @JsonKey(name: 'createdAt')
+  final DateTime createdAt;
+
+  // ID's (emails) of participants/users
+  @JsonKey(name: 'participantsIds')
+  final List<String> participantsIds;
+
+  @JsonKey(name: 'isCompleted')
+  final bool isCompleted;
 
   // TODO: change data type? (to dynamic? will DB accept this? maybe 'json' data type?)
   // final String location;
-  //
-  // // in km/h
-  // final double avgSpeed;
-  // // in km
-  // final double distance;
-  // // in meters
-  // final double climbing;
-  // // e.g. 4h 20min
-  // final Duration duration;
-  //
-  // final List<String> tags;
 
-  const RideModel(this.id, this.title); //, this.author, this.participants);
+  // final double latitude;
+  // final double longitude;
+
+  // in km/h
+  @JsonKey(name: 'averageSpeed')
+  final Unit averageSpeed;
+
+  // in km
+  @JsonKey(name: 'distance')
+  final Unit distance;
+
+  // in meters
+  @JsonKey(name: 'climbing')
+  final Unit climbing;
+
+  // e.g. 4h 20min
+  @JsonKey(name: 'duration')
+  final Duration duration;
+
+  @JsonKey(name: 'tags')
+  final List<String> tags;
+
+  @JsonKey(ignore: true)
+  late UserModel? author;
+  @JsonKey(ignore: true)
+  late List<UserModel> participants;
+
+  RideModel({
+    required this.createdAt,
+    required this.averageSpeed,
+    required this.distance,
+    required this.climbing,
+    required this.duration,
+    required this.tags,
+    required this.participantsIds,
+    required this.isCompleted,
+    required this.title,
+    required this.authorId,
+    required this.id,
+    this.author,
+    this.participants = const [],
+  });
+
+  RideModel.id({
+    required this.createdAt,
+    required this.averageSpeed,
+    required this.distance,
+    required this.climbing,
+    required this.duration,
+    required this.tags,
+    required this.participantsIds,
+    required this.isCompleted,
+    required this.title,
+    required this.authorId,
+    this.author,
+    this.participants = const [],
+  }): id = Uuid().v1();
 
   factory RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
   Map<String, dynamic> toJson() => _$RideModelToJson(this);

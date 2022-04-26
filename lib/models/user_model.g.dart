@@ -11,6 +11,18 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       aboutMe: json['aboutMe'] as String? ?? 'No info',
+      createdRidesIds: (json['createdRidesIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      joinedRidesIds: (json['joinedRidesIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      completedRidesIds: (json['completedRidesIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -18,4 +30,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'aboutMe': instance.aboutMe,
+      'createdRidesIds': instance.createdRidesIds,
+      'joinedRidesIds': instance.joinedRidesIds,
+      'completedRidesIds': instance.completedRidesIds,
     };

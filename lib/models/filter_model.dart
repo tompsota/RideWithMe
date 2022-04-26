@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/models/ride_model.dart';
 
 import '../settings/filter_defaults.dart';
 
@@ -38,5 +39,18 @@ class FilterModel {
     selectedDuration = other.selectedDuration;
     selectedAvgSpeed = other.selectedAvgSpeed;
     selectedNrParticipants = other.selectedNrParticipants;
+  }
+
+  // TODO: add all conditions
+  // might wanna add check for 'COMPLETED' (either attribute or using DateTime.now())
+  bool passes(RideModel ride) {
+    // return selectedDuration.start <= ride.duration && ride.duration <= selectedDuration.end
+    final passesNrParticipants =
+        selectedNrParticipants.start <= ride.participantsIds.length &&
+        ride.participantsIds.length <= selectedNrParticipants.end;
+    print('ride with ${ride.participantsIds.length} participants - passes: $passesNrParticipants');
+    return passesNrParticipants;
+    // return selectedDistance.start <= ride.distance && ride.distance <= selectedDistance.end;
+    // return selectedAvgSpeed.start <= ride.averageSpeed && ride.averageSpeed <= selectedAvgSpeed.end;
   }
 }

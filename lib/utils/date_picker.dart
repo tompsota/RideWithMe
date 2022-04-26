@@ -5,8 +5,9 @@ import 'callback_types.dart';
 class DatePicker extends StatefulWidget {
   DateTimeCallback callback;
   DateTime initialValue;
+  bool isEditable;
 
-  DatePicker({Key? key, required this.callback, required this.initialValue}) : super(key: key);
+  DatePicker({Key? key, required this.callback, required this.initialValue, required this.isEditable}) : super(key: key);
 
   @override
   _DatePickerState createState() => _DatePickerState();
@@ -26,7 +27,7 @@ class _DatePickerState extends State<DatePicker> {
       alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
-          _selectDate(context);
+          widget.isEditable ? _selectDate(context) : null;
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,

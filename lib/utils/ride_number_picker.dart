@@ -7,8 +7,11 @@ class RideNumberPicker extends StatefulWidget {
   int maxValue;
   String units;
   bool isEditable;
+  ValueChanged<int> callback;
 
-  RideNumberPicker({Key? key, required this.minValue, required this.maxValue, required this.units, required this.isEditable})
+  // TODO: change int to double ?
+
+  RideNumberPicker({Key? key, required this.minValue, required this.maxValue, required this.units, required this.isEditable, required this.callback})
       : super(key: key);
 
   @override
@@ -67,6 +70,7 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
                       onChanged: (value) {
                         setState(() => _currentValue = value); // to change on widget level state
                         builderSetState(() => _currentValue = value); //* to change on dialog state
+                        widget.callback(_currentValue);
                       }),
                   MediumText(widget.units),
                 ],
