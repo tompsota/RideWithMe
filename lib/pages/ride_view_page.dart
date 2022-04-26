@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,6 +59,8 @@ class RideViewPage extends StatelessWidget {
           int rideClimbing = 0;
           List<String> rideTags = [];
 
+          final authUser = FirebaseAuth.instance;
+
           return Scaffold(
             appBar: AppBar(
                 toolbarHeight: 80,
@@ -105,7 +108,8 @@ class RideViewPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
+                            backgroundImage: NetworkImage(ride?.author?.avatarURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
+                            // backgroundImage: NetworkImage(authUser.currentUser?.photoURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
                             maxRadius: 30,
                           ),
                         ),
@@ -168,7 +172,19 @@ class RideViewPage extends StatelessWidget {
                                     ],
                                   )
                                 : Stack(
-                                    children: ride.participants.map((x) => Text(x.email)).toList(),
+                                    children:
+                                      // ride.participants.map((x) => Text(x.email)).toList(),
+                                      List.generate(
+                                      ride.participantsIds.length,
+                                      (index) => Positioned(
+                                        left: index * 12,
+                                        child: CircleAvatar(
+                                        backgroundImage: NetworkImage(ride.participants[index].avatarURL),
+
+                                        maxRadius: 12,
+                                        ),
+                                        ),
+                                        ),
                                   )),
                       ),
                     ],

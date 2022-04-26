@@ -20,7 +20,8 @@ class UserModel {
   final String lastName;
 
   // avatar / profile pic URL
-  // final String avatarURL;
+  @JsonKey(name: 'avatarURL')
+  final String avatarURL;
 
   // bike model
   // final String bike;
@@ -68,10 +69,13 @@ class UserModel {
   // TODO: save image to 'firebase/storage'
   // TODO: use RouteMaster ?
 
-  UserModel({required this.email, required this.firstName, required this.lastName, this.aboutMe = 'No info',
+  UserModel({required this.email, required this.firstName, required this.lastName, this.aboutMe = 'No info', required this.avatarURL,
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
-    this.completedRidesIds = const []
+    this.completedRidesIds = const [],
+    this.createdRides = const [],
+    this.joinedRides = const [],
+    this.completedRides = const [],
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

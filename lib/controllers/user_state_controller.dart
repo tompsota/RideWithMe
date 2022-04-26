@@ -45,8 +45,23 @@ class UserStateController extends ChangeNotifier {
             .catchError((error) => print("Failed to add user - ${user.email}: $error"));
       }
 
-      final newUser = UserModel(email: email ?? "N/A", firstName: authUser.displayName ?? "N/A", lastName: "N/A", aboutMe: "No info.");
-      // TODO: use photoURL (some default user pic if it's null)
+      var userFirstName = authUser.displayName ?? "";
+      var userLastName = "";
+      if (authUser.displayName?.contains(' ') ?? false) {
+        var names = authUser.displayName?.split(' ');
+        if (names != null) {
+          userFirstName = names[0].trim();
+          userLastName = names.sublist(1).join(' ').trim();
+        }
+      }
+
+      final newUser = UserModel(
+          email: email ?? "",
+          firstName: userFirstName,
+          lastName: userLastName,
+          aboutMe: "No info.",
+          avatarURL: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg"
+      );
       await addUser(newUser);
       controller.user = newUser;
     }
@@ -65,6 +80,7 @@ class UserStateController extends ChangeNotifier {
         firstName: user.firstName,
         email: user.email,
         aboutMe: user.aboutMe,
+        avatarURL: user.avatarURL,
         createdRidesIds: updatedCreatedRidesIds,
         completedRidesIds: user.completedRidesIds,
         joinedRidesIds: user.joinedRidesIds,
@@ -84,6 +100,7 @@ class UserStateController extends ChangeNotifier {
         firstName: user.firstName,
         email: user.email,
         aboutMe: user.aboutMe,
+        avatarURL: user.avatarURL,
         createdRidesIds: user.createdRidesIds,
         completedRidesIds: user.completedRidesIds,
         joinedRidesIds: updatedJoinedRidesIds
