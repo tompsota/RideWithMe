@@ -5,8 +5,9 @@ import 'package:ride_with_me/utils/callback_types.dart';
 class TimePicker extends StatefulWidget {
   final TimeOfDayCallback callback;
   final TimeOfDay time;
+  bool isEditable;
 
-  TimePicker({Key? key, required this.callback, required this.time}) : super(key: key);
+  TimePicker({Key? key, required this.callback, required this.time, required this.isEditable}) : super(key: key);
 
   @override
   _TimePickerState createState() => _TimePickerState();
@@ -26,7 +27,7 @@ class _TimePickerState extends State<TimePicker> {
       alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
-          _selectTime(context);
+          widget.isEditable ? _selectTime(context) : null;
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,

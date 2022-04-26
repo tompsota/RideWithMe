@@ -95,11 +95,10 @@ class GoogleSignInPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // TODO: uncomment after adding assets
-                        // Image(
-                        //   image: AssetImage("assets/google_logo.png"),
-                        //   height: 35.0,
-                        // ),
+                        Image(
+                          image: AssetImage("assets/google_logo.png"),
+                          height: 35.0,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
@@ -124,27 +123,14 @@ class GoogleSignInPage extends StatelessWidget {
                     // TODO: uncomment after testing
                     final userCredential = isWeb ? await signInWithGoogleWeb() : await signInWithGoogleNative();
 
-
                     // // we can't create the controller inside ChangeNotifierProvider.create callback
                     // TODO: could first check, if there exists a document in 'users' collection with id = authUser.email
                     //   - if not, user has to input his first/last name etc., otherwise can just feed it into UserStateController
                     final userStateController = await UserStateController.create();
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) =>
-                        // MultiProvider(
-                        //   providers: [
-                        //     ChangeNotifierProvider.value(
-                        //       value: userStateController,
-                        //     ),
-                        //     ChangeNotifierProvider(create: (_) => RideFilterController()),
-                        //   ],
-                        //   child: const MainPage(),
-                        // )),
-                        ChangeNotifierProvider.value(
-                          value: userStateController,
-                          child: const MainPage()
-                        )),
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
                       (_) => false,
                     );
 
