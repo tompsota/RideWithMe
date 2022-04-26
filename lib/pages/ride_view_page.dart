@@ -52,6 +52,11 @@ class RideViewPage extends StatelessWidget {
           final iframeHeight = MediaQuery.of(context).size.width.toInt() * 1.5;
 
           Duration rideDuration = Duration();
+          DateTime rideDate = DateTime.now();
+          TimeOfDay rideStartTime = TimeOfDay.now();
+          String rideMapLink;
+          String rideStartLocationName;
+          String rideStartLocationId;
           // TODO: change to double ?
           int rideDistance = 0;
           int rideAverageSpeed = 0;
@@ -77,17 +82,6 @@ class RideViewPage extends StatelessWidget {
                       },
                       textController: titleController,
                     )),
-                    // FittedBox(
-                    //   fit: BoxFit.fitWidth,
-                    //   child: Text(
-                    //     "Trip to " + _rideTitle,
-                    //     style: TextStyle(
-                    //       color: Theme.of(context).primaryColor,
-                    //       fontWeight: FontWeight.bold,
-                    //       fontSize: 36,
-                    //     ),
-                    //   ),
-                    // ),
                     IconButton(
                       icon: Icon(Icons.close, color: Theme.of(context).unselectedWidgetColor),
                       onPressed: () => Navigator.of(context).pop(),
@@ -116,23 +110,21 @@ class RideViewPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: isBeingCreated
-                          ? UserInputField(initialValue: "", callback: (_) => {})
+                          ? UserInputField(initialValue: "", callback: (link) => {rideMapLink = link})
                           : Container(
                               child: kIsWeb
                                   ? Image(
                                       image: AssetImage("assets/abstract-map-placeholder.jpg"),
                                     )
-                                  : Container(
+                                  : SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       height: MediaQuery.of(context).size.width * 0.54,
-                                      child: Expanded(
-                                        child: WebView(
-                                          initialUrl: Uri.dataFromString(
-                                                  '<html><body><iframe style="border:none" src="https://en.frame.mapy.cz/s/gozajafofo" width="$iframeWidth" height="$iframeHeight" frameborder="0"></iframe></body></html>',
-                                                  mimeType: 'text/html')
-                                              .toString(),
-                                          javascriptMode: JavascriptMode.unrestricted,
-                                        ),
+                                      child: WebView(
+                                        initialUrl: Uri.dataFromString(
+                                                '<html><body><iframe style="border:none" src="https://en.frame.mapy.cz/s/gozajafofo" width="$iframeWidth" height="$iframeHeight" frameborder="0"></iframe></body></html>',
+                                                mimeType: 'text/html')
+                                            .toString(),
+                                        javascriptMode: JavascriptMode.unrestricted,
                                       ),
                                     ),
                             ),
@@ -179,12 +171,12 @@ class RideViewPage extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: DatePicker(callback: (date) => {}, initialValue: DateTime.now(), isEditable: canBeEdited),
+                            child: DatePicker(callback: (date) => {rideDate = date}, initialValue: DateTime.now(), isEditable: canBeEdited),
                           ),
                           if (canBeEdited) Icon(Icons.edit, color: Colors.grey),
                           SizedBox(width: 15),
                           Expanded(
-                            child: TimePicker(callback: (time) => {}, time: TimeOfDay.now(), isEditable: canBeEdited),
+                            child: TimePicker(callback: (time) => {rideStartTime = time}, time: TimeOfDay.now(), isEditable: canBeEdited),
                           ),
                           if (canBeEdited) Icon(Icons.edit, color: Colors.grey),
                           SizedBox(
@@ -232,7 +224,13 @@ class RideViewPage extends StatelessWidget {
                         }),
                     SizedBox(height: 20),
                     MediumText("Start Location"),
-                    AddressSearch(initialValue: isBeingCreated ? "" : "Brno, Czech Republic", callback: (_) {}, isEditable: canBeEdited),
+                    AddressSearch(
+                        initialValue: isBeingCreated ? "" : "Brno, Czech Republic",
+                        callback: (value) {
+                          rideStartLocationName = value["description"];
+                          rideStartLocationId = value["place_id"];
+                        },
+                        isEditable: canBeEdited),
                     //TODO add callback, set initial value from db
                     SizedBox(height: 20),
                     MediumText("Tags"),
@@ -273,12 +271,15 @@ class RideViewPage extends StatelessWidget {
                       ),
                     ],
                     if (showCompleteRideButton)
-                      SubmitButton(
-                        value: "Mark ride as complete",
-                        callback: () async {
-                          await completeRide(ride);
-                          Navigator.of(context).pop();
-                        },
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: SubmitButton(
+                          value: "Mark ride as completed",
+                          callback: () async {
+                            await completeRide(ride);
+                            Navigator.of(context).pop();
+                          },
+                        ),
                       )
                   ],
                 ),
@@ -299,6 +300,7 @@ class RideViewPage extends StatelessWidget {
                               await createRide(
                                   // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
                                   RideModel.id(
+                                    //TODO   add DateTime rideDate, TimeOfDay rideStartTime, String rideMapLink, String rideStartLocationName, String rideStartLocationId to DB (variables already exist and are filled with data)
                                     participantsIds: [userId],
                                     isCompleted: false,
                                     title: titleController.text,
