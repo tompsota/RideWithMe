@@ -17,7 +17,9 @@ class CopyLinkButton extends StatelessWidget {
           children: [
             Text(
               value,
-              style: TextStyle(fontSize: 16.0, fontFamily: GoogleFonts.ptMono().fontFamily),
+              style: TextStyle(fontSize: 16.0, fontFamily: GoogleFonts
+                  .ptMono()
+                  .fontFamily),
             ),
             Icon(
               Icons.content_copy,
@@ -34,10 +36,20 @@ class CopyLinkButton extends StatelessWidget {
         ),
         onPressed: () {
           Clipboard.setData(ClipboardData(text: value)).then((result) {
-            // show toast or snackbar after successfully save
-            //TODO Fluttertoast.showToast(msg: "copied");
+            _showToast(context);
           });
         },
+      ),
+    );
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 5),
+        content: const Text('Copied to Clipboard'),
+        action: SnackBarAction(label: 'OK', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }

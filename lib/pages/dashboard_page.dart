@@ -14,7 +14,6 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: should add refresh button or does it get updated automatically? if a different user adds a new ride in real time,
     //   will the current user see the new ride? probably has to refresh? maybe pull down/scroll up on phone at the very top would
     //   trigger refresh (get current collection 'rides' from DB), while keeping the same filter?
@@ -25,97 +24,102 @@ class DashboardPage extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Consumer<UserStateController>(
-          builder: (context, userController, child) {
-            return SubmitButton(
-              value: "Add ride",
-              callback: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    // builder: (_) => RideViewPage()
-                    // TODO: why the fuck do I have to wrap it in another ChangeNotifierProvider, when this widget/Page can access UserStateController ?????
-                      builder: (_) => ChangeNotifierProvider.value(
-                          value: userController, child: RideViewPage()
-                      )
-                  )
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
+                child: SubmitButton(
+                    value: "FILTER RIDES",
+                    callback: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FilterRidesPage()),
+                      );
+                    }),
               ),
-            );
-          }
+            ),
+          ],
+        ),
+        // TODO: tried to place Consumer<RideFilterController> everywhere, it doesn't react to notifyListeners() from RideFilterController.applyFilter()
+        Expanded(
+          child: SingleChildScrollView(
+            child: Consumer<RideFilterController>(builder: (context, filterController, child) {
+              return StreamBuilder<QuerySnapshot>(
+                  // StreamBuilder<QuerySnapshot>(
+                  //   stream: _ridesStream,
+                  stream: FirebaseFirestore.instance.collection('rides').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    }
+
+                    // return Consumer<RideFilterController>(
+                    //   builder: (context, filterController, child) {
+                    return ListView(
+                        shrinkWrap: true,
+                        children: snapshot.data!.docs
+                            .map((doc) => RideModel.fromJson(doc.data()! as Map<String, dynamic>))
+                            // .where((ride) => Provider.of<RideFilterController>(context).getAppliedFilter().passes(ride))
+                            .where((ride) => filterController.getAppliedFilter().passes(ride))
+                            .map((ride) => FutureBuilder<RideModel?>(
+                                // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
+                                // we 'include' author for display
+                                // getFullRide(rideModel) fetches both author and participants
+                                // future: getFullRide(rideModel),
+                                future: getRideWithAuthor(ride),
+                                initialData: ride,
+                                builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
+                                  final ride = snapshot.data!;
+                                  return ListTile(
+                                      title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
+                                      subtitle: Text(
+                                          "author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
+                                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (_) => ChangeNotifierProvider.value(
+                                                value: Provider.of<UserStateController>(context),
+                                                child: RideViewPage(rideBeingEdited: ride),
+                                              ))));
+                                }))
+                            .toList());
+                  });
+            }),
+          ),
         ),
 
-    // TODO: tried to place Consumer<RideFilterController> everywhere, it doesn't react to notifyListeners() from RideFilterController.applyFilter()
-    Consumer<RideFilterController>(
-      builder: (context, filterController, child) {
-        return StreamBuilder<QuerySnapshot>(
-        // StreamBuilder<QuerySnapshot>(
-        //   stream: _ridesStream,
-          stream: FirebaseFirestore.instance.collection('rides').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Something went wrong');
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
-            }
-
-            // return Consumer<RideFilterController>(
-            //   builder: (context, filterController, child) {
-            return ListView(
-              shrinkWrap: true,
-              children: snapshot.data!.docs
-                .map((doc) => RideModel.fromJson(doc.data()! as Map<String, dynamic>))
-                // .where((ride) => Provider.of<RideFilterController>(context).getAppliedFilter().passes(ride))
-                .where((ride) => filterController.getAppliedFilter().passes(ride))
-                .map((ride) =>
-                  FutureBuilder<RideModel?>(
-                  // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
-                  // we 'include' author for display
-                  // getFullRide(rideModel) fetches both author and participants
-                  // future: getFullRide(rideModel),
-                    future: getRideWithAuthor(ride),
-                    initialData: ride,
-                    builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
-                      final ride = snapshot.data!;
-                      return ListTile(
-                        title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
-                        subtitle: Text("author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => ChangeNotifierProvider.value(
-                            value: Provider.of<UserStateController>(context),
-                            child: RideViewPage(rideBeingEdited: ride),
-                          )
-                        ))
-                      );
-                  })).toList()
-            );
-          }
-        );
-      }),
-
-        Spacer(),
-
-        SizedBox(
-          width: double.infinity,
-          child: SubmitButton(
-              value: "FILTER RIDES",
-              callback: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FilterRidesPage()),
-                );
-              }),
-        )
+        //todo maybe use this for 'add ride' button
+        // FloatingActionButton(
+        //   onPressed: () {},
+        //   tooltip: 'Increment',
+        //   child: const Icon(Icons.add),
+        // ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Consumer<UserStateController>(builder: (context, userController, child) {
+              return Expanded(
+                child: SubmitButton(
+                  value: "ADD RIDE",
+                  callback: () => Navigator.of(context).push(MaterialPageRoute(
+                      // builder: (_) => RideViewPage()
+                      // TODO: why the fuck do I have to wrap it in another ChangeNotifierProvider, when this widget/Page can access UserStateController ?????
+                      builder: (context) => ChangeNotifierProvider.value(value: userController, child: RideViewPage()))),
+                ),
+              );
+            }),
+          ],
+        ),
       ],
     );
   }
 }
 
-
-
-
-
 // ------------------[ old stuff ]----------------------
-
 
 //       return FutureBuilder<RideModel?>(
 //         // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
@@ -146,7 +150,6 @@ class DashboardPage extends StatelessWidget {
 //     );
 //   }
 // )
-
 
 // return ListView(
 //   shrinkWrap: true,
