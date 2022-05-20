@@ -102,8 +102,8 @@ class RideViewPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(ride?.author?.avatarURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
-                            // backgroundImage: NetworkImage(authUser.currentUser?.photoURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
+                            backgroundImage: NetworkImage(
+                                ride?.author?.avatarURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
                             maxRadius: 30,
                           ),
                         ),
@@ -165,18 +165,17 @@ class RideViewPage extends StatelessWidget {
                                   )
                                 : Stack(
                                     children:
-                                      // ride.participants.map((x) => Text(x.email)).toList(),
-                                      List.generate(
+                                        // ride.participants.map((x) => Text(x.email)).toList(),
+                                        List.generate(
                                       ride.participantsIds.length,
                                       (index) => Positioned(
                                         left: index * 12,
                                         child: CircleAvatar(
-                                        backgroundImage: NetworkImage(ride.participants[index].avatarURL),
-
-                                        maxRadius: 12,
+                                          backgroundImage: NetworkImage(ride.participants[index].avatarURL),
+                                          maxRadius: 12,
                                         ),
-                                        ),
-                                        ),
+                                      ),
+                                    ),
                                   )),
                       ),
                     ],
@@ -275,12 +274,20 @@ class RideViewPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              RideIconButton(icon: FontAwesomeIcons.facebook),
-                              RideIconButton(icon: FontAwesomeIcons.strava),
-                              RideIconButton(icon: FontAwesomeIcons.instagram),
-                              RideIconButton(icon: FontAwesomeIcons.google),
-                              RideIconButton(icon: FontAwesomeIcons.slack),
-                              RideIconButton(icon: FontAwesomeIcons.envelope),
+                              RideIconButton(
+                                  icon: FontAwesomeIcons.facebook, accountLink: 'facebook.com/' + ride!.authorId, serviceName: 'Facebook'),
+                              //TODO add username from db
+                              RideIconButton(
+                                  icon: FontAwesomeIcons.strava, accountLink: 'strava.com/' + ride!.authorId, serviceName: 'Strava'),
+                              RideIconButton(
+                                  icon: FontAwesomeIcons.instagram,
+                                  accountLink: 'instagram.com/' + ride!.authorId,
+                                  serviceName: 'Instagram'),
+                              RideIconButton(
+                                  icon: FontAwesomeIcons.google, accountLink: 'google.com/' + ride!.authorId, serviceName: 'Google'),
+                              RideIconButton(
+                                  icon: FontAwesomeIcons.slack, accountLink: 'slack.com/' + ride!.authorId, serviceName: 'Slack'),
+                              RideIconButton(icon: FontAwesomeIcons.envelope, accountLink: ride!.authorId, serviceName: 'Email'),
                             ],
                           ),
                         ),
