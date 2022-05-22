@@ -11,8 +11,6 @@ part 'ride_model.g.dart';
 
 typedef Unit = int;
 
-// TODO: needs to be immutable? then we need to create a new instance every time we want to change an attribute (e.g. add new participant)
-@immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class RideModel {
   @JsonKey(name: 'id')

@@ -19,7 +19,6 @@ Future<RideModel> rideFromJsonWithAuthor(Map<String, dynamic> json) async {
 
 Future<UserModel> userFromJsonFull(Map<String, dynamic> json) async {
   var user = UserModel.fromJson(json);
-  // TODO: getFullRides or getRides ??
   final createdRides = await getRidesByIds(user.createdRidesIds);
   final joinedRides = await getRidesByIds(user.joinedRidesIds);
   final completedRides = await getRidesByIds(user.completedRidesIds);

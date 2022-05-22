@@ -7,27 +7,14 @@ import '../models/ride_model.dart';
 
 class RideFilterController extends ChangeNotifier {
 
-  // final List<RideModel> _allRides = [];
-  List<RideModel> _allRides = [];
-  // List<RideModel> filteredRides = [];
-  List<RideModel> get visibleRides => List.unmodifiable(_allRides.where(_passesFilter));
-
-  // void setRides(List<RideModel> rides) {
-  //   _allRides = rides;
-  //   // _allRides.clear();
-  //   // _allRides.addAll(rides);
-  //   filterRides();
-  //   notifyListeners();
-  // }
-
-  // void filterRides() {
-  //   filteredRides = _allRides.where(_passesFilter).toList();
-  //   print('filtering rides');
-  //   notifyListeners();
-  // }
+  final List<RideModel> _allRides = [];
+  List<RideModel> get visibleRides => List.unmodifiable(_allRides.where(_appliedFilter.passesFilter));
 
   Future<void> refreshRides() async {
-    _allRides = await getAllRides();
+    // _allRides = await getAllRides();
+    final currentRides = await getAllRides();
+    _allRides.clear();
+    _allRides.addAll(currentRides);
     notifyListeners();
   }
 
@@ -36,57 +23,43 @@ class RideFilterController extends ChangeNotifier {
 
   void updateDate(DateTime newValue) {
     _currentFilter.selectedDate = newValue;
-    // notifyListeners();
   }
 
   void updateStartTime(TimeOfDay newValue) {
     _currentFilter.selectedStartTime = newValue;
-    // notifyListeners();
   }
 
   void updateFinishTime(TimeOfDay newValue) {
     _currentFilter.selectedFinishTime = newValue;
-    // notifyListeners();
   }
 
   void updateLocation(dynamic newValue) {
     _currentFilter.selectedLocation = newValue;
-    // notifyListeners();
   }
 
   void updateDistance(RangeValues newValue) {
     _currentFilter.selectedDistance = newValue;
-    // notifyListeners();
   }
 
   void updateClimbing(RangeValues newValue) {
     _currentFilter.selectedClimbing = newValue;
-    // notifyListeners();
   }
 
   void updateDuration(RangeValues newValue) {
     _currentFilter.selectedDuration = newValue;
-    // notifyListeners();
   }
 
   void updateAvgSpeed(RangeValues newValue) {
     _currentFilter.selectedAvgSpeed = newValue;
-    // notifyListeners();
   }
 
-  // TODO: commented out all the notifyListeners() in these updateXYZ methods
   void updateNrParticipants(RangeValues newValue) {
     _currentFilter.selectedNrParticipants = newValue;
-    // notifyListeners();
   }
 
-  // TODO: shouldn't notifyListeners() be only here and in resetFilters() ?
-  // otherwise we reload the Consumer widget with every update
   Future<void> applyFilter() async {
     _appliedFilter.update(_currentFilter);
-    // print('ride_filter_controller: applies filter: $_appliedFilter');
     await refreshRides();
-    // filterRides();
     notifyListeners();
   }
 
@@ -95,7 +68,7 @@ class RideFilterController extends ChangeNotifier {
     _currentFilter.update(_appliedFilter);
   }
 
-  //reset filters to default values
+  // resets filters to default values
   void resetFilters() {
     _currentFilter.reset();
     _appliedFilter.reset();
@@ -110,8 +83,8 @@ class RideFilterController extends ChangeNotifier {
     return _appliedFilter.selectedLocation == null ? "" : _appliedFilter.selectedLocation["description"];
   }
 
-  bool _passesFilter(RideModel ride) {
-    return ride.participantsIds.length >= _appliedFilter.selectedNrParticipants.start
-      && ride.participantsIds.length <= _appliedFilter.selectedNrParticipants.end;
-  }
+  // bool _passesFilter(RideModel ride) => _appliedFilter.passes(ride)
+  //   return ride.participantsIds.length >= _appliedFilter.selectedNrParticipants.start
+  //     && ride.participantsIds.length <= _appliedFilter.selectedNrParticipants.end;
+  // }
 }

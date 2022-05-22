@@ -53,7 +53,7 @@ Future<void> createRide(RideModel ride, UserStateController userController) asyn
     joinedRidesIds: user.joinedRidesIds,
     avatarURL: user.avatarURL,
   );
-  userController.addCreatedRide(ride.id);
+  // userController.addCreatedRide(ride.id);
   await updateUser(user.getId(), updatedUser);
 
   final rides = FirebaseFirestore.instance.collection('rides');
