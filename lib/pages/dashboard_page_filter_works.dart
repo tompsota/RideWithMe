@@ -6,7 +6,7 @@ import 'package:ride_with_me/pages/filter_rides_page.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ride_with_me/utils/db_utils.dart';
+import 'package:ride_with_me/utils/db/ride.dart';
 import '../models/ride_model.dart';
 
 class DashboardPage extends StatelessWidget {

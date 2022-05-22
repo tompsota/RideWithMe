@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/models/ride_model.dart';
-import 'package:ride_with_me/utils/from_json.dart';
+import 'package:ride_with_me/utils/db/from_json.dart';
 
 import '../models/user_model.dart';
 

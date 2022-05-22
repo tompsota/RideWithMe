@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
-import 'package:ride_with_me/utils/db_utils.dart';
 
 import '../utils/button.dart';
 import 'main_page.dart';

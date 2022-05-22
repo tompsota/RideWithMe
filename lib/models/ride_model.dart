@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ride_with_me/models/user_model.dart';
-import 'package:ride_with_me/utils/db_utils.dart';
 import 'package:uuid/uuid.dart';
 
 part 'ride_model.g.dart';

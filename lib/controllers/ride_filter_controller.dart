@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/models/filter_model.dart';
+import 'package:ride_with_me/utils/db/ride.dart';
 
 import '../models/ride_model.dart';
-import '../utils/db_utils.dart';
+
 
 class RideFilterController extends ChangeNotifier {
 

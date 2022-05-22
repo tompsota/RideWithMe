@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
+import 'package:ride_with_me/utils/db/user.dart';
 import 'package:ride_with_me/utils/prefix_text_input_field.dart';
 import 'package:ride_with_me/utils/text.dart';
 
 import '../models/user_model.dart';
 import '../utils/button.dart';
-import '../utils/db_utils.dart';
 import '../utils/ride_icon_button.dart';
 
 class ProfilePage extends StatefulWidget {
