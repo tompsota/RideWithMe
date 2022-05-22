@@ -1,7 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/models/filter_model.dart';
 
+import '../models/ride_model.dart';
+import '../utils/db_utils.dart';
+
 class RideFilterController extends ChangeNotifier {
+
+  // final List<RideModel> _allRides = [];
+  List<RideModel> _allRides = [];
+  // List<RideModel> filteredRides = [];
+  List<RideModel> get visibleRides => List.unmodifiable(_allRides.where(_passesFilter));
+
+  // void setRides(List<RideModel> rides) {
+  //   _allRides = rides;
+  //   // _allRides.clear();
+  //   // _allRides.addAll(rides);
+  //   filterRides();
+  //   notifyListeners();
+  // }
+
+  // void filterRides() {
+  //   filteredRides = _allRides.where(_passesFilter).toList();
+  //   print('filtering rides');
+  //   notifyListeners();
+  // }
+
+  Future<void> refreshRides() async {
+    _allRides = await getAllRides();
+    notifyListeners();
+  }
+
   final FilterModel _currentFilter = FilterModel();
   final FilterModel _appliedFilter = FilterModel();
 
@@ -53,9 +81,11 @@ class RideFilterController extends ChangeNotifier {
 
   // TODO: shouldn't notifyListeners() be only here and in resetFilters() ?
   // otherwise we reload the Consumer widget with every update
-  void applyFilter() {
+  Future<void> applyFilter() async {
     _appliedFilter.update(_currentFilter);
-    print('applies filter: $_appliedFilter');
+    // print('ride_filter_controller: applies filter: $_appliedFilter');
+    await refreshRides();
+    // filterRides();
     notifyListeners();
   }
 
@@ -77,5 +107,10 @@ class RideFilterController extends ChangeNotifier {
 
   String getFilterLocation() {
     return _appliedFilter.selectedLocation == null ? "" : _appliedFilter.selectedLocation["description"];
+  }
+
+  bool _passesFilter(RideModel ride) {
+    return ride.participantsIds.length >= _appliedFilter.selectedNrParticipants.start
+      && ride.participantsIds.length <= _appliedFilter.selectedNrParticipants.end;
   }
 }

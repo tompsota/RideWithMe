@@ -26,32 +26,9 @@ class DashboardPage extends StatelessWidget {
     // Provider.of<RideFilterController>(context, listen: false).setRides(rides);
 
     return Consumer<RideFilterController>(builder: (context, filterController, child) {
-    return Column(
+      return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-                // child: TextButton(
-                //     child: Text("REFRESH RIDES"),
-                //     onPressed: () async {
-                //       final allRides = await getAllRides();
-                //       filterController.setRides(allRides);
-                //     }),
-                child: SubmitButton(
-                    value: "REFRESH RIDES",
-                    callback: () async => filterController.refreshRides()
-                      // final allRides = await getAllRides();
-                      // filterController.setRides(allRides);
-                    // }
-                    ),
-              ),
-            ),
-          ],
-        ),
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -60,39 +37,26 @@ class DashboardPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
               child: SubmitButton(
                   value: "FILTER RIDES",
-                  callback: () async {
+                  callback: () {
                     Navigator.push(
                       context,
-                      // MaterialPageRoute(builder: (context) => FilterRidesPage()),
                       MaterialPageRoute(builder: (context) => ChangeNotifierProvider.value(value: filterController, child: FilterRidesPage())),
+                      // MaterialPageRoute(builder: (context) => FilterRidesPage()),
                     );
-                    // final allRides = await getAllRides();
-                    // filterController.setRides(allRides);
                   }),
             ),
           ),
         ],
       ),
-      // FutureBuilder<List<RideModel>>(
-      FutureBuilder<void>(
-        // future: getAllRides(),
-        future: filterController.refreshRides(),
-        initialData: [],
-        // builder: (BuildContext context, AsyncSnapshot<List<RideModel>> snapshot) {
-        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-          // add snapshot.hasData (etc.) checks
 
-          // final rides = snapshot.data ?? [];
-          // filterController.setRides(rides);
-          // Provider.of<RideFilterController>(context, listen: false).setRides(rides);
-          // return Consumer<RideFilterController>(builder: (context, filterController, child) {
-          //   Provider.of<RideFilterController>(context, listen: false).setRides(rides);
-          return Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-            child: ListView(
+    // Consumer<RideFilterController>(builder: (context, filterController, child) {
+            // Provider.of<RideFilterController>(context, listen: false).setRides(rides);
+            // var rides = filterController.filteredRides;
+            // return ListView(
+            ListView(
               shrinkWrap: true,
-              children: filterController.visibleRides
+              children: Provider.of<RideFilterController>(context).visibleRides // should be filteredRides, but other gives error, since filteredRides was removed
+              // children: Provider.of<RideFilterController>(context).filteredRides
               .map((ride) => FutureBuilder<RideModel?>(
                 // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
                 // we 'include' author for display
@@ -113,11 +77,8 @@ class DashboardPage extends StatelessWidget {
                       )
                     )));
                 }))
-              .toList())
-              )
-          );
-        }),
-
+              .toList()),
+        // }),
 
 
     //todo maybe use this for 'add ride' button
@@ -131,8 +92,6 @@ class DashboardPage extends StatelessWidget {
       children: [
         Consumer<UserStateController>(builder: (context, userController, child) {
           return Expanded(
-              child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
             child: SubmitButton(
               value: "ADD RIDE",
               callback: () => Navigator.of(context).push(MaterialPageRoute(
@@ -140,13 +99,13 @@ class DashboardPage extends StatelessWidget {
                   // TODO: why the fuck do I have to wrap it in another ChangeNotifierProvider, when this widget/Page can access UserStateController ?????
                   builder: (context) => ChangeNotifierProvider.value(value: userController, child: RideViewPage()))),
             ),
-          ));
+          );
         }),
       ],
     ),
   ],);
-  });
-}
+    });
+  }
 }
 
 // ------------------[ old stuff ]----------------------

@@ -66,6 +66,11 @@ Future<RideModel?> getFullRideById(String id) async {
   }
 }
 
+Future<List<RideModel>> getAllRides() async {
+  final rideSnapshots = await FirebaseFirestore.instance.collection('rides').get();
+  return rideSnapshots.docs.map((doc) => RideModel.fromJson(doc.data())).toList();
+}
+
 Future<List<RideModel>> getRidesByIds(List<String> ids) async {
   final rideSnapshots = await FirebaseFirestore.instance.collection('rides').get();
   final filteredDocs = rideSnapshots.docs.where((doc) => ids.contains(doc.id));

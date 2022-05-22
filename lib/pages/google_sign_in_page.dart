@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/utils/db_utils.dart';
 
 import '../utils/button.dart';
 import 'main_page.dart';
@@ -129,11 +130,23 @@ class GoogleSignInPage extends StatelessWidget {
 
                     // TODO: add 'ensureCreated' that returns UserModel (creates new document if there is not a document with authUser.email)
 
+                    
+                    // final rides = await getAllRides();
+                    // final ridesFilterController = RideFilterController();
+                    // ridesFilterController.setRides(rides);
+                    //
                     final userStateController = await UserStateController.create();
+                    
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
+                          // builder: (context) => MultiProvider(
+                          //     providers: [
+                          //       ChangeNotifierProvider.value(value: userStateController),
+                          //       ChangeNotifierProvider.value(value: ridesFilterController)
+                          //     ],
+                          //     child: const MainPage())),
                       (_) => false,
                     );
 

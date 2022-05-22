@@ -51,6 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
               final instagramController = TextEditingController(text: user.aboutMe);
               final googleController = TextEditingController(text: user.aboutMe);
               final slackController = TextEditingController(text: user.aboutMe);
+              // TODO: probably shouldn't be able to change email - otherwise we have to also change the document ID (since it uses email)
               final emailController = TextEditingController(text: user.email);
 
               return Scaffold(
