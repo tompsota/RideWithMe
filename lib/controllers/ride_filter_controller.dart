@@ -11,14 +11,20 @@ class RideFilterController extends ChangeNotifier {
 
   final List<RideModel> _allRides = [];
   List<RideModel> get visibleRides => List.unmodifiable(_allRides.where(_appliedFilter.passesFilter));
+  List<RideModel> filteredRides = [];
 
   Future<void> refreshRides() async {
     // _allRides = await getAllRides();
     // TODO: remove after testing
-    sleep(Duration(seconds:1));
+    // await Future.delayed(Duration(seconds: 1));
+    // sleep(Duration(seconds:1));
     final currentRides = await getAllRides();
     _allRides.clear();
     _allRides.addAll(currentRides);
+    // print('refresh: ${_allRides.length}');
+    // filteredRides = _allRides.where(_appliedFilter.passesFilter).toList();
+    // print('refresh - all rides: ${_allRides.length}');
+    // print('refresh - filtered rides: ${filteredRides.length}');
     notifyListeners();
   }
 

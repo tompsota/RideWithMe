@@ -11,6 +11,7 @@ part 'ride_model.g.dart';
 
 typedef Unit = int;
 
+@immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class RideModel {
   @JsonKey(name: 'id')

@@ -33,11 +33,12 @@ class MainPage extends StatelessWidget {
             )),
         body: TabBarView(
           children: [
-            ChangeNotifierProvider(
-              create: (_) => RideFilterController(),
-              child: DashboardPage(),
-            ),
-            // DashboardPage(),
+            // ChangeNotifierProvider(
+            //   create: (_) => RideFilterController(),
+            //   child: DashboardPage(),
+            // ),
+            // ChangeNotifierProvider.value(value: Provider.of<RideFilterController>(context), child: DashboardPage(),),
+            DashboardPage(),
             ProfilePage()
           ],
         ),

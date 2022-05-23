@@ -47,17 +47,21 @@ class FilterModel {
     final passesNrParticipants = _passesRange(selectedNrParticipants, ride.participantsIds.length);
     final passesDistance = _passesRange(selectedDistance, ride.distance);
     final passesClimbing = _passesRange(selectedClimbing, ride.climbing);
-    final passesDuration = _passesRange(selectedDuration, ride.duration);
+    // final passesDuration = _passesRange(selectedDuration, ride.duration);
     final passesAvgSpeed = _passesRange(selectedAvgSpeed, ride.averageSpeed);
     // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
 
-    return [
+    final passesList = [
       passesNrParticipants,
       passesAvgSpeed,
       passesDistance,
-      passesClimbing,
-      passesDuration
-    ].every((x) => x);
+      passesClimbing
+      // passesDuration
+    ];
+    // print(passesList);
+    final passes = passesList.every((x) => x);
+    // print('Passes: $passes');
+    return passes;
   }
 
   // what about double accuracy?

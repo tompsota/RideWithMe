@@ -6,5 +6,5 @@ RangeValues defaultDistance = RangeValues(0, 500);
 RangeValues defaultClimbing = RangeValues(0, 10000);
 // TODO: duration should have values of type Duration?
 RangeValues defaultDuration = RangeValues(0, 18);
-RangeValues defaultAvgSpeed = RangeValues(5, 50);
+RangeValues defaultAvgSpeed = RangeValues(0, 50);
 RangeValues defaultNrParticipants = RangeValues(0, 20);
