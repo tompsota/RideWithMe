@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/models/filter_model.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
@@ -12,6 +14,8 @@ class RideFilterController extends ChangeNotifier {
 
   Future<void> refreshRides() async {
     // _allRides = await getAllRides();
+    // TODO: remove after testing
+    sleep(Duration(seconds:1));
     final currentRides = await getAllRides();
     _allRides.clear();
     _allRides.addAll(currentRides);

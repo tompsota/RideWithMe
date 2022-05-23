@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
@@ -58,6 +60,8 @@ class DashboardPage extends StatelessWidget {
           initialData: [],
           // builder: (BuildContext context, AsyncSnapshot<List<RideModel>> snapshot) {
           builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            // TODO: remove after testing
+            sleep(Duration(seconds:1));
             return Expanded(
               // child: SingleChildScrollView(
                 child: Padding(
