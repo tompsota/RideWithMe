@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/domain_layer/user_repository.dart';
 import 'package:ride_with_me/utils/db/user.dart';
 
 import '../models/user_model.dart';
@@ -14,7 +17,7 @@ class UserStateController extends ChangeNotifier {
   UserStateController._create();
 
   /// Public factory
-  static Future<UserStateController> create() async {
+  static Future<UserStateController> create(UsersRepository usersRepository) async {
     final authUser = FirebaseAuth.instance.currentUser;
     final email = authUser?.email;
     var controller = UserStateController._create();
@@ -25,19 +28,20 @@ class UserStateController extends ChangeNotifier {
 
     // TODO: add try catch?
     final users = FirebaseFirestore.instance.collection('users');
+    // TODO: use UsersRepository method
     final userSnapshot = await users.doc(email).get();
     if (userSnapshot.exists) {
       // we load the full user, so that when we enter ProfilePage, we already have precise InitialData (and the fetch will only update some values, if any)
-      final user = UserModel.fromJson(userSnapshot.data()!);
-      controller.user = await getFullUser(user);
+      final user = usersRepository.getUserByEmail(authUser.email ?? "");
+      // controller.user = await getFullUser(user);
     } else {
-      Future<void> addUser(UserModel user) {
-        return users
-            .doc(email)
-            .set(user.toJson())
-            .then((value) => print("User added - ${user.email}."))
-            .catchError((error) => print("Failed to add user - ${user.email}: $error"));
-      }
+      // Future<void> addUser(UserModel user) {
+      //   return users
+      //       .doc(email)
+      //       .set(user.toJson())
+      //       .then((value) => print("User added - ${user.email}."))
+      //       .catchError((error) => print("Failed to add user - ${user.email}: $error"));
+      // }
 
       var userFirstName = authUser.displayName ?? "";
       var userLastName = "";
@@ -49,14 +53,14 @@ class UserStateController extends ChangeNotifier {
         }
       }
 
-      final newUser = UserModel(
+      final newUser = UserModel.id(
           email: email ?? "",
           firstName: userFirstName,
           lastName: userLastName,
           aboutMe: "No info.",
-          avatarURL: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg"
+          avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg"
       );
-      await addUser(newUser);
+      await usersRepository.createUser(newUser);
       controller.user = newUser;
     }
 

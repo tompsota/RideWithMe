@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
 
 import '../utils/button.dart';
 import '../utils/db/ride.dart';
@@ -133,11 +134,12 @@ class GoogleSignInPage extends StatelessWidget {
                     
                     // final rides = await getAllRides();
                     final ridesFilterController = RideFilterController();
-                    await ridesFilterController.refreshRides();
+                    // await ridesFilterController.refreshRides();
                     // ridesFilterController.filteredRides = rides;
                     // ridesFilterController.visibleRides = rides;
 
-                    final userStateController = await UserStateController.create();
+                    final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
+                    final userStateController = await UserStateController.create(usersRepository);
                     
                     Navigator.pushAndRemoveUntil(
                       context,
