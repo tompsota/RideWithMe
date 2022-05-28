@@ -8,26 +8,21 @@ import 'package:uuid/uuid.dart';
 
 part 'user_model.g.dart';
 
-@immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class UserModel {
+
   // we use email as ID (primary key)
   @JsonKey(name: 'email')
   final String email;
+
   @JsonKey(name: 'firstName')
   final String firstName;
+
   @JsonKey(name: 'lastName')
   final String lastName;
 
-  // avatar / profile pic URL
   @JsonKey(name: 'avatarURL')
   final String avatarURL;
-
-  // bike model
-  // final String bike;
-
-  // we might wanna display age
-  // final DateTime birthDate;
 
   @JsonKey(name: 'aboutMe')
   final String aboutMe;
@@ -42,21 +37,13 @@ class UserModel {
   final List<String> createdRidesIds;
 
   // ID's of rides the user took part in
-  // 'completedRides' / 'joinedRides' (Figma) ?
-  // the user can click the 'I'll participate button' in RideDetail,
+  // > the user can click the 'I'll participate button' in RideDetail,
   //   and the ride's ID will be added to this list
-  //   - when user clicks on RideDetail, we can check if user.joinedRides contains the ride's ID - that means he is currently participating
-  //     - we could then display different button to leave the ride (and remove that ID from user.joinedRides)
-  // then the number of completed rides is different though (basically joinedRides that have already happened)
-  // - ideally we would keep a separate list for completedRides? but we would have to update that regularly based on starting date of a race
-  // - as soon as ride happens, for every participant, we will remove that ride's ID from joinedRides and add it to completedRides
-  // - in our case, we could start the update/recalculation as soon as user starts app (if other users could view our profile, then it would show old stats)
-  // - maybe the easiest/smartest solution would be to make author label the ride as finished (ride could have attribute 'state': {finished, cancelled, pending, ...}),
-  //    which will trigger the update
-  //    - author also has the ability to cancel the race / postpone it (e.g. because of bad weather conditions / whatever)
   final List<String> joinedRidesIds;
 
-  // rides the user has finished
+  // ID's of rides the uer has finished
+  // > ride has to be marked as 'Completed' by the author - ride's ID will
+  //   be removed from joinedRidesIds, and added to completedRidesIds
   final List<String> completedRidesIds;
 
   @JsonKey(ignore: true)
@@ -66,10 +53,12 @@ class UserModel {
   @JsonKey(ignore: true)
   late List<RideModel> completedRides;
 
-  // TODO: save image to 'firebase/storage'
-  // TODO: use RouteMaster ?
-
-  UserModel({required this.email, required this.firstName, required this.lastName, this.aboutMe = 'No info', required this.avatarURL,
+  UserModel({
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.avatarURL,
+    this.aboutMe = 'No info',
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
     this.completedRidesIds = const [],

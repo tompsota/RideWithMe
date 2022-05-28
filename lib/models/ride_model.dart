@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ride_with_me/models/user_model.dart';
-import 'package:ride_with_me/utils/db_utils.dart';
 import 'package:uuid/uuid.dart';
 
 part 'ride_model.g.dart';
@@ -12,7 +11,6 @@ part 'ride_model.g.dart';
 
 typedef Unit = int;
 
-// TODO: needs to be immutable? then we need to create a new instance every time we want to change an attribute (e.g. add new participant)
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class RideModel {

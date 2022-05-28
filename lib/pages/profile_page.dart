@@ -5,12 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
+import 'package:ride_with_me/utils/db/user.dart';
 import 'package:ride_with_me/utils/prefix_text_input_field.dart';
 import 'package:ride_with_me/utils/text.dart';
 
 import '../models/user_model.dart';
 import '../utils/button.dart';
-import '../utils/db_utils.dart';
 import '../utils/ride_icon_button.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -51,6 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
               final instagramController = TextEditingController(text: user.aboutMe);
               final googleController = TextEditingController(text: user.aboutMe);
               final slackController = TextEditingController(text: user.aboutMe);
+              // TODO: probably shouldn't be able to change email - otherwise we have to also change the document ID (since it uses email)
               final emailController = TextEditingController(text: user.email);
 
               return Scaffold(

@@ -170,9 +170,9 @@ class FilterRidesPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
         child: SubmitButton(
             value: "APPLY FILTERS",
-            callback: () {
+            callback: () async {
               Navigator.of(context).pop();
-              Provider.of<RideFilterController>(context, listen: false).applyFilter();
+              await Provider.of<RideFilterController>(context, listen: false).applyFilter();
             }),
       ),
     );

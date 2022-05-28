@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
+import 'package:ride_with_me/utils/db/ride.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 import 'package:ride_with_me/utils/title_button.dart';
@@ -17,7 +19,6 @@ import '../utils/address_search.dart';
 import '../utils/button.dart';
 import '../utils/copy_link_button.dart';
 import '../utils/date_picker.dart';
-import '../utils/db_utils.dart';
 import '../utils/duration_picker.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
@@ -58,7 +59,6 @@ class RideViewPage extends StatelessWidget {
           String rideMapLink;
           String rideStartLocationName;
           String rideStartLocationId;
-          // TODO: change to double ?
           int rideDistance = 0;
           int rideAverageSpeed = 0;
           int rideClimbing = 0;
@@ -75,8 +75,6 @@ class RideViewPage extends StatelessWidget {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    //TODO make this readonly if ride is viewed
-                    // TODO: keep either callback or textController, not both
                     Expanded(
                         child: TitleButton(
                       isEnabled: isBeingCreated,
@@ -165,7 +163,6 @@ class RideViewPage extends StatelessWidget {
                                   )
                                 : Stack(
                                     children:
-                                        // ride.participants.map((x) => Text(x.email)).toList(),
                                         List.generate(
                                       ride.participantsIds.length,
                                       (index) => Positioned(
@@ -255,9 +252,6 @@ class RideViewPage extends StatelessWidget {
                           rideTags = tags;
                         }),
 
-                    // link to share with friends should be displayed always? (or not when ride is complete? - to look at results?)
-                    // author/host contact info should be displayed at all times?
-                    // change 'author' to 'host' in display?
                     if (!isBeingCreated) ...[
                       SizedBox(height: 20),
                       MediumText("Link to share with friends"),
@@ -310,8 +304,8 @@ class RideViewPage extends StatelessWidget {
             ),
             bottomNavigationBar: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              //  also, ride should have a bool "finished/completed", which can be set (once?) by the author ("Mark ride as finished/complete") - if this is set,
-              //  no info can be edited anymore and the ride's ID is added to participant's "completedRides"
+              //  ride can be marked as "completed", which can be set (once) by the author ("Mark ride as finished/complete")
+              //  - if this is set, no info can be edited anymore and the ride's ID is added to participant's "completedRides"
               child: (ride != null && ride.isCompleted)
                   // TODO: improve design - maybe grayed out?
                   ? Text('Ride is already completed')
@@ -337,16 +331,20 @@ class RideViewPage extends StatelessWidget {
                                   ),
                                   userController);
                               Navigator.of(context).pop();
+                              // refresh rides, so that DashboardPage gets updated automatically
+                              await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                             }
                           : (userIsParticipating
                               ? () async {
                                   // user that is participating clicked on "Leave ride"
                                   await leaveRide(ride!, userController);
                                   Navigator.of(context).pop();
+                                  await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                                 }
                               : () async {
                                   await joinRide(ride!, userController);
                                   Navigator.of(context).pop();
+                                  await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                                 })),
             ),
           );

@@ -2,22 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ride_with_me/utils/db/user.dart';
 
 import '../models/user_model.dart';
-import '../utils/db_utils.dart';
 
 class UserStateController extends ChangeNotifier {
 
-  // waiting to get UserModel from DB might be too slow sometimes
+  // we retrieve UserModel from DB
   late UserModel user;
 
-  // TODO extra: could create variable 'stateChanged: bool', and then we wouldn't have to reload user every time we switch to ProfilePage
-  //      however, we don't have information about CompletedRides, since it's created independently of that user's actions
-  //      - it's created when ride's author marks the ride as completed
-
-  // create default/empty user so that we don't have to deal with nullable
-  // but then we have to use 'late' keyword
-  UserStateController._create() {}
+  UserStateController._create();
 
   /// Public factory
   static Future<UserStateController> create() async {
@@ -69,56 +63,43 @@ class UserStateController extends ChangeNotifier {
     return controller;
   }
 
-
-  // adds rideId to a list of create rides - we are the author (after clicking on 'Create ride' button)
-  // Future<void> addCreatedRide(String rideId) async {
-  void addCreatedRide(String rideId) async {
-    var updatedCreatedRidesIds = user.createdRidesIds;
-    updatedCreatedRidesIds.add(rideId);
-    UserModel newUser = UserModel(
-        lastName: user.lastName,
-        firstName: user.firstName,
-        email: user.email,
-        aboutMe: user.aboutMe,
-        avatarURL: user.avatarURL,
-        createdRidesIds: updatedCreatedRidesIds,
-        completedRidesIds: user.completedRidesIds,
-        joinedRidesIds: user.joinedRidesIds,
-    );
-    // await updateDB(newUser);
-    user = newUser;
-    notifyListeners();
-  }
-
-  // adds rideId to a list of joined rides (after clicking on 'I will participate' button)
-  // Future<void> addJoinedRide(String rideId) async {
-  void addJoinedRide(String rideId) async {
-    var updatedJoinedRidesIds = user.joinedRidesIds;
-    updatedJoinedRidesIds.add(rideId);
-    UserModel newUser = UserModel(
-        lastName: user.lastName,
-        firstName: user.firstName,
-        email: user.email,
-        aboutMe: user.aboutMe,
-        avatarURL: user.avatarURL,
-        createdRidesIds: user.createdRidesIds,
-        completedRidesIds: user.completedRidesIds,
-        joinedRidesIds: updatedJoinedRidesIds
-    );
-    // await updateDB(newUser);
-    user = newUser;
-    notifyListeners();
-  }
-
-  // DB shouldn't be handled inside state controller IMO,
-  // Future<void> updateDB(UserModel updatedUser) async {
-  //   return FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(user.getId())
-  //       .update(updatedUser.toJson())
-  //       .then((_) => print('Updated user - ${updatedUser.email}'))
-  //       .catchError((error) => print('Update failed: $error'));
+  // TODO: probably can be removed, since this only updates UserStateController.user, and doesn't actually update DB (that's done elsewhere)
+  // void addCreatedRide(String rideId) async {
+  //   var updatedCreatedRidesIds = user.createdRidesIds;
+  //   updatedCreatedRidesIds.add(rideId);
+  //   UserModel newUser = UserModel(
+  //       lastName: user.lastName,
+  //       firstName: user.firstName,
+  //       email: user.email,
+  //       aboutMe: user.aboutMe,
+  //       avatarURL: user.avatarURL,
+  //       createdRidesIds: updatedCreatedRidesIds,
+  //       completedRidesIds: user.completedRidesIds,
+  //       joinedRidesIds: user.joinedRidesIds,
+  //   );
+  //   user = newUser;
+  //   notifyListeners();
   // }
+  //
+  // // adds rideId to a list of joined rides (after clicking on 'I will participate' button)
+  // // Future<void> addJoinedRide(String rideId) async {
+  // void addJoinedRide(String rideId) async {
+  //   var updatedJoinedRidesIds = user.joinedRidesIds;
+  //   updatedJoinedRidesIds.add(rideId);
+  //   UserModel newUser = UserModel(
+  //       lastName: user.lastName,
+  //       firstName: user.firstName,
+  //       email: user.email,
+  //       aboutMe: user.aboutMe,
+  //       avatarURL: user.avatarURL,
+  //       createdRidesIds: user.createdRidesIds,
+  //       completedRidesIds: user.completedRidesIds,
+  //       joinedRidesIds: updatedJoinedRidesIds
+  //   );
+  //   user = newUser;
+  //   notifyListeners();
+  // }
+
 
   void updateUser(UserModel newUser) {
     user = newUser;

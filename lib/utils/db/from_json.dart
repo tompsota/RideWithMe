@@ -1,6 +1,8 @@
-import '../models/ride_model.dart';
-import '../models/user_model.dart';
-import 'db_utils.dart';
+import 'package:ride_with_me/models/ride_model.dart';
+import 'package:ride_with_me/models/user_model.dart';
+import 'package:ride_with_me/utils/db/ride.dart';
+import 'package:ride_with_me/utils/db/user.dart';
+
 
 Future<RideModel> rideFromJsonFull(Map<String, dynamic> json) async {
   var ride = RideModel.fromJson(json);
@@ -17,7 +19,6 @@ Future<RideModel> rideFromJsonWithAuthor(Map<String, dynamic> json) async {
 
 Future<UserModel> userFromJsonFull(Map<String, dynamic> json) async {
   var user = UserModel.fromJson(json);
-  // TODO: getFullRides or getRides ??
   final createdRides = await getRidesByIds(user.createdRidesIds);
   final joinedRides = await getRidesByIds(user.joinedRidesIds);
   final completedRides = await getRidesByIds(user.completedRidesIds);

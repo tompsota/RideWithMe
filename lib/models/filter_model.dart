@@ -43,14 +43,31 @@ class FilterModel {
 
   // TODO: add all conditions
   // might wanna add check for 'COMPLETED' (either attribute or using DateTime.now())
-  bool passes(RideModel ride) {
-    // return selectedDuration.start <= ride.duration && ride.duration <= selectedDuration.end
-    final passesNrParticipants =
-        selectedNrParticipants.start <= ride.participantsIds.length &&
-        ride.participantsIds.length <= selectedNrParticipants.end;
-    print('ride with ${ride.participantsIds.length} participants - passes: $passesNrParticipants');
-    return passesNrParticipants;
-    // return selectedDistance.start <= ride.distance && ride.distance <= selectedDistance.end;
-    // return selectedAvgSpeed.start <= ride.averageSpeed && ride.averageSpeed <= selectedAvgSpeed.end;
+  bool passesFilter(RideModel ride) {
+    final passesNrParticipants = _passesRange(selectedNrParticipants, ride.participantsIds.length);
+    final passesDistance = _passesRange(selectedDistance, ride.distance);
+    final passesClimbing = _passesRange(selectedClimbing, ride.climbing);
+    // final passesDuration = _passesRange(selectedDuration, ride.duration);
+    final passesAvgSpeed = _passesRange(selectedAvgSpeed, ride.averageSpeed);
+    // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
+
+    final passesList = [
+      passesNrParticipants,
+      passesAvgSpeed,
+      passesDistance,
+      passesClimbing
+      // passesDuration
+    ];
+    // print(passesList);
+    final passes = passesList.every((x) => x);
+    // print('Passes: $passes');
+    return passes;
   }
+
+  // what about double accuracy?
+  // check: https://pub.dev/documentation/dart_numerics/latest/dart_numerics/almostEqualNumbersBetween.html
+  bool _passesRange(RangeValues filterRange, dynamic rideValue) {
+    return rideValue >= filterRange.start && rideValue <= filterRange.end;
+  }
+
 }
