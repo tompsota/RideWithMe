@@ -67,8 +67,8 @@ class RideViewPage extends StatelessWidget {
 
       final authUser = FirebaseAuth.instance;
       // TODO: replace with Provider.of call ?
-      final dbRepository = getDbRepository();
-      // final dbRepository = Provider.of<DbRepository>(context, listen: false);
+      // final dbRepository = getDbRepository();
+      final dbRepository = Provider.of<DbRepository>(context, listen: false);
       final usersRepository = dbRepository.usersRepository;
       final ridesRepository = dbRepository.ridesRepository;
 

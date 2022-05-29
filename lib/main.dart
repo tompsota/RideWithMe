@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => RideFilterController()),
         ChangeNotifierProvider(create: (context) => NewRideController()),
+        ChangeNotifierProvider(create: (_) => DbRepository(ridesApi: FirestoreRidesApi(), usersApi: FirestoreUsersApi())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -50,11 +51,8 @@ class MyApp extends StatelessWidget {
         // home: FirebaseAuth.instance.currentUser == null ? InitialPage() :
         // ChangeNotifierProvider(create: (_) => UserStateController(user: FirebaseAuth.instance.currentUser), child: MainPage()),
         // home: GoogleSignInPage(),
-        home: ChangeNotifierProvider(
-          // TODO: possibly use e.g. GetIt for DI
-          create: (_) => DbRepository(ridesApi: FirestoreRidesApi(), usersApi: FirestoreUsersApi()),
-          child: GoogleSignInPage()
-        )
+        home: GoogleSignInPage()
+
       ),
     );
   }
