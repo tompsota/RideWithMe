@@ -4,6 +4,7 @@ import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/pages/google_sign_in_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
+import 'package:ride_with_me/controllers/new_ride_controller.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'data_layer/apis/firestore_rides_api.dart';
@@ -26,8 +27,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RideFilterController(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => RideFilterController()),
+        ChangeNotifierProvider(create: (context) => NewRideController()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Ride With Me",

@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ride_with_me/utils/text.dart';
 
-class RideNumberPicker extends StatefulWidget {
-  int minValue;
-  int maxValue;
-  String units;
-  bool isEditable;
-  ValueChanged<int> callback;
+class RideNumberPicker extends StatelessWidget {
+  final int minValue;
+  final int maxValue;
+  final String units;
+  final bool isEditable;
+  final ValueChanged<int> callback;
+  int currentValue;
 
   // TODO: change int to double ?
 
-  RideNumberPicker({Key? key, required this.minValue, required this.maxValue, required this.units, required this.isEditable, required this.callback})
+  RideNumberPicker(
+      {Key? key,
+      required this.minValue,
+      required this.maxValue,
+      required this.units,
+      required this.isEditable,
+      required this.callback,
+      required this.currentValue})
       : super(key: key);
-
-  @override
-  State<RideNumberPicker> createState() => _RideNumberPickerState();
-}
-
-class _RideNumberPickerState extends State<RideNumberPicker> {
-  int _currentValue = 20;
-  late NumberPicker integerNumberPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: OutlinedButton(
         onPressed: () {
-          widget.isEditable ? _showDialog() : null;
+          isEditable ? _showDialog(context) : null;
         },
         style: OutlinedButton.styleFrom(
           side: BorderSide(width: 2.0, color: Colors.transparent),
@@ -41,11 +41,11 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
           child: Row(
             children: [
               Text(
-                _currentValue.toString() + " " + widget.units,
+                currentValue.toString() + " " + units,
                 style: TextStyle(color: Colors.grey, fontSize: 20),
               ),
-              if (widget.isEditable) Spacer(),
-              if (widget.isEditable) Icon(Icons.edit, color: Colors.grey),
+              if (isEditable) Spacer(),
+              if (isEditable) Icon(Icons.edit, color: Colors.grey),
             ],
           ),
         ),
@@ -53,7 +53,7 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
     );
   }
 
-  void _showDialog() {
+  void _showDialog(BuildContext context) {
     showDialog<int>(
         context: context,
         builder: (BuildContext context) {
@@ -64,15 +64,15 @@ class _RideNumberPickerState extends State<RideNumberPicker> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   NumberPicker(
-                      value: _currentValue,
-                      minValue: widget.minValue,
-                      maxValue: widget.maxValue,
+                      value: currentValue,
+                      minValue: minValue,
+                      maxValue: maxValue,
                       onChanged: (value) {
-                        setState(() => _currentValue = value); // to change on widget level state
-                        builderSetState(() => _currentValue = value); //* to change on dialog state
-                        widget.callback(_currentValue);
+                        currentValue = value; // to change on widget level state
+                        builderSetState(() => currentValue = value); //* to change on dialog state
+                        callback(currentValue);
                       }),
-                  MediumText(widget.units),
+                  MediumText(units),
                 ],
               );
             }),

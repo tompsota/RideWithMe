@@ -1,24 +1,10 @@
 import 'package:flutter/material.dart';
 
-class UserInputField extends StatefulWidget {
-  UserInputField({Key? key, required this.initialValue ,required this.callback}) : super(key: key);
+class UserInputField extends StatelessWidget {
+  UserInputField({Key? key, required this.callback, required this.controller}) : super(key: key);
 
-  final initialValue;
   final callback;
-
-  @override
-  _UserInputFieldState createState() => _UserInputFieldState();
-}
-
-class _UserInputFieldState extends State<UserInputField> {
-  final _controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.text = widget.initialValue;
-  }
-
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +13,7 @@ class _UserInputFieldState extends State<UserInputField> {
       child: Align(
         alignment: Alignment.topCenter,
         child: TextField(
-          controller: _controller,
+          controller: controller,
           decoration: InputDecoration(
             hintText: "Add link to your ride",
             focusColor: Colors.white,
@@ -36,8 +22,8 @@ class _UserInputFieldState extends State<UserInputField> {
             suffixIcon: IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                _controller.clear();
-                widget.callback("");
+                controller.clear();
+                callback("");
               },
             ),
             fillColor: Colors.white,
@@ -48,8 +34,8 @@ class _UserInputFieldState extends State<UserInputField> {
                 borderRadius: BorderRadius.circular(15.0), borderSide: BorderSide(color: Colors.transparent, width: 3.0)),
           ),
           onSubmitted: (value) {
-            _controller.text = value;
-            widget.callback(value);
+            controller.text = value;
+            callback(value);
           },
         ),
       ),
