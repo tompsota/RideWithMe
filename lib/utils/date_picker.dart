@@ -1,25 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_with_me/models/filter_model.dart';
+import '../controllers/ride_filter_controller.dart';
 import 'callback_types.dart';
 
-class DatePicker extends StatefulWidget {
+class DatePicker extends StatelessWidget {
   final callback;
-  DateTime initialValue;
-  bool isEditable;
+  final DateTime currentValue;
+  final bool isEditable;
 
-  DatePicker({Key? key, required this.callback, required this.initialValue, required this.isEditable}) : super(key: key);
-
-  @override
-  _DatePickerState createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  DateTime _selectedDate = DateTime.now();
-
-  @override
-  void initState() {
-    _selectedDate = widget.initialValue;
-  }
+  DatePicker({Key? key, required this.callback, required this.currentValue, required this.isEditable}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +18,14 @@ class _DatePickerState extends State<DatePicker> {
       alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
-          widget.isEditable ? _selectDate(context) : null;
+          isEditable ? _selectDate(context) : null;
         },
         style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,
           primary: Colors.black,
         ),
         child: Text(
-          DateFormat.MMMEd().format(_selectedDate),
+          DateFormat.MMMEd().format(currentValue),
           style: TextStyle(fontSize: 16),
         ),
       ),
@@ -43,12 +34,9 @@ class _DatePickerState extends State<DatePicker> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked =
-        await showDatePicker(context: context, initialDate: _selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        widget.callback(_selectedDate);
-      });
+        await showDatePicker(context: context, initialDate: currentValue, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
+    if (picked != null) {
+      callback(picked);
     }
   }
 }

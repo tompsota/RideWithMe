@@ -5,29 +5,28 @@ import 'package:uuid/uuid.dart';
 
 import '../data_layer/dtos/ride.dart';
 
-
 typedef Unit = int;
 
 class RideModel {
 
-  final String id;
-  final String title;
-  final String authorId;
-  final DateTime createdAt;
-  final List<String> participantsIds;
-  final bool isCompleted;
+  String id;
+  String title;
+  String authorId;
+  DateTime createdAt;
+  List<String> participantsIds;
+  bool isCompleted;
 
   // TODO: change data type? (to dynamic? will DB accept this? maybe 'json' data type?)
-  // final String location;
+  // String location;
 
-  // final double latitude;
-  // final double longitude;
+  // double latitude;
+  // double longitude;
 
-  final Unit averageSpeed;
-  final Unit distance;
-  final Unit climbing;
-  final Duration duration;
-  final List<String> tags;
+  Unit averageSpeed;
+  Unit distance;
+  Unit climbing;
+  Duration duration;
+  List<String> tags;
 
   late UserModel? author;
   late List<UserModel> participants;

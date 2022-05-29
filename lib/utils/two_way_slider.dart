@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ride_with_me/utils/callback_types.dart';
 
-class TwoWaySlider extends StatefulWidget {
+import '../controllers/ride_filter_controller.dart';
+
+class TwoWaySlider extends StatelessWidget {
   final RangeValuesCallback callback;
   final RangeValues span;
   final RangeValues initialSpan;
+  RangeValues currentValues;
   final String units;
 
   TwoWaySlider({
@@ -13,36 +17,22 @@ class TwoWaySlider extends StatefulWidget {
     required this.initialSpan,
     required this.callback,
     required this.units,
+    required this.currentValues,
   }) : super(key: key);
-
-  @override
-  _TwoWaySliderState createState() => _TwoWaySliderState();
-}
-
-class _TwoWaySliderState extends State<TwoWaySlider> {
-  late RangeValues _currentRangeValues;
-
-  @override
-  void initState() {
-    _currentRangeValues = widget.initialSpan;
-  }
 
   @override
   Widget build(BuildContext context) {
     return RangeSlider(
-      values: _currentRangeValues,
-      min: widget.span.start,
-      max: widget.span.end,
-      divisions: widget.span.end.toInt(),
+      values: currentValues,
+      min: span.start,
+      max: span.end,
+      divisions: span.end.toInt(),
       labels: RangeLabels(
-        _currentRangeValues.start.round().toString() + " " + widget.units, //TODO find nicer way to do this
-        _currentRangeValues.end.round().toString() + " " + widget.units,
+        currentValues.start.round().toString() + " " + units, //TODO find nicer way to do this
+        currentValues.end.round().toString() + " " + units,
       ),
       onChanged: (RangeValues values) {
-        setState(() {
-          _currentRangeValues = values;
-          widget.callback(_currentRangeValues);
-        });
+        callback(values);
       },
     );
   }

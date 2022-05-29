@@ -2,20 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:ride_with_me/utils/text.dart';
 
-class DurationPicker extends StatefulWidget {
+class DurationPicker extends StatelessWidget {
   bool isEditable;
   ValueChanged<Duration> callback;
+  Duration currentValue;
 
-  DurationPicker({Key? key, required this.isEditable, required this.callback}) : super(key: key);
-
-  @override
-  State<DurationPicker> createState() => _DurationPickerState();
-}
-
-class _DurationPickerState extends State<DurationPicker> {
-  int _currentValueHours = 20;
-  int _currentValueMins = 20;
-  late NumberPicker integerNumberPicker;
+  DurationPicker({Key? key, required this.isEditable, required this.callback, required this.currentValue}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +15,7 @@ class _DurationPickerState extends State<DurationPicker> {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: OutlinedButton(
           onPressed: () {
-            widget.isEditable ? _showDialog() : null;
+            isEditable ? _showDialog(context) : null;
           },
           style: OutlinedButton.styleFrom(
             side: BorderSide(width: 2.0, color: Colors.transparent),
@@ -36,18 +28,18 @@ class _DurationPickerState extends State<DurationPicker> {
             child: Row(
               children: [
                 Text(
-                  _currentValueHours.toString() + " h   " + _currentValueMins.toString() + " min",
+                  currentValue.inHours.toString() + " h   " + currentValue.inMinutes.remainder(60).toString() + " min",
                   style: TextStyle(color: Colors.grey, fontSize: 20),
                 ),
-                if (widget.isEditable) Spacer(),
-                if (widget.isEditable) Icon(Icons.edit, color: Colors.grey),
+                if (isEditable) Spacer(),
+                if (isEditable) Icon(Icons.edit, color: Colors.grey),
               ],
             ),
           ),
         ));
   }
 
-  void _showDialog() {
+  void _showDialog(BuildContext context) {
     showDialog<int>(
         context: context,
         builder: (BuildContext context) {
@@ -57,23 +49,24 @@ class _DurationPickerState extends State<DurationPicker> {
               return Row(
                 children: [
                   NumberPicker(
-                      value: _currentValueHours,
+                      value: currentValue.inHours,
                       minValue: 0,
                       maxValue: 23,
                       onChanged: (value) {
-                        setState(() => _currentValueHours = value); // to change on widget level state
-                        builderSetState(() => _currentValueHours = value); //* to change on dialog state
-                        widget.callback(Duration(hours: _currentValueHours, minutes: _currentValueMins));
+                        currentValue = Duration(hours: value, minutes: currentValue.inMinutes.remainder(60));
+                        builderSetState(
+                            () => Duration(hours: value, minutes: currentValue.inMinutes.remainder(60))); //* to change on dialog state
+                        callback(Duration(hours: value, minutes: currentValue.inMinutes.remainder(60)));
                       }),
                   MediumText("h"),
                   NumberPicker(
-                      value: _currentValueMins,
+                      value: currentValue.inMinutes.remainder(60),
                       minValue: 0,
                       maxValue: 59,
                       onChanged: (value) {
-                        setState(() => _currentValueMins = value); // to change on widget level state
-                        builderSetState(() => _currentValueMins = value); //* to change on dialog state
-                        widget.callback(Duration(hours: _currentValueHours, minutes: _currentValueMins));
+                        currentValue = Duration(hours: currentValue.inHours, minutes: value);
+                        builderSetState(() => Duration(hours: currentValue.inHours, minutes: value)); //* to change on dialog state
+                        callback(Duration(hours: currentValue.inHours, minutes: value));
                       }),
                   MediumText("min"),
                 ],

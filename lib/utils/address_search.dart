@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/utils/callback_types.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -105,7 +104,7 @@ class _AddressSearchState extends State<AddressSearch> {
                     title: Text(_placeList[index]["description"]),
                     onTap: () {
                       _controller.text = _placeList[index]["description"];
-                      widget.callback(_placeList[index]);
+                      widget.callback(_placeList[index]["description"]);
                       _isVisibleListview = false;
                     },
                   );

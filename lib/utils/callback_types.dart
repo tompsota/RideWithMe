@@ -4,5 +4,4 @@ import 'package:flutter/material.dart';
 
 typedef TimeOfDayCallback = void Function(TimeOfDay);
 typedef DateTimeCallback = void Function(DateTime);
-typedef DynamicCallback = void Function(dynamic);
 typedef RangeValuesCallback = void Function(RangeValues);

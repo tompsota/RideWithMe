@@ -8,7 +8,7 @@ class FilterModel {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedStartTime = defaultStartTime;
   TimeOfDay selectedFinishTime = defaultFinishTime;
-  dynamic selectedLocation;
+  String selectedLocation = "";
   RangeValues selectedDistance = defaultDistance;
   RangeValues selectedClimbing = defaultClimbing;
   RangeValues selectedDuration = defaultDuration;
@@ -20,7 +20,7 @@ class FilterModel {
     selectedDate = DateTime.now();
     selectedStartTime = defaultStartTime;
     selectedFinishTime = defaultFinishTime;
-    selectedLocation = null;
+    selectedLocation = "";
     selectedDistance = defaultDistance;
     selectedClimbing = defaultClimbing;
     selectedDuration = defaultDuration;
