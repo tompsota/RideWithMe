@@ -1,15 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/components/user_contact_icons.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/controllers/new_ride_controller.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
-import 'package:ride_with_me/utils/db/ride.dart';
-import 'package:ride_with_me/utils/ride/ride_participants_icons.dart';
-import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 import 'package:ride_with_me/utils/title_button.dart';
 import 'package:ride_with_me/utils/user_input_field.dart';
@@ -18,7 +15,6 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../controllers/user_state_controller.dart';
 import '../models/ride_model.dart';
-import '../models/user_model.dart';
 import '../utils/address_search.dart';
 import '../utils/button.dart';
 import '../utils/copy_link_button.dart';
@@ -26,7 +22,6 @@ import '../utils/date_picker.dart';
 import '../utils/duration_picker.dart';
 import '../utils/filters.dart';
 import '../utils/ride/ride_participants.dart';
-import '../utils/temp/get_db_repository.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
 
@@ -172,7 +167,7 @@ class RideViewPage extends StatelessWidget {
                         Expanded(
                           child: TimePicker(
                               callback: (time) => {_newRideProvider.setRideStartTime(time)},
-                              time: TimeOfDay.now(), //todo
+                              time: _newRideProvider.getRideStartTime(),
                               isEditable: canBeEdited),
                         ),
                         if (canBeEdited) Icon(Icons.edit, color: Colors.grey),
@@ -254,27 +249,9 @@ class RideViewPage extends StatelessWidget {
                     SizedBox(height: 20),
                     MediumText("Contact host"),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RideIconButton(
-                                icon: FontAwesomeIcons.facebook, accountLink: 'facebook.com/' + ride!.authorId, serviceName: 'Facebook'),
-                            //TODO add username from db
-                            RideIconButton(
-                                icon: FontAwesomeIcons.strava, accountLink: 'strava.com/' + ride!.authorId, serviceName: 'Strava'),
-                            RideIconButton(
-                                icon: FontAwesomeIcons.instagram, accountLink: 'instagram.com/' + ride!.authorId, serviceName: 'Instagram'),
-                            RideIconButton(
-                                icon: FontAwesomeIcons.google, accountLink: 'google.com/' + ride!.authorId, serviceName: 'Google'),
-                            RideIconButton(icon: FontAwesomeIcons.slack, accountLink: 'slack.com/' + ride!.authorId, serviceName: 'Slack'),
-                            RideIconButton(icon: FontAwesomeIcons.envelope, accountLink: ride!.authorId, serviceName: 'Email'),
-                          ],
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: UserContactIcons(user: userController.user) //todo chcelo by to model autora, nie toho co je prihlaseny
                         ),
-                      ),
-                    ),
                   ],
                   if (showCompleteRideButton)
                     Container(

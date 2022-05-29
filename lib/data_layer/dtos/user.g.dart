@@ -12,6 +12,11 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       avatarUrl: json['avatarUrl'] as String,
+      facebookAccount: json['facebook'] as String,
+      googleAccount: json['google'] as String,
+      instagramAccount: json['instagram'] as String,
+      slackAccount: json['slack'] as String,
+      stravaAccount: json['strava'] as String,
       aboutMe: json['aboutMe'] as String? ?? 'No info',
       createdRidesIds: (json['createdRidesIds'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -34,6 +39,11 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'lastName': instance.lastName,
       'avatarUrl': instance.avatarUrl,
       'aboutMe': instance.aboutMe,
+      'facebook': instance.facebookAccount,
+      'strava': instance.stravaAccount,
+      'instagram': instance.instagramAccount,
+      'google': instance.googleAccount,
+      'slack': instance.slackAccount,
       'createdRidesIds': instance.createdRidesIds,
       'joinedRidesIds': instance.joinedRidesIds,
       'completedRidesIds': instance.completedRidesIds,

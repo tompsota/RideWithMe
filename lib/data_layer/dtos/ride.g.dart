@@ -19,6 +19,10 @@ Ride _$RideFromJson(Map<String, dynamic> json) => Ride(
       climbing: json['climbing'] as int,
       duration: Duration(microseconds: json['duration'] as int),
       tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+      rideStartLocationName: json['location'] as String,
+      rideMapLink: json['mapLink'] as String,
+      rideDate: DateTime.parse(json['date'] as String),
+      rideStartTime: json['startTime'] as String,
     );
 
 Map<String, dynamic> _$RideToJson(Ride instance) => <String, dynamic>{
@@ -27,6 +31,10 @@ Map<String, dynamic> _$RideToJson(Ride instance) => <String, dynamic>{
       'authorId': instance.authorId,
       'participantsIds': instance.participantsIds,
       'isCompleted': instance.isCompleted,
+      'location': instance.rideStartLocationName,
+      'date': instance.rideDate.toIso8601String(),
+      'startTime': instance.rideStartTime,
+      'mapLink': instance.rideMapLink,
       'averageSpeed': instance.averageSpeed,
       'distance': instance.distance,
       'climbing': instance.climbing,

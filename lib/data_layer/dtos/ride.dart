@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ride_with_me/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'ride.g.dart';
@@ -27,7 +27,6 @@ typedef Unit = int;
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Ride {
-
   @JsonKey(name: 'id')
   final String id;
 
@@ -47,10 +46,17 @@ class Ride {
   @JsonKey(name: 'isCompleted')
   final bool isCompleted;
 
-  // TODO: add to DB; change data type?
-  // final String location;
-  // final double latitude;
-  // final double longitude;
+  @JsonKey(name: 'location')
+  final String rideStartLocationName;
+
+  @JsonKey(name: 'date')
+  final DateTime rideDate;
+
+  @JsonKey(name: 'startTime')
+  final String rideStartTime;
+
+  @JsonKey(name: 'mapLink')
+  final String rideMapLink;
 
   // in km/h
   @JsonKey(name: 'averageSpeed')
@@ -82,20 +88,27 @@ class Ride {
     required this.climbing,
     required this.duration,
     required this.tags,
+    required this.rideStartLocationName,
+    required this.rideMapLink,
+    required this.rideDate,
+    required this.rideStartTime,
   }) : createdAt = DateTime.now();
 
   Ride.id({
     required this.title,
     required this.authorId,
-    required this.participantsIds,  // could default to [authorId]
-    required this.isCompleted,  // could default to false
+    required this.participantsIds, // could default to [authorId]
+    required this.isCompleted, // could default to false
     required this.averageSpeed,
     required this.distance,
     required this.climbing,
     required this.duration,
     required this.tags,
-  }):
-        id = Uuid().v4(),
+    required this.rideStartLocationName,
+    required this.rideMapLink,
+    required this.rideDate,
+    required this.rideStartTime,
+  })  : id = Uuid().v4(),
         createdAt = DateTime.now();
 
   /// Returns a copy of this ride with the given values updated.
@@ -109,7 +122,11 @@ class Ride {
     Unit? distance,
     Unit? climbing,
     Duration? duration,
-    List<String>? tags
+    List<String>? tags,
+    String? rideStartLocationName,
+    String? rideMapLink,
+    DateTime? rideDate,
+    String? rideStartTime,
   }) {
     return Ride(
       id: id ?? this.id,
@@ -122,9 +139,14 @@ class Ride {
       climbing: climbing ?? this.climbing,
       duration: duration ?? this.duration,
       tags: tags ?? this.tags,
+      rideDate: rideDate ?? this.rideDate,
+      rideMapLink: rideMapLink ?? this.rideMapLink,
+      rideStartLocationName: rideStartLocationName ?? this.rideStartLocationName,
+      rideStartTime: rideStartTime ?? this.rideStartTime,
     );
   }
 
   factory Ride.fromJson(Map<String, dynamic> json) => _$RideFromJson(json);
+
   Map<String, dynamic> toJson() => _$RideToJson(this);
 }

@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:ride_with_me/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,7 +6,6 @@ import '../data_layer/dtos/ride.dart';
 typedef Unit = int;
 
 class RideModel {
-
   String id;
   String title;
   String authorId;
@@ -16,11 +13,10 @@ class RideModel {
   List<String> participantsIds;
   bool isCompleted;
 
-  // TODO: change data type? (to dynamic? will DB accept this? maybe 'json' data type?)
-  // String location;
-
-  // double latitude;
-  // double longitude;
+  String rideStartLocationName;
+  String rideMapLink;
+  DateTime rideDate;
+  String rideStartTime;
 
   Unit averageSpeed;
   Unit distance;
@@ -43,6 +39,10 @@ class RideModel {
     required this.title,
     required this.authorId,
     required this.id,
+    required this.rideStartLocationName,
+    required this.rideMapLink,
+    required this.rideDate,
+    required this.rideStartTime,
     this.author,
     this.participants = const [],
   });
@@ -58,37 +58,49 @@ class RideModel {
     required this.isCompleted,
     required this.title,
     required this.authorId,
+    required this.rideStartLocationName,
+    required this.rideMapLink,
+    required this.rideDate,
+    required this.rideStartTime,
     this.author,
     this.participants = const [],
-  }): id = Uuid().v4();
+  }) : id = Uuid().v4();
 
   factory RideModel.fromDto(Ride ride) => RideModel(
-      createdAt: ride.createdAt,
-      averageSpeed: ride.averageSpeed,
-      distance: ride.distance,
-      climbing: ride.climbing,
-      duration: ride.duration,
-      tags: ride.tags,
-      participantsIds: ride.participantsIds,
-      isCompleted: ride.isCompleted,
-      title: ride.title,
-      authorId: ride.authorId,
-      id: ride.id
-  );
+        createdAt: ride.createdAt,
+        averageSpeed: ride.averageSpeed,
+        distance: ride.distance,
+        climbing: ride.climbing,
+        duration: ride.duration,
+        tags: ride.tags,
+        participantsIds: ride.participantsIds,
+        isCompleted: ride.isCompleted,
+        title: ride.title,
+        authorId: ride.authorId,
+        id: ride.id,
+        rideStartLocationName: ride.rideStartLocationName,
+        rideMapLink: ride.rideMapLink,
+        rideDate: ride.rideDate,
+        rideStartTime: ride.rideStartTime,
+      );
 
   Ride toDto() => Ride(
-      id: id,
-      title: title,
-      authorId: authorId,
-      participantsIds: participantsIds,
-      isCompleted: isCompleted,
-      averageSpeed: averageSpeed,
-      distance: distance,
-      climbing: climbing,
-      duration: duration,
-      tags: tags
-  );
+        id: id,
+        title: title,
+        authorId: authorId,
+        participantsIds: participantsIds,
+        isCompleted: isCompleted,
+        averageSpeed: averageSpeed,
+        distance: distance,
+        climbing: climbing,
+        duration: duration,
+        tags: tags,
+        rideStartLocationName: rideStartLocationName,
+        rideMapLink: rideMapLink,
+        rideDate: rideDate,
+        rideStartTime: rideStartTime,
+      );
 
-  // factory RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
-  // Map<String, dynamic> toJson() => _$RideModelToJson(this);
+// factory RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
+// Map<String, dynamic> toJson() => _$RideModelToJson(this);
 }
