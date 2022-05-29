@@ -1,17 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_model.dart';
+part of 'user.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
+User _$UserFromJson(Map<String, dynamic> json) => User(
+      id: json['id'] as String,
       email: json['email'] as String,
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
+      avatarUrl: json['avatarUrl'] as String,
       aboutMe: json['aboutMe'] as String? ?? 'No info',
-      avatarURL: json['avatarURL'] as String,
       createdRidesIds: (json['createdRidesIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -26,11 +27,12 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
           const [],
     );
 
-Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+      'id': instance.id,
       'email': instance.email,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
-      'avatarURL': instance.avatarURL,
+      'avatarUrl': instance.avatarUrl,
       'aboutMe': instance.aboutMe,
       'createdRidesIds': instance.createdRidesIds,
       'joinedRidesIds': instance.joinedRidesIds,

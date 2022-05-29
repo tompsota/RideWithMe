@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
+import 'package:ride_with_me/utils/ride/ride_participants_icons.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 import 'package:ride_with_me/utils/title_button.dart';
@@ -15,11 +17,15 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../controllers/user_state_controller.dart';
 import '../models/ride_model.dart';
+import '../models/user_model.dart';
 import '../utils/address_search.dart';
 import '../utils/button.dart';
 import '../utils/copy_link_button.dart';
 import '../utils/date_picker.dart';
 import '../utils/duration_picker.dart';
+import '../utils/filters.dart';
+import '../utils/ride/ride_participants.dart';
+import '../utils/temp/get_db_repository.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
 
@@ -31,11 +37,13 @@ class RideViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final ride = await getFullRide(rideBeingEdited!);
-    return FutureBuilder<RideModel?>(
-      future: getFullRide(rideBeingEdited),
-      builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
+    // return FutureBuilder<RideModel?>(
+    //   future: getFullRide(rideBeingEdited),
+    //   builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
         return Consumer<UserStateController>(builder: (context, userController, child) {
-          final ride = snapshot.data;
+          // final ride = snapshot.data;
+
+          final ride = rideBeingEdited;
 
           final userId = userController.user.email;
           final isBeingCreated = rideBeingEdited == null;
@@ -65,6 +73,11 @@ class RideViewPage extends StatelessWidget {
           List<String> rideTags = [];
 
           final authUser = FirebaseAuth.instance;
+          // TODO: replace with Provider.of call ?
+          final dbRepository = getDbRepository();
+          // final dbRepository = Provider.of<DbRepository>(context, listen: false);
+          final usersRepository = dbRepository.usersRepository;
+          final ridesRepository = dbRepository.ridesRepository;
 
           return Scaffold(
             appBar: AppBar(
@@ -101,7 +114,7 @@ class RideViewPage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                ride?.author?.avatarURL ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
+                                ride?.author?.avatarUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
                             maxRadius: 30,
                           ),
                         ),
@@ -140,40 +153,10 @@ class RideViewPage extends StatelessWidget {
                         child: Padding(
                             padding: const EdgeInsets.only(top: 12),
                             child: ride == null
-                                ?
-                                // : Text("Loading...")
-                                // some placeholder text/images before we load participants from DB
-                                Stack(
-                                    children: [
-                                      ...List.generate(
-                                        12,
-                                        (index) => Positioned(
-                                          left: index * 12,
-                                          child: CircleAvatar(
-                                            backgroundImage: index.isEven
-                                                ? NetworkImage(
-                                                    'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg')
-                                                : NetworkImage(
-                                                    'https://portswigger.net/cms/images/63/12/0c8b-article-211117-linux-rng.jpg'),
-                                            maxRadius: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Stack(
-                                    children:
-                                        List.generate(
-                                      ride.participantsIds.length,
-                                      (index) => Positioned(
-                                        left: index * 12,
-                                        child: CircleAvatar(
-                                          backgroundImage: NetworkImage(ride.participants[index].avatarURL),
-                                          maxRadius: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  )),
+                                ? RideParticipants(participantsStream: null)
+                                : RideParticipants(participantsStream: usersRepository.getUsers(Filters.isParticipant(ride)))
+                                // : RideParticipants(participantsStream: usersRepository.getUsers())
+                        )
                       ),
                     ],
                     SizedBox(height: 50),
@@ -293,7 +276,8 @@ class RideViewPage extends StatelessWidget {
                         child: SubmitButton(
                           value: "Mark ride as completed",
                           callback: () async {
-                            await completeRide(ride);
+
+                            // await completeRide(ride);
                             Navigator.of(context).pop();
                           },
                         ),
@@ -313,43 +297,46 @@ class RideViewPage extends StatelessWidget {
                       value: isBeingCreated ? "CREATE RIDE" : (userIsParticipating ? "LEAVE RIDE" : "I'LL PARTICIPATE"),
                       callback: isBeingCreated
                           ? () async {
+                        // TODO: use RidesRepository method
                               // createRide in DB
-                              await createRide(
-                                  // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
-                                  RideModel.id(
-                                    //TODO   add DateTime rideDate, TimeOfDay rideStartTime, String rideMapLink, String rideStartLocationName, String rideStartLocationId to DB (variables already exist and are filled with data)
-                                    participantsIds: [userId],
-                                    isCompleted: false,
-                                    title: titleController.text,
-                                    authorId: userId,
-                                    distance: rideDistance,
-                                    climbing: rideClimbing,
-                                    createdAt: DateTime.now(),
-                                    tags: rideTags,
-                                    averageSpeed: rideAverageSpeed,
-                                    duration: rideDuration,
-                                  ),
-                                  userController);
+                              // await createRide(
+                              //     // RideModel.id(participantsIds: [userId], isCompleted: false, title: rideTitle, authorId: userId),
+                              //     RideModel.id(
+                              //       //TODO   add DateTime rideDate, TimeOfDay rideStartTime, String rideMapLink, String rideStartLocationName, String rideStartLocationId to DB (variables already exist and are filled with data)
+                              //       participantsIds: [userId],
+                              //       isCompleted: false,
+                              //       title: titleController.text,
+                              //       authorId: userId,
+                              //       distance: rideDistance,
+                              //       climbing: rideClimbing,
+                              //       createdAt: DateTime.now(),
+                              //       tags: rideTags,
+                              //       averageSpeed: rideAverageSpeed,
+                              //       duration: rideDuration,
+                              //     ),
+                              //     userController);
                               Navigator.of(context).pop();
                               // refresh rides, so that DashboardPage gets updated automatically
-                              await Provider.of<RideFilterController>(context, listen: false).refreshRides();
+                              // await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                             }
                           : (userIsParticipating
                               ? () async {
+                            // TODO: use RidesRepository method
                                   // user that is participating clicked on "Leave ride"
-                                  await leaveRide(ride!, userController);
+                                  // await leaveRide(ride!, userController);
                                   Navigator.of(context).pop();
-                                  await Provider.of<RideFilterController>(context, listen: false).refreshRides();
+                                  // await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                                 }
                               : () async {
-                                  await joinRide(ride!, userController);
+                        // TODO: use RidesRepository method
+                        //           await joinRide(ride!, userController);
                                   Navigator.of(context).pop();
-                                  await Provider.of<RideFilterController>(context, listen: false).refreshRides();
+                                  // await Provider.of<RideFilterController>(context, listen: false).refreshRides();
                                 })),
             ),
           );
         });
-      },
-    );
+    //   },
+    // );
   }
 }

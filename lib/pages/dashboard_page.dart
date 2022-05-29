@@ -4,36 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/data_layer/apis/firestore_users_api.dart';
+import 'package:ride_with_me/domain_layer/rides_repository.dart';
 import 'package:ride_with_me/pages/filter_rides_page.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
+import 'package:ride_with_me/utils/ride/rides_stream_builder.dart';
+import '../data_layer/apis/firestore_rides_api.dart';
+import '../data_layer/apis/rides_api.dart';
+import '../domain_layer/db_repository.dart';
 import '../models/ride_model.dart';
+import '../utils/filters.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final dbRepository = Provider.of<DbRepository>(context, listen: false);
+    final ridesRepository = dbRepository.ridesRepository;
+    
     return Consumer<RideFilterController>(builder: (context, filterController, child) {
+
+      final ridesFilter = filterController.getAppliedFilter();
+      final ridesStream = ridesRepository.getFullRides(Filters.passesRidesFilter(ridesFilter));
+
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-                  child: SubmitButton(
-                    value: "REFRESH RIDES",
-                    callback: () async => filterController.refreshRides(),
-                  ),
-                ),
-              ),
-            ],
-          ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -59,36 +60,7 @@ class DashboardPage extends StatelessWidget {
             // child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: filterController.visibleRides.map((ride) => FutureBuilder<RideModel?>(
-                    // for filters we don't need participants or author (for number of participants we have ride.participantsIds)
-                    // we 'include' author for display ; getFullRide(ride) would fetch both author and participants
-                    future: getRideWithAuthor(ride),
-                    initialData: ride,
-                    builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
-                      // TODO: add snapshot.hasData (etc.) checks
-                      final ride = snapshot.data!;
-                      return ListTile(
-                        title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
-                        subtitle: Text(
-                          "author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
-                        onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) =>
-                          //     ChangeNotifierProvider.value(
-                          //   value: Provider.of<UserStateController>(context),
-                          //   child: RideViewPage(rideBeingEdited: ride),
-                          // )
-                            MultiProvider(providers: [
-                              ChangeNotifierProvider.value(value: Provider.of<UserStateController>(context)),
-                              ChangeNotifierProvider.value(value: filterController),
-                            ],
-                            child: RideViewPage(rideBeingEdited: ride),
-                          )
-                        )));
-                    }))
-                  .toList()
-                ),
+                child: RidesStreamBuilder(ridesStream: ridesStream),
               ),
             // ),
           ),
