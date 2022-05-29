@@ -11,10 +11,12 @@ import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
+import 'package:ride_with_me/utils/ride/rides_stream_builder.dart';
 import '../data_layer/apis/firestore_rides_api.dart';
 import '../data_layer/apis/rides_api.dart';
 import '../domain_layer/db_repository.dart';
 import '../models/ride_model.dart';
+import '../utils/filters.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -23,8 +25,13 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final dbRepository = Provider.of<DbRepository>(context, listen: false);
-
+    final ridesRepository = dbRepository.ridesRepository;
+    
     return Consumer<RideFilterController>(builder: (context, filterController, child) {
+
+      final ridesFilter = filterController.getAppliedFilter();
+      final ridesStream = ridesRepository.getFullRides(Filters.passesRidesFilter(ridesFilter));
+
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -53,46 +60,7 @@ class DashboardPage extends StatelessWidget {
             // child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-                child: StreamBuilder<List<RideModel>>(
-                  stream: dbRepository.ridesRepository.getFullRides(),
-                  builder: (BuildContext context, AsyncSnapshot<List<RideModel>> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Something went wrong');
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text("Loading");
-                    }
-
-                    if (!snapshot.hasData) {
-                      return Text("No rides to show.");
-                    }
-
-                    return ListView(
-                        shrinkWrap: true,
-                        children: snapshot.data!.map((ride) {
-                          return ListTile(
-                            title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
-                            subtitle: Text(
-                              "author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
-                            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) =>
-                              //     ChangeNotifierProvider.value(
-                              //   value: Provider.of<UserStateController>(context),
-                              //   child: RideViewPage(rideBeingEdited: ride),
-                              // )
-                                MultiProvider(providers: [
-                                  ChangeNotifierProvider.value(value: dbRepository),
-                                  ChangeNotifierProvider.value(value: Provider.of<UserStateController>(context)),
-                                  ChangeNotifierProvider.value(value: filterController),
-                                ],
-                                child: RideViewPage(rideBeingEdited: ride),
-                              )
-                            )));
-                          }).toList(),
-                    );
-                  },
-                )
+                child: RidesStreamBuilder(ridesStream: ridesStream),
               ),
             // ),
           ),

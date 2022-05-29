@@ -12,7 +12,7 @@ class RideListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(ride.title),
+        title: Text('${ride.title}  ${(ride.isCompleted) ? "(COMPLETED)" : ""}'),
         subtitle: Text("author: ${ride.author?.getFullName() ?? "Unknown"}, participants: ${ride.participantsIds.length}"),
 //         onTap: () =>
 //             Navigator.of(context).push(MaterialPageRoute(
