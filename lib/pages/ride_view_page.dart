@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
+import 'package:ride_with_me/utils/ride/ride_participants_icons.dart';
 import 'package:ride_with_me/utils/ride_icon_button.dart';
 import 'package:ride_with_me/utils/ride_number_picker.dart';
 import 'package:ride_with_me/utils/title_button.dart';
@@ -15,11 +17,14 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../controllers/user_state_controller.dart';
 import '../models/ride_model.dart';
+import '../models/user_model.dart';
 import '../utils/address_search.dart';
 import '../utils/button.dart';
 import '../utils/copy_link_button.dart';
 import '../utils/date_picker.dart';
 import '../utils/duration_picker.dart';
+import '../utils/filters.dart';
+import '../utils/ride/ride_participants.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
 
@@ -67,6 +72,9 @@ class RideViewPage extends StatelessWidget {
           List<String> rideTags = [];
 
           final authUser = FirebaseAuth.instance;
+          final dbRepository = Provider.of<DbRepository>(context, listen: false);
+          final usersRepository = dbRepository.usersRepository;
+          final ridesRepository = dbRepository.ridesRepository;
 
           return Scaffold(
             appBar: AppBar(
@@ -142,40 +150,9 @@ class RideViewPage extends StatelessWidget {
                         child: Padding(
                             padding: const EdgeInsets.only(top: 12),
                             child: ride == null
-                                ?
-                                // : Text("Loading...")
-                                // some placeholder text/images before we load participants from DB
-                                Stack(
-                                    children: [
-                                      ...List.generate(
-                                        12,
-                                        (index) => Positioned(
-                                          left: index * 12,
-                                          child: CircleAvatar(
-                                            backgroundImage: index.isEven
-                                                ? NetworkImage(
-                                                    'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg')
-                                                : NetworkImage(
-                                                    'https://portswigger.net/cms/images/63/12/0c8b-article-211117-linux-rng.jpg'),
-                                            maxRadius: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Stack(
-                                    children:
-                                        List.generate(
-                                      ride.participantsIds.length,
-                                      (index) => Positioned(
-                                        left: index * 12,
-                                        child: CircleAvatar(
-                                          backgroundImage: NetworkImage(ride.participants[index].avatarUrl),
-                                          maxRadius: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  )),
+                                ? RideParticipants(participantsStream: null)
+                                : RideParticipants(participantsStream: usersRepository.getUsers(Filters.isParticipant(ride)))
+                        )
                       ),
                     ],
                     SizedBox(height: 50),

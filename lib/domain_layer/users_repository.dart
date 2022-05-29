@@ -20,15 +20,15 @@ class UsersRepository {
 
   /// Provides a [Stream] of all users.
   // TODO: rename 'filter' to something else
-  Stream<List<UserModel>> getUsers(bool Function(UserModel) filter) => _usersApi
-      .getUsers()
-      .map((users) {
-    return users
-        .map((user) => UserModel.fromDto(user))
-        .where((userModel) => filter(userModel))
-        .toList();
-  })
-      .asBroadcastStream();
+  Stream<List<UserModel>> getUsers([bool Function(UserModel)? filter]) {
+    return _usersApi
+        .getUsers()
+        .map((users) => users
+          .map((user) => UserModel.fromDto(user))
+          .where(filter ?? (_) => true)
+          .toList())
+        .asBroadcastStream();
+  }
 
   // TODO: change to getUserById or something similar ??
   // (we don't have access to Id tho, since we use randomly generated Uuid, and not firebaseAuth.user.uid)

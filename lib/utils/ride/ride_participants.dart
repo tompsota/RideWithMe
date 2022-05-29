@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+import 'package:ride_with_me/utils/ride/ride_list_tile.dart';
+import 'package:ride_with_me/utils/ride/ride_participants_icons.dart';
+
+import '../../models/ride_model.dart';
+import '../../models/user_model.dart';
+
+// TODO: rename to something better ?
+class RideParticipants extends StatelessWidget {
+
+  final Stream<List<UserModel>>? participantsStream;
+
+  RideParticipants({Key? key, required this.participantsStream}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (participantsStream == null) {
+      return RideParticipantsIcons(participants: null);
+    }
+
+    return StreamBuilder<List<UserModel>>(
+        stream: participantsStream,
+        builder: (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong!');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading participants ...");
+          }
+
+          if (!snapshot.hasData || snapshot.data?.length == 0) {
+            return Text("No participants... (yet)");
+          }
+
+          return RideParticipantsIcons(participants: snapshot.data!);
+        },
+    );
+  }
+}
+

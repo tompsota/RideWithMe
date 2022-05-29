@@ -4,6 +4,7 @@ import 'package:ride_with_me/utils/ride/rides_list_view.dart';
 
 import '../../models/ride_model.dart';
 
+// TODO: probably rename to something better
 class RidesStreamBuilder extends StatelessWidget {
 
   final Stream<List<RideModel>> ridesStream;

@@ -10,8 +10,11 @@ abstract class UsersApi {
   /// Provides a [Stream] of all users.
   Stream<List<User>> getUsers();
 
-  /// Returns User instance or null, if user with given email does not exist.
+  /// Returns user or null, if user with given email does not exist.
   Future<User?> getUserByEmail(String email);
+
+  /// Returns user or null, if user with given id does not exist.
+  Future<User?> getUserById(String id);
 
   /// Saves a [user].
   ///

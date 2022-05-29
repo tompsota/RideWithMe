@@ -36,16 +36,22 @@ class RidesRepository {
 
   /// Provides a [Stream] of all rides with author and participants.
   // Stream<List<RideModel>> getFullRides(Function filter) {
-  Stream<List<RideModel>> getFullRides() {
+  /// If filter is null, we keep all rides.
+  Stream<List<RideModel>> getFullRides([bool Function(RideModel)? filter]) {
     // var users = _usersApi.getUsers();
     return _ridesApi
         .getRides()
         .map((rides) {
-          return rides.map((ride) {
-            var rideModel = RideModel.fromDto(ride);
-            // add author and participants
-            return rideModel;
-          }).toList();
+          return rides
+              .map((ride) {
+                var rideModel = RideModel.fromDto(ride);
+                // add author and participants ?
+                // rideModel.participants = ...;
+                // rideModel.author = ...;
+                return rideModel;
+              })
+              .where(filter ?? (_) => true)
+              .toList();
         })
         .asBroadcastStream();
   }

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/domain_layer/db_repository.dart';
-import 'package:ride_with_me/domain_layer/user_repository.dart';
+import 'package:ride_with_me/domain_layer/users_repository.dart';
 import 'package:ride_with_me/utils/db/user.dart';
 
 import '../models/user_model.dart';
@@ -29,19 +29,13 @@ class UserStateController extends ChangeNotifier {
     // TODO: add try catch?
     final users = FirebaseFirestore.instance.collection('users');
     // TODO: use UsersRepository method
-    final userSnapshot = await users.doc(email).get();
-    if (userSnapshot.exists) {
+
+    final user = await usersRepository.getUserByEmail(authUser.email ?? "");
+
+    if (user != null) {
       // we load the full user, so that when we enter ProfilePage, we already have precise InitialData (and the fetch will only update some values, if any)
-      final user = usersRepository.getUserByEmail(authUser.email ?? "");
-      // controller.user = await getFullUser(user);
+      controller.user = user;
     } else {
-      // Future<void> addUser(UserModel user) {
-      //   return users
-      //       .doc(email)
-      //       .set(user.toJson())
-      //       .then((value) => print("User added - ${user.email}."))
-      //       .catchError((error) => print("Failed to add user - ${user.email}: $error"));
-      // }
 
       var userFirstName = authUser.displayName ?? "";
       var userLastName = "";

@@ -138,8 +138,8 @@ class GoogleSignInPage extends StatelessWidget {
                     // ridesFilterController.filteredRides = rides;
                     // ridesFilterController.visibleRides = rides;
 
-                    final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
-                    final userStateController = await UserStateController.create(usersRepository);
+                    final dbRepository = Provider.of<DbRepository>(context, listen: false);
+                    final userStateController = await UserStateController.create(dbRepository.usersRepository);
                     
                     Navigator.pushAndRemoveUntil(
                       context,
@@ -147,6 +147,7 @@ class GoogleSignInPage extends StatelessWidget {
                           // builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
                           builder: (context) => MultiProvider(
                               providers: [
+                                ChangeNotifierProvider.value(value: dbRepository),
                                 ChangeNotifierProvider.value(value: userStateController),
                                 ChangeNotifierProvider.value(value: ridesFilterController)
                               ],

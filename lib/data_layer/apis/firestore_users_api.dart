@@ -65,4 +65,20 @@ class FirestoreUsersApi implements UsersApi {
     return User.fromJson(snapshot.docs.single.data());
   }
 
+  // can fetch doc directly ?
+  @override
+  Future<User?> getUserById(String id) async {
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(id)
+        // .where('id', isEqualTo: id)
+        .get();
+
+    if (snapshot.data() == null) {
+      return null;
+    }
+    return User.fromJson(snapshot.data()!);
+  }
+
+
 }

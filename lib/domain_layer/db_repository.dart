@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/domain_layer/rides_repository.dart';
-import 'package:ride_with_me/domain_layer/user_repository.dart';
+import 'package:ride_with_me/domain_layer/users_repository.dart';
 
 import '../data_layer/apis/rides_api.dart';
 import '../data_layer/apis/users_api.dart';

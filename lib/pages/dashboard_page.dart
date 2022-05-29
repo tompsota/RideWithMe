@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_with_me/utils/db/ride.dart';
 import '../data_layer/apis/firestore_rides_api.dart';
 import '../data_layer/apis/rides_api.dart';
+import '../domain_layer/db_repository.dart';
 import '../models/ride_model.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -20,6 +21,9 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final dbRepository = Provider.of<DbRepository>(context, listen: false);
+
     return Consumer<RideFilterController>(builder: (context, filterController, child) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -50,7 +54,7 @@ class DashboardPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
                 child: StreamBuilder<List<RideModel>>(
-                  stream: RidesRepository(ridesApi: FirestoreRidesApi(), usersApi: FirestoreUsersApi()).getFullRides(),
+                  stream: dbRepository.ridesRepository.getFullRides(),
                   builder: (BuildContext context, AsyncSnapshot<List<RideModel>> snapshot) {
                     if (snapshot.hasError) {
                       return Text('Something went wrong');
@@ -78,6 +82,7 @@ class DashboardPage extends StatelessWidget {
                               //   child: RideViewPage(rideBeingEdited: ride),
                               // )
                                 MultiProvider(providers: [
+                                  ChangeNotifierProvider.value(value: dbRepository),
                                   ChangeNotifierProvider.value(value: Provider.of<UserStateController>(context)),
                                   ChangeNotifierProvider.value(value: filterController),
                                 ],
