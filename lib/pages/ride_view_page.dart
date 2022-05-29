@@ -25,6 +25,7 @@ import '../utils/date_picker.dart';
 import '../utils/duration_picker.dart';
 import '../utils/filters.dart';
 import '../utils/ride/ride_participants.dart';
+import '../utils/temp/get_db_repository.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
 
@@ -72,7 +73,9 @@ class RideViewPage extends StatelessWidget {
           List<String> rideTags = [];
 
           final authUser = FirebaseAuth.instance;
-          final dbRepository = Provider.of<DbRepository>(context, listen: false);
+          // TODO: replace with Provider.of call ?
+          final dbRepository = getDbRepository();
+          // final dbRepository = Provider.of<DbRepository>(context, listen: false);
           final usersRepository = dbRepository.usersRepository;
           final ridesRepository = dbRepository.ridesRepository;
 
@@ -152,6 +155,7 @@ class RideViewPage extends StatelessWidget {
                             child: ride == null
                                 ? RideParticipants(participantsStream: null)
                                 : RideParticipants(participantsStream: usersRepository.getUsers(Filters.isParticipant(ride)))
+                                // : RideParticipants(participantsStream: usersRepository.getUsers())
                         )
                       ),
                     ],
