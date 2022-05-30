@@ -23,44 +23,57 @@ class RidesRepository {
   final RidesApi _ridesApi;
   final UsersApi _usersApi;
 
-  /// Provides a [Stream] of all rides.
-  // TODO: rename 'filter' to something else
-  Stream<List<RideModel>> getRides(bool Function(RideModel) filter) => _ridesApi
-      .getRides()
-      .map((rides) {
-        return rides
-            .map((ride) => RideModel.fromDto(ride))
-            .where((rideModel) => filter(rideModel))
-            .toList();
-      })
-      .asBroadcastStream();
 
-  /// Provides a [Stream] of all rides with author and participants.
-  // Stream<List<RideModel>> getFullRides(Function filter) {
+  /// Provides a [Stream] of all rides.
   /// If filter is null, we keep all rides.
-  Stream<List<RideModel>> getFullRides([bool Function(RideModel)? filter]) {
+  Stream<List<RideModel>> getRides([bool Function(RideModel)? filter]) {
     // var users = _usersApi.getUsers();
     return _ridesApi
         .getRides()
         .map((rides) {
           return rides
-              .map((ride) {
-                var rideModel = RideModel.fromDto(ride);
-                // add author and participants ?
-                // rideModel.participants = ...;
-                // var author = await _usersApi.getUserById(ride.authorId);
-                // rideModel.author = UserModel.fromDto(author!);
-                return rideModel;
-              })
+              .map((ride) => RideModel.fromDto(ride))
               .where(filter ?? (_) => true)
               .toList();
         })
         .asBroadcastStream();
   }
 
-  // Stream<List<RideModel>> getFullRidesAsyncTest([bool Function(RideModel)? filter]) {
-  //
-  // }
+  /// Provides a [Stream] of all rides with author and participants.
+  Stream<List<RideModel>> getFullRides([bool Function(RideModel)? filter]) async* {
+    var ridesStream = getRides(filter);
+    List<RideModel> fullRides = [];
+
+    await for (var rides in ridesStream) {
+      for (var ride in rides) {
+        var author = await _usersApi.getUserById(ride.authorId);
+        if (author != null) {
+          ride.author = UserModel.fromDto(author);
+          fullRides.add(ride);
+        }
+      }
+      yield fullRides;
+    }
+  }
+
+  Stream<List<RideModel>> getFullRides_2() {
+    return getRides()
+        .asyncMap<List<RideModel>>((rides) => Future.wait(
+          rides
+              .map<Future<RideModel?>>((ride) async {
+                var author = await _usersApi.getUserById(ride.authorId);
+                if (author == null) {
+                  return null;
+                }
+                ride.author = UserModel.fromDto(author);
+                return ride;
+              })
+              // .whereType<Future<RideModel>>()
+              .whereType()
+              // .where((ride) => ride != null).toList()
+        )
+    );
+  }
 
   Future<void> joinRide(String rideId, String userId) async {
     await _ridesApi.joinRide(rideId, userId);
@@ -96,6 +109,5 @@ class RidesRepository {
     //   otherwise userId will be added to ride.participantsIds
     // await _ridesApi.joinRide(ride.id, ride.authorId);
   }
-
 
 }
