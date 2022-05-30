@@ -34,16 +34,13 @@ class RideViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     NewRideController _newRideProvider = Provider.of<NewRideController>(context, listen: false);
     RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
-    // final ride = await getFullRide(rideBeingEdited!);
-    // return FutureBuilder<RideModel?>(
-    //   future: getFullRide(rideBeingEdited),
-    //   builder: (BuildContext context, AsyncSnapshot<RideModel?> snapshot) {
+
     return Consumer<UserStateController>(builder: (context, userController, child) {
       // final ride = snapshot.data;
 
       final ride = rideBeingEdited;
 
-      final userId = userController.user.email;
+      final userId = userController.user.id;
       final isBeingCreated = rideBeingEdited == null;
       final isAuthor = ride?.authorId == userId;
       // ride can be edited by author and when it's being created (we can remove author later)
@@ -60,9 +57,6 @@ class RideViewPage extends StatelessWidget {
       final iframeWidth = MediaQuery.of(context).size.width.toInt() * 2.5; // some black magic
       final iframeHeight = MediaQuery.of(context).size.width.toInt() * 1.5;
 
-      final authUser = FirebaseAuth.instance;
-      // TODO: replace with Provider.of call ?
-      // final dbRepository = getDbRepository();
       final dbRepository = Provider.of<DbRepository>(context, listen: false);
       final usersRepository = dbRepository.usersRepository;
       final ridesRepository = dbRepository.ridesRepository;
@@ -259,7 +253,7 @@ class RideViewPage extends StatelessWidget {
                       child: SubmitButton(
                         value: "Mark ride as completed",
                         callback: () async {
-                          // await completeRide(ride);
+                          await ridesRepository.markRideAsCompleted(ride);
                           Navigator.of(context).pop();
                         },
                       ),
@@ -280,26 +274,20 @@ class RideViewPage extends StatelessWidget {
                   value: isBeingCreated ? "CREATE RIDE" : (userIsParticipating ? "LEAVE RIDE" : "I'LL PARTICIPATE"),
                   callback: isBeingCreated
                       ? () async {
-                          // TODO: use RidesRepository method (now in provider)
-                          //       _newRideProvider.submitRide(userId, userController);
-                          // refresh rides, so that DashboardPage gets updated automatically
-                          // await _rideFilterProvider.refreshRides();
+                          await _newRideProvider.submitRide(userId);
                           Navigator.of(context).pop();
                         }
                       : (userIsParticipating
                           ? () async {
-                              //TODO: use RidesRepository method
                               // user that is participating clicked on "Leave ride"
-                              // await leaveRide(ride!, userController);
-                              // await _rideFilterProvider.refreshRides();
+                              await ridesRepository.leaveRide(ride!.id, userId);
                               Navigator.of(context).pop();
                             }
                           : () async {
-                              // TODO: use RidesRepository method
-                              // await joinRide(ride!, userController);
-                              // await _rideFilterProvider.refreshRides();
+                              await ridesRepository.joinRide(ride!.id, userId);
                               Navigator.of(context).pop();
-                            })),
+                            })
+          ),
         ),
       );
     });

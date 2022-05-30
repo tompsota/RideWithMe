@@ -26,6 +26,11 @@ abstract class UsersApi {
   /// If a [user] with given id does not exist, it will be created.
   Future<void> updateUser(User user);
 
+  Future<void> createRide(String rideId, String userId);
+  Future<void> joinRide(String rideId, String userId);
+  Future<void> leaveRide(String rideId, String userId);
+  Future<void> completeRide(String rideId, String userId);
+
 /// Deletes the user with the given id.
 ///
 /// If no user with the given id exists, a [UserNotFoundException] error is

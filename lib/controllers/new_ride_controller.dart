@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/domain_layer/rides_repository.dart';
 import '../models/ride_model.dart';
 
 class NewRideController extends ChangeNotifier {
+
+  // TODO: maybe use ridesRepository instead of dbRepository ?
+  NewRideController({required this.ridesRepository});
+  final RidesRepository ridesRepository;
+
   // TODO: remove late and add ctor
   RideModel ride = RideModel.id(
     createdAt: DateTime.now(),
@@ -75,11 +82,11 @@ class NewRideController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void submitRide(String author, UserStateController userController) async {
-    ride.authorId = author;
-    ride.participantsIds.add(author);
-    //todo fix adding ride to db
-    // await createRide(ride, userController);
+  Future<void> submitRide(String authorId) async {
+    ride.authorId = authorId;
+    ride.participantsIds = [authorId];
+    await ridesRepository.createRide(ride);
+    // TODO: notifyListeners() is possibly useless here / has no effect ?
     notifyListeners();
   }
 
