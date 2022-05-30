@@ -104,7 +104,6 @@ class RideViewPage extends StatelessWidget {
                       LargeText("by $authorName"),
                     ],
                   ),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: isBeingCreated
@@ -130,7 +129,6 @@ class RideViewPage extends StatelessWidget {
                                   ),
                           ),
                   ),
-
                   if (!isBeingCreated) ...[
                     SizedBox(height: 20),
                     MediumText("With"),
@@ -224,15 +222,15 @@ class RideViewPage extends StatelessWidget {
                         _newRideProvider.setRideStartLocation(value["description"]);
                       },
                       isEditable: canBeEdited),
-                  //TODO add callback, set initial value from db
                   SizedBox(height: 20),
                   MediumText("Tags"),
                   CheckboxDialog(
-                      isEditable: canBeEdited,
-                      callback: (tags) {
-                        _newRideProvider.setRideTags(tags);
-                      }),
-
+                    isEditable: canBeEdited,
+                    callback: (tags) {
+                      _newRideProvider.setRideTags(tags);
+                    },
+                    selectedTags: newRideModel.ride.tags,
+                  ),
                   if (!isBeingCreated) ...[
                     SizedBox(height: 20),
                     MediumText("Link to share with friends"),
@@ -286,8 +284,7 @@ class RideViewPage extends StatelessWidget {
                           : () async {
                               await ridesRepository.joinRide(ride!.id, userId);
                               Navigator.of(context).pop();
-                            })
-          ),
+                            })),
         ),
       );
     });

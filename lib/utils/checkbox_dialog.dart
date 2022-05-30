@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CheckboxDialog extends StatefulWidget {
-  bool isEditable;
-  ValueChanged<List<String>> callback;
+class CheckboxDialog extends StatelessWidget {
+  final bool isEditable;
+  final ValueChanged<List<String>> callback;
+  final List<String> selectedTags;
+  final List<String> allTags = ['Coffee stop', 'Recovery ride', 'Chill ride', 'Race', 'Only roads', 'KOM hunting', 'Hills', 'Flat'];
 
-  CheckboxDialog({Key? key, required this.isEditable, required this.callback}) : super(key: key);
-
-  @override
-  _CheckboxDialogState createState() => _CheckboxDialogState();
-}
-
-class _CheckboxDialogState extends State<CheckboxDialog> {
-  List<String> allTags = ['Coffee stop', 'Recovery ride', 'Chill ride', 'Race', 'Only roads', 'KOM hunting', 'Hills', 'Flat'];
-  List<String> selectedTags = [];
+  CheckboxDialog({Key? key, required this.isEditable, required this.callback, required this.selectedTags}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +26,7 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
                   return ListTile(title: Text(selectedTags[index]));
                 }),
           ),
-          if (widget.isEditable)
+          if (isEditable)
             ElevatedButton(
                 child: Icon(Icons.add),
                 onPressed: () {
@@ -40,13 +34,10 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
                       context: context,
                       builder: (context) {
                         return DialogWindow(
-                            cities: allTags,
-                            selectedCities: selectedTags,
-                            onSelectedCitiesListChanged: (cities) {
-                              setState(
-                                () => selectedTags = cities,
-                              );
-                              widget.callback(selectedTags);
+                            tags: allTags,
+                            selectedTags: selectedTags,
+                            onSelectedTagsListChanged: (tags) {
+                              callback(selectedTags);
                             });
                       });
                 }),
@@ -56,31 +47,26 @@ class _CheckboxDialogState extends State<CheckboxDialog> {
   }
 }
 
+
+
+
 class DialogWindow extends StatefulWidget {
   DialogWindow({
     Key? key,
-    required this.cities,
-    required this.selectedCities,
-    required this.onSelectedCitiesListChanged,
+    required this.tags,
+    required this.selectedTags,
+    required this.onSelectedTagsListChanged,
   }) : super(key: key);
 
-  final List<String> cities;
-  final List<String> selectedCities;
-  final ValueChanged<List<String>> onSelectedCitiesListChanged;
+  final List<String> tags;
+  final List<String> selectedTags;
+  final ValueChanged<List<String>> onSelectedTagsListChanged;
 
   @override
   _DialogWindowState createState() => _DialogWindowState();
 }
 
 class _DialogWindowState extends State<DialogWindow> {
-  List<String> _tempSelectedCities = [];
-
-  @override
-  void initState() {
-    _tempSelectedCities = widget.selectedCities;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -99,30 +85,29 @@ class _DialogWindowState extends State<DialogWindow> {
               ),
             ],
           ),
-          //TODO make this smaller
           Flexible(
             child: ListView.builder(
-                itemCount: widget.cities.length,
+                itemCount: widget.tags.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final cityName = widget.cities[index];
+                  final cityName = widget.tags[index];
                   return CheckboxListTile(
                       title: Text(cityName),
-                      value: _tempSelectedCities.contains(cityName),
+                      value: widget.selectedTags.contains(cityName),
                       onChanged: (value) {
                         if (value == true) {
-                          if (!_tempSelectedCities.contains(cityName)) {
+                          if (!widget.selectedTags.contains(cityName)) {
                             setState(() {
-                              _tempSelectedCities.add(cityName);
+                              widget.selectedTags.add(cityName);
                             });
                           }
                         } else {
-                          if (_tempSelectedCities.contains(cityName)) {
+                          if (widget.selectedTags.contains(cityName)) {
                             setState(() {
-                              _tempSelectedCities.removeWhere((String city) => city == cityName);
+                              widget.selectedTags.removeWhere((String city) => city == cityName);
                             });
                           }
                         }
-                        widget.onSelectedCitiesListChanged(_tempSelectedCities);
+                        widget.onSelectedTagsListChanged(widget.selectedTags);
                       });
                 }),
           ),

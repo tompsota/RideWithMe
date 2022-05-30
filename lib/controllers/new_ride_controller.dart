@@ -5,9 +5,9 @@ import 'package:ride_with_me/domain_layer/rides_repository.dart';
 import '../models/ride_model.dart';
 
 class NewRideController extends ChangeNotifier {
-
   // TODO: maybe use ridesRepository instead of dbRepository ?
   NewRideController({required this.ridesRepository});
+
   final RidesRepository ridesRepository;
 
   // TODO: remove late and add ctor
@@ -25,7 +25,7 @@ class NewRideController extends ChangeNotifier {
     rideMapLink: '',
     rideStartLocationName: '',
     rideDate: DateTime.now(),
-    rideStartTime: "",
+    rideStartTime: "0:0",
   );
 
   TimeOfDay getRideStartTime() {
@@ -48,7 +48,7 @@ class NewRideController extends ChangeNotifier {
   }
 
   void setRideStartTime(TimeOfDay value) {
-    ride.rideStartTime = value.toString();
+    ride.rideStartTime = '${value.hour.toString()}:${value.minute.toString()}';
     notifyListeners();
   }
 
