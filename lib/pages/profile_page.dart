@@ -2,16 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/components/profile_expansion_panel.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/utils/prefix_text_input_field.dart';
-import 'package:ride_with_me/utils/ride/rides_stream_builder.dart';
 import 'package:ride_with_me/utils/text.dart';
-import 'package:tuple/tuple.dart';
 
 import '../components/user_contact_icons.dart';
 import '../utils/button.dart';
-import '../utils/filters.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -25,10 +22,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final dbRepository = Provider.of<DbRepository>(context, listen: false);
-    final ridesRepository = dbRepository.ridesRepository;
-    final usersRepository = dbRepository.usersRepository;
-
     return Consumer<UserStateController>(builder: (context, userController, child) {
       // return FutureBuilder<UserModel?>(
       //   // we might wanna load rides with authors for display (otherwise author = null)
@@ -125,34 +118,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   PrefixTextInputField(initialValue: 'slack.com/ ', controller: slackController, mediaIcon: FontAwesomeIcons.slack),
                   PrefixTextInputField(initialValue: 'email ', controller: emailController, mediaIcon: FontAwesomeIcons.envelope),
                 ] else
-                  Padding(padding: const EdgeInsets.only(top: 20, bottom: 10), child: UserContactIcons(user: user)),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: MediumText('Completed rides'),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: UserContactIcons(user: user),
+                  ),
                 // TODO: ExpansionPanelList might only (easily) work as Stateful,
-                ExpansionPanelList(
-                  children: [
-                    Tuple2<String, List<String>>('Completed rides', user.completedRidesIds),
-                    Tuple2<String, List<String>>('Created rides', user.createdRidesIds),
-                    Tuple2<String, List<String>>('Joined rides', user.joinedRidesIds),
-                  ].map((data) {
-                    final String headerTitle = data.item1;
-                    final ridesIds = data.item2;
-                    return ExpansionPanel(
-                      headerBuilder: (context, isExpanded) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: MediumText(headerTitle),
-                        );
-                      },
-                      body: RidesStreamBuilder(ridesStream: ridesRepository.getFullRides(Filters.isRideFromCollection(ridesIds))),
-                      isExpanded: true,
-                      canTapOnHeader: true,
-                    );
-                  }).toList(),
-                )
+                ProfileExpansionPanel(),
               ],
             ),
           ),
