@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/components/ride_with_me_title.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/domain_layer/db_repository.dart';
 
 import '../utils/button.dart';
-import '../utils/db/ride.dart';
 import 'main_page.dart';
 
 class GoogleSignInPage extends StatelessWidget {
@@ -24,62 +24,8 @@ class GoogleSignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 80.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    "Ride",
-                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 56),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 80.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    "With",
-                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 56),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 80.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    "Me",
-                    style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 56),
-                  ),
-                ),
-              ),
-            ),
+            RideWithMeTitle(),
             Spacer(),
-            // ColorFiltered(
-            //   colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.colorBurn),
-            //   child: Image(image: NetworkImage('https://www.q36-5.com/wp-content/uploads/Header-desktop-RNH.jpg'),),
-            // ),
-            //https://www.q36-5.com/wp-content/uploads/Header-desktop-RNH.jpg
-
-            // Image.asset("assets/foejuANBeiCtYkT6PaXW9F-768-80.jpg"),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: OutlinedButton(
@@ -131,7 +77,6 @@ class GoogleSignInPage extends StatelessWidget {
 
                     // TODO: add 'ensureCreated' that returns UserModel (creates new document if there is not a document with authUser.email)
 
-                    
                     // final rides = await getAllRides();
                     final ridesFilterController = RideFilterController();
                     // await ridesFilterController.refreshRides();
@@ -140,18 +85,16 @@ class GoogleSignInPage extends StatelessWidget {
 
                     final dbRepository = Provider.of<DbRepository>(context, listen: false);
                     final userStateController = await UserStateController.create(dbRepository.usersRepository);
-                    
+
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           // builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
-                          builder: (context) => MultiProvider(
-                              providers: [
+                          builder: (context) => MultiProvider(providers: [
                                 ChangeNotifierProvider.value(value: dbRepository),
                                 ChangeNotifierProvider.value(value: userStateController),
                                 ChangeNotifierProvider.value(value: ridesFilterController)
-                              ],
-                              child: const MainPage())),
+                              ], child: const MainPage())),
                       (_) => false,
                     );
 

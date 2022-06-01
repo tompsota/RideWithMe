@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/ride_filter_controller.dart';
-import '../models/filter_model.dart';
-import '../settings/filter_defaults.dart';
 import '../utils/date_picker.dart';
 import '../utils/text.dart';
 import '../utils/time_picker.dart';
-import '../utils/two_way_slider.dart';
 
 class FilterDatePickers extends StatelessWidget {
   const FilterDatePickers({Key? key}) : super(key: key);
@@ -15,7 +12,6 @@ class FilterDatePickers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
-    FilterModel _appliedFilter = _rideFilterProvider.getAppliedFilter();
 
     return Consumer<RideFilterController>(
       builder: (context, filterModel, _) => Column(
