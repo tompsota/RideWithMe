@@ -12,7 +12,6 @@ part 'user.g.dart';
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
-
   @JsonKey(name: 'id')
   final String id;
 
@@ -31,7 +30,20 @@ class User {
   @JsonKey(name: 'aboutMe')
   final String aboutMe;
 
-  // TODO: add links
+  @JsonKey(name: 'facebook')
+  final String facebookAccount;
+
+  @JsonKey(name: 'strava')
+  final String stravaAccount;
+
+  @JsonKey(name: 'instagram')
+  final String instagramAccount;
+
+  @JsonKey(name: 'google')
+  final String googleAccount;
+
+  @JsonKey(name: 'slack')
+  final String slackAccount;
 
   // ID's of rides that a user has created
   final List<String> createdRidesIds;
@@ -46,13 +58,17 @@ class User {
   //   be removed from joinedRidesIds, and added to completedRidesIds
   final List<String> completedRidesIds;
 
-
   User({
     required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
     required this.avatarUrl,
+    required this.facebookAccount,
+    required this.googleAccount,
+    required this.instagramAccount,
+    required this.slackAccount,
+    required this.stravaAccount,
     this.aboutMe = 'No info',
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
@@ -64,6 +80,11 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.avatarUrl,
+    required this.facebookAccount,
+    required this.googleAccount,
+    required this.instagramAccount,
+    required this.slackAccount,
+    required this.stravaAccount,
     this.aboutMe = 'No info',
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
@@ -79,6 +100,12 @@ class User {
     String? lastName,
     String? avatarUrl,
     String? aboutMe,
+    String? emailAccount,
+    String? facebookAccount,
+    String? googleAccount,
+    String? instagramAccount,
+    String? slackAccount,
+    String? stravaAccount,
     List<String>? createdRidesIds,
     List<String>? joinedRidesIds,
     List<String>? completedRidesIds,
@@ -90,6 +117,11 @@ class User {
       lastName: lastName ?? this.lastName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       aboutMe: aboutMe ?? this.aboutMe,
+      facebookAccount: facebookAccount ?? this.facebookAccount,
+      googleAccount: googleAccount ?? this.googleAccount,
+      instagramAccount: instagramAccount ?? this.instagramAccount,
+      slackAccount: slackAccount ?? this.slackAccount,
+      stravaAccount: stravaAccount ?? this.stravaAccount,
       createdRidesIds: createdRidesIds ?? this.createdRidesIds,
       joinedRidesIds: joinedRidesIds ?? this.joinedRidesIds,
       completedRidesIds: completedRidesIds ?? this.completedRidesIds,
@@ -97,6 +129,7 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
   String getFullName() => firstName + " " + lastName;

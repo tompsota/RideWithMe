@@ -2,15 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/domain_layer/users_repository.dart';
-import 'package:ride_with_me/utils/db/user.dart';
 
 import '../models/user_model.dart';
 
 class UserStateController extends ChangeNotifier {
-
   // we retrieve UserModel from DB
   late UserModel user;
 
@@ -36,7 +32,6 @@ class UserStateController extends ChangeNotifier {
       // we load the full user, so that when we enter ProfilePage, we already have precise InitialData (and the fetch will only update some values, if any)
       controller.user = user;
     } else {
-
       var userFirstName = authUser.displayName ?? "";
       var userLastName = "";
       if (authUser.displayName?.contains(' ') ?? false) {
@@ -52,8 +47,12 @@ class UserStateController extends ChangeNotifier {
           firstName: userFirstName,
           lastName: userLastName,
           aboutMe: "No info.",
-          avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg"
-      );
+          facebookAccount: '',
+          slackAccount: '',
+          instagramAccount: '',
+          stravaAccount: '',
+          googleAccount: '',
+          avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg");
       await usersRepository.createUser(newUser);
       controller.user = newUser;
     }
@@ -97,7 +96,6 @@ class UserStateController extends ChangeNotifier {
   //   user = newUser;
   //   notifyListeners();
   // }
-
 
   void updateUser(UserModel newUser) {
     user = newUser;

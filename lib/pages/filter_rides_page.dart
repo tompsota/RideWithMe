@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/filter_date_pickers.dart';
 import 'package:ride_with_me/components/filter_range_sliders.dart';
-import 'package:ride_with_me/models/filter_model.dart';
-import 'package:ride_with_me/settings/filter_defaults.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
-import 'package:ride_with_me/utils/date_picker.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/utils/text.dart';
-import 'package:ride_with_me/utils/time_picker.dart';
-import 'package:ride_with_me/utils/two_way_slider.dart';
 
 //TODO pridat reset tlacitko
 class FilterRidesPage extends StatelessWidget {
@@ -19,7 +14,6 @@ class FilterRidesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
-    FilterModel _appliedFilter = _rideFilterProvider.getAppliedFilter();
 
     return Scaffold(
       appBar: AppBar(

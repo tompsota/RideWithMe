@@ -62,6 +62,28 @@ class FirestoreRidesApi implements RidesApi {
     // _rideStreamController.add(rides);
   }
 
+  @override
+  Future<void> leaveRide(String rideId, String userId) async {
+    await _firestore
+        .collection('rides')
+        .doc(rideId)
+        .update({"participantsIds": FieldValue.arrayRemove([userId]),});
+  }
 
+  @override
+  Future<void> joinRide(String rideId, String userId) async {
+    await _firestore
+        .collection('rides')
+        .doc(rideId)
+        .update({"participantsIds": FieldValue.arrayUnion([userId]),});
+  }
+
+  @override
+  Future<void> markRideAsCompleted(String rideId) async {
+    await _firestore
+        .collection('rides')
+        .doc(rideId)
+        .update({"isCompleted": true});
+  }
 
 }

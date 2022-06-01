@@ -17,38 +17,23 @@ class FirestoreUsersApi implements UsersApi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
  
   @override
-  Stream<List<User>> getUsers() => _firestore
-      .collection('users')
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => User.fromJson(doc.data())).toList())
-      .asBroadcastStream(); // TODO: AsReusableStream from Rx ?
-
-  // User getUser(String id) => firestore
-  //     .collection('users')
-  //     .where("id", isEqualTo: id)
-  //     .snapshots().
-
-
+  Stream<List<User>> getUsers() {
+    return _firestore
+        .collection('users')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => User.fromJson(doc.data())).toList())
+        .asBroadcastStream(); // TODO: Observable / AsReusableStream from Rx ?
+  }
 
   @override
   Future<void> updateUser(User user) async {
     await _firestore.collection('users').doc(user.id).update(user.toJson());
   }
 
-
   @override
   Future<void> createUser(User user) async {
     await _firestore.collection('users').add(user.toJson());
-
-    // final users = [..._userStreamController.value];
-    // final userIndex = users.indexWhere((t) => t.id == user.id);
-    // if (userIndex >= 0) {
-    //   users[userIndex] = user;
-    // } else {
-    //   users.add(user);
-    // }
-
-    // _userStreamController.add(users);
   }
 
   @override
@@ -65,13 +50,11 @@ class FirestoreUsersApi implements UsersApi {
     return User.fromJson(snapshot.docs.single.data());
   }
 
-  // can fetch doc directly ?
   @override
   Future<User?> getUserById(String id) async {
     final snapshot = await _firestore
         .collection('users')
         .doc(id)
-        // .where('id', isEqualTo: id)
         .get();
 
     if (snapshot.data() == null) {
@@ -80,5 +63,36 @@ class FirestoreUsersApi implements UsersApi {
     return User.fromJson(snapshot.data()!);
   }
 
+  @override
+  Future<void> createRide(String rideId, String userId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .update({"createdRidesIds": FieldValue.arrayUnion([rideId]),});
+  }
+
+  @override
+  Future<void> leaveRide(String rideId, String userId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .update({"joinedRidesIds": FieldValue.arrayRemove([rideId]),});
+  }
+
+  @override
+  Future<void> joinRide(String rideId, String userId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .update({"joinedRidesIds": FieldValue.arrayUnion([rideId]),});
+  }
+
+  @override
+  Future<void> completeRide(String rideId, String userId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .update({"completedRidesIds": FieldValue.arrayUnion([rideId]),});
+  }
 
 }

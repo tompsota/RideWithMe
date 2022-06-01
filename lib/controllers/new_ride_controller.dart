@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/domain_layer/rides_repository.dart';
 import '../models/ride_model.dart';
 
 class NewRideController extends ChangeNotifier {
+  // TODO: maybe use ridesRepository instead of dbRepository ?
+  NewRideController({required this.ridesRepository});
+
+  final RidesRepository ridesRepository;
+
   // TODO: remove late and add ctor
   RideModel ride = RideModel.id(
-      createdAt: DateTime.now(),
-      averageSpeed: 0,
-      distance: 0,
-      climbing: 0,
-      duration: Duration(),
-      tags: [],
-      participantsIds: [],
-      isCompleted: false,
-      title: "",
-      authorId: "");
+    createdAt: DateTime.now(),
+    averageSpeed: 0,
+    distance: 0,
+    climbing: 0,
+    duration: Duration(),
+    tags: [],
+    participantsIds: [],
+    isCompleted: false,
+    title: "",
+    authorId: "",
+    rideMapLink: '',
+    rideStartLocationName: '',
+    rideDate: DateTime.now(),
+    rideStartTime: "0:0",
+  );
+
+  TimeOfDay getRideStartTime() {
+    return TimeOfDay(hour: int.parse(ride.rideStartTime.split(":")[0]), minute: int.parse(ride.rideStartTime.split(":")[1]));
+  }
 
   void setRideTitle(String value) {
     ride.title = value;
@@ -27,22 +43,22 @@ class NewRideController extends ChangeNotifier {
   }
 
   void setRideDate(DateTime value) {
-    //todo
+    ride.rideDate = value;
     notifyListeners();
   }
 
   void setRideStartTime(TimeOfDay value) {
-    //todo
+    ride.rideStartTime = '${value.hour.toString()}:${value.minute.toString()}';
     notifyListeners();
   }
 
   void setRideMapLink(String value) {
-    //todo
+    ride.rideMapLink = value;
     notifyListeners();
   }
 
   void setRideStartLocation(String value) {
-    //todo
+    ride.rideStartLocationName = value;
     notifyListeners();
   }
 
@@ -66,11 +82,11 @@ class NewRideController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void submitRide(String author, UserStateController userController) async {
-    ride.authorId = author;
-    ride.participantsIds.add(author);
-    //todo fix adding ride to db
-    // await createRide(ride, userController);
+  Future<void> submitRide(String authorId) async {
+    ride.authorId = authorId;
+    ride.participantsIds = [authorId];
+    await ridesRepository.createRide(ride);
+    // TODO: notifyListeners() is possibly useless here / has no effect ?
     notifyListeners();
   }
 

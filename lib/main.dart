@@ -27,11 +27,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final DbRepository dbRepository = DbRepository(ridesApi: FirestoreRidesApi(), usersApi: FirestoreUsersApi());
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => RideFilterController()),
-        ChangeNotifierProvider(create: (context) => NewRideController()),
-        ChangeNotifierProvider(create: (_) => DbRepository(ridesApi: FirestoreRidesApi(), usersApi: FirestoreUsersApi())),
+        ChangeNotifierProvider(create: (context) => NewRideController(ridesRepository: dbRepository.ridesRepository)),
+        ChangeNotifierProvider.value(value: dbRepository),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

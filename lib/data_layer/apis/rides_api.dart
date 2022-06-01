@@ -15,6 +15,9 @@ abstract class RidesApi {
   /// If a [ride] with the same id already exists, it will be replaced.
   Future<void> createRide(Ride ride);
 
+  Future<void> joinRide(String rideId, String userId);
+  Future<void> leaveRide(String rideId, String userId);
+
   /// Updates a [ride].
   ///
   /// If a [ride] with given id does not exist, it will be created.
@@ -25,6 +28,9 @@ abstract class RidesApi {
   /// If no ride with the given id exists, a [RideNotFoundException] error is
   /// thrown.
   // Future<void> deleteRide(String id);
+
+  Future<void> markRideAsCompleted(String rideId);
+
 }
 
 /// Error thrown when a [Ride] with a given id is not found.
