@@ -4,7 +4,7 @@ import 'package:tuple/tuple.dart';
 
 import '../controllers/user_state_controller.dart';
 import '../domain_layer/db_repository.dart';
-import '../utils/filters.dart';
+import '../domain_layer/filters.dart';
 import '../utils/ride/rides_stream_builder.dart';
 import '../utils/text.dart';
 
@@ -18,16 +18,19 @@ class ProfileExpansionPanel extends StatefulWidget {
 class _ProfileExpansionPanelState extends State<ProfileExpansionPanel> {
   @override
   Widget build(BuildContext context) {
-    final dbRepository = Provider.of<DbRepository>(context, listen: false);
-    final ridesRepository = dbRepository.ridesRepository;
+
+    final ridesRepository = Provider.of<DbRepository>(context, listen: false).ridesRepository;
     return Consumer<UserStateController>(builder: (context, userController, child) {
       final user = userController.user;
+      final ridesData = [
+        Tuple2<String, List<String>>('Completed rides', user.completedRidesIds),
+        Tuple2<String, List<String>>('Created rides', user.createdRidesIds),
+        Tuple2<String, List<String>>('Joined rides', user.joinedRidesIds),
+      ];
+      List<bool> _isExpanded = List.filled(ridesData.length, false);
+
       return ExpansionPanelList(
-        children: [
-          Tuple2<String, List<String>>('Completed rides', user.completedRidesIds),
-          Tuple2<String, List<String>>('Created rides', user.createdRidesIds),
-          Tuple2<String, List<String>>('Joined rides', user.joinedRidesIds),
-        ].map((data) {
+        children: ridesData.map((data) {
           final String headerTitle = data.item1;
           final ridesIds = data.item2;
           return ExpansionPanel(
@@ -37,11 +40,12 @@ class _ProfileExpansionPanelState extends State<ProfileExpansionPanel> {
                 child: MediumText(headerTitle),
               );
             },
-            body: RidesStreamBuilder(ridesStream: ridesRepository.getFullRides(Filters.isRideFromCollection(ridesIds))),
+            body: RidesStreamBuilder(ridesStream: ridesRepository.getRidesFromCollection(ridesIds)),
             isExpanded: true,
             canTapOnHeader: true,
           );
         }).toList(),
+        expansionCallback: (i, isExpanded) => setState(() => _isExpanded[i] = !isExpanded),
       );
     });
   }

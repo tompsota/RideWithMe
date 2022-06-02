@@ -86,7 +86,6 @@ class NewRideController extends ChangeNotifier {
     ride.authorId = authorId;
     ride.participantsIds = [authorId];
     await ridesRepository.createRide(ride);
-    // TODO: notifyListeners() is possibly useless here / has no effect ?
     notifyListeners();
   }
 

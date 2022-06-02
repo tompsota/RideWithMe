@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/profile_expansion_panel.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
+import 'package:ride_with_me/domain_layer/db_repository.dart';
 import 'package:ride_with_me/utils/prefix_text_input_field.dart';
 import 'package:ride_with_me/utils/text.dart';
 
@@ -23,24 +24,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserStateController>(builder: (context, userController, child) {
-      // return FutureBuilder<UserModel?>(
-      //   // we might wanna load rides with authors for display (otherwise author = null)
-      //   // future: getFullUserById(userController.user.getId()),
-      //     future: getFullUserWithAuthorById(userController.user.getId()),
-      //     initialData: userController.user,
-      //     builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
-      // TODO: add snapshot.hasError and other checks?
 
+      final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
       final user = userController.user;
-      // userController.user = user;
+
       final aboutMeController = TextEditingController(text: user.aboutMe);
       final facebookController = TextEditingController(text: ' ' + user.facebookAccount);
       final stravaController = TextEditingController(text: ' ' + user.stravaAccount);
       final instagramController = TextEditingController(text: ' ' + user.instagramAccount);
       final googleController = TextEditingController(text: ' ' + user.googleAccount);
       final slackController = TextEditingController(text: ' ' + user.slackAccount);
-      // TODO: should be able to change email ? we would have to change also gmail login,
-      //  since we fetch user based on firebaseAuth.user.email (so the firebaseAuth email has to match the 'usersCollection.userDocument.email')
       final emailController = TextEditingController(text: user.email);
 
       return Scaffold(
@@ -97,12 +90,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 if (isEditing)
                   TextFormField(
-                    // would have to change to currentUserId == userId, if we wanted to allow viewing other people's profiles
                     enabled: true,
                     controller: aboutMeController,
                     onFieldSubmitted: (text) {
                       aboutMeController.text = text;
-                      // print("about me changed: ${aboutMeController.text}");
                     },
                   )
                 else
@@ -122,7 +113,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.only(top: 20, bottom: 10),
                     child: UserContactIcons(user: user),
                   ),
-                // TODO: ExpansionPanelList might only (easily) work as Stateful,
                 ProfileExpansionPanel(),
               ],
             ),
@@ -134,8 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: SubmitButton(
                     value: "SAVE CHANGES",
                     callback: () async {
-                      // TODO: use UsersRepository method
-                      // await userUpdateAboutMe(userController, aboutMeController.text);
+                      await usersRepository.updateUserProfile(user);
                       setState(() {
                         isEditing = false;
                       });

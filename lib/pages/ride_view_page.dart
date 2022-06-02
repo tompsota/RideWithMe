@@ -27,23 +27,24 @@ class RideViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // NewRideController _newRideProvider = Provider.of<NewRideController>(context, listen: false);
-    // RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
+
+    // TODO: when author = null, the page doesn't load at all
 
     return Consumer<UserStateController>(builder: (context, userController, child) {
-      // final ride = snapshot.data;
+
       final ride = rideBeingEdited;
 
       final userId = userController.user.id;
       final isBeingCreated = rideBeingEdited == null;
       final isAuthor = ride?.authorId == userId;
-      // ride can be edited by author and when it's being created (we can remove author later)
       final canBeEdited = isBeingCreated || isAuthor;
       final userIsParticipating = ride?.participantsIds.contains(userId) ?? false;
 
+      final author = isBeingCreated ? userController.user : ride?.author;
       final authorName = isBeingCreated ? userController.user.getFullName() : ride?.author?.getFullName() ?? "Unknown author";
       var rideTitle = isBeingCreated ? "$authorName's ride" : ride?.title ?? "Loading...";
       var titleController = TextEditingController(text: rideTitle);
+      // Provider.of<NewRideController>(context, listen: false).setRideTitle(rideTitle);
       final showCompleteRideButton = isAuthor && (ride != null && !ride.isCompleted);
 
       final dbRepository = Provider.of<DbRepository>(context, listen: false);
@@ -63,7 +64,7 @@ class RideViewPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RideAuthorImage(ride: ride, authorName: authorName),
+                  RideAuthorImage(author: author, authorName: authorName),
                   RideMapComponent(isBeingCreated: isBeingCreated),
                   RideParticipantsList(ride: ride, isBeingCreated: isBeingCreated),
                   RideDatePickers(canBeEdited: canBeEdited),
@@ -99,8 +100,8 @@ class RideViewPage extends StatelessWidget {
                     MediumText("Contact host"),
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: UserContactIcons(user: userController.user) //todo chcelo by to model autora, nie toho co je prihlaseny
-                        ),
+                        child: UserContactIcons(user: ride!.author!), //todo chcelo by to model autora, nie toho co je prihlaseny - check if the change is successful
+                    ),
                   ],
                   if (showCompleteRideButton)
                     Container(

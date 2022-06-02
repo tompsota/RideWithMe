@@ -32,7 +32,7 @@ class FilterDatePickers extends StatelessWidget {
                 Expanded(
                   child: DatePicker(
                     callback: (date) => _rideFilterProvider.updateDate(date),
-                    currentValue: filterModel.getCurrentFilter().selectedDate,
+                    currentValue: filterModel.currentFilter.selectedDate,
                     isEditable: true,
                   ),
                 ),
@@ -52,7 +52,7 @@ class FilterDatePickers extends StatelessWidget {
                 Expanded(
                     child: TimePicker(
                   callback: (time) => _rideFilterProvider.updateStartTime(time),
-                  time: filterModel.getCurrentFilter().selectedStartTime,
+                  time: filterModel.currentFilter.selectedStartTime,
                   isEditable: true,
                 )),
               ],
@@ -70,7 +70,7 @@ class FilterDatePickers extends StatelessWidget {
                 Expanded(
                     child: TimePicker(
                   callback: (time) => _rideFilterProvider.updateFinishTime(time),
-                  time: filterModel.getCurrentFilter().selectedFinishTime,
+                  time: filterModel.currentFilter.selectedFinishTime,
                   isEditable: true,
                 )),
               ],

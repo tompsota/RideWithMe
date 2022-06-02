@@ -9,6 +9,7 @@ abstract class RidesApi {
 
   /// Provides a [Stream] of all rides.
   Stream<List<Ride>> getRides();
+  Stream<List<Ride>> getRidesFromCollection(List<String> ridesIds);
 
   /// Saves a [ride].
   ///

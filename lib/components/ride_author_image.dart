@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_with_me/controllers/user_state_controller.dart';
 
 import '../controllers/new_ride_controller.dart';
 import '../models/ride_model.dart';
+import '../models/user_model.dart';
 import '../utils/text.dart';
 
 class RideAuthorImage extends StatelessWidget {
-  RideModel? ride;
-  String authorName;
+  final UserModel? author;
+  final String authorName;
 
-  RideAuthorImage({Key? key, required this.ride, required this.authorName}) : super(key: key);
+  RideAuthorImage({Key? key, required this.author, required this.authorName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class RideAuthorImage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: CircleAvatar(
               backgroundImage:
-                  NetworkImage(ride?.author?.avatarUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
+                  NetworkImage(author?.avatarUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg'),
               maxRadius: 30,
             ),
           ),

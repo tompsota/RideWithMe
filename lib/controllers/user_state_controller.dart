@@ -9,6 +9,9 @@ import '../models/user_model.dart';
 class UserStateController extends ChangeNotifier {
   // we retrieve UserModel from DB
   late UserModel user;
+  UserStateController();
+
+  // TODO: add setter with notifyListeners()
 
   UserStateController._create();
 

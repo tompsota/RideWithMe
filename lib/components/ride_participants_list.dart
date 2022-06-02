@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../domain_layer/db_repository.dart';
 import '../models/ride_model.dart';
-import '../utils/filters.dart';
+import '../domain_layer/filters.dart';
 import '../utils/ride/ride_participants.dart';
 import '../utils/text.dart';
 

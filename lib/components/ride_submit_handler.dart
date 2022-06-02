@@ -7,10 +7,10 @@ import '../models/ride_model.dart';
 import '../utils/button.dart';
 
 class RideSubmitHandler extends StatelessWidget {
-  RideModel? ride;
-  bool isBeingCreated;
-  bool userIsParticipating;
-  String userId;
+  final RideModel? ride;
+  final bool isBeingCreated;
+  final bool userIsParticipating;
+  final String userId;
 
   RideSubmitHandler({Key? key, required this.ride, required this.isBeingCreated, required this.userIsParticipating, required this.userId})
       : super(key: key);

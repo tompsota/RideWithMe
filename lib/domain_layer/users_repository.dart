@@ -1,7 +1,9 @@
 // handles transformation of data from UsersApi and UserApi,
 // to e.g. provide a stream of Users with authors and participants
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ride_with_me/data_layer/apis/users_api.dart';
+import 'package:tuple/tuple.dart';
 
 import '../data_layer/apis/users_api.dart';
 import '../models/user_model.dart';
@@ -58,16 +60,85 @@ class UsersRepository {
   /// If a [user] with the same id already exists, it will be replaced.
   Future<void> createUser(UserModel user) async {
     await _usersApi.createUser(user.toDto());
-
-    // TODO: update user's created users
-    // await _usersApi.updateUser(user.author)
-
-    // TODO: update participants
-    // user.participants.forEach((participant) async {
-    //   await _usersApi.updateUser(participant);
-    // });
-
   }
 
+  // if user is not signed in or he is signed in as anonymous user (email is null)
+  bool _isUserSignedIn() {
+    final authUser = FirebaseAuth.instance.currentUser;
+    return authUser != null && (authUser.email?.isNotEmpty ?? false);
+  }
+
+  Tuple2<String, String> _getUserNames() {
+    final authUser = FirebaseAuth.instance.currentUser;
+    
+    if (authUser == null) {
+      return Tuple2("Unknown", "Unknown");
+    }
+    
+    var userFirstName = authUser.displayName ?? "";
+    var userLastName = "";
+    if (authUser.displayName?.contains(' ') ?? false) {
+      var names = authUser.displayName?.split(' ');
+      if (names != null) {
+        userFirstName = names[0].trim();
+        userLastName = names.sublist(1).join(' ').trim();
+      }
+    }
+    return Tuple2(userFirstName, userLastName);
+  }
+
+  Future<UserModel?> ensureUserExists() async {
+
+    final authUser = FirebaseAuth.instance.currentUser;
+    final email = authUser?.email;
+
+    if (!_isUserSignedIn()) {
+      return null;
+    }
+
+    // TODO: what if DB can't fetch valid user with given email - will our new user overwrite the current one?
+    //
+    final user = await getUserByEmail(authUser!.email!);
+
+    if (user != null) {
+      return user;
+    } else {
+
+      // create new user
+      var userNames = _getUserNames();
+      var userFirstName = userNames.item1;
+      var userLastName = userNames.item2;
+
+      final newUser = UserModel.id(
+          email: email!,
+          firstName: userFirstName,
+          lastName: userLastName,
+          aboutMe: "No info.",
+          facebookAccount: '',
+          slackAccount: '',
+          instagramAccount: '',
+          stravaAccount: '',
+          googleAccount: '',
+          avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg");
+      await createUser(newUser);
+    }
+
+    // TODO: do we want to retrieve the user directly from the createUser call ??
+    //   since this call return null possibly? but that adds complexity to createUser method
+    return getUserByEmail(email);
+  }
+
+  // TODO: WARNING - if we update also ___RidesIds, then we might overwrite the result,
+  //   since the UserStateController.user doesn't get updated when we create ride, join a ride etc.
+  //   therefore we would ideally only update things that can be update from the user profile,
+  // such as 'About me', links etc. (user is not able to update ___RidesIds by himself,
+  // therefore they should be excluded from the update
+  Future<void> updateUser(UserModel user) async {
+      await _usersApi.updateUser(user.toDto());
+  }
+
+  Future<void> updateUserProfile(UserModel user) async {
+    await _usersApi.updateUserProfile(user.toDto());
+  }
 
 }

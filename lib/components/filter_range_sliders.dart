@@ -13,7 +13,7 @@ class FilterRangeSliders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
-    FilterModel _appliedFilter = _rideFilterProvider.getAppliedFilter();
+    FilterModel _appliedFilter = _rideFilterProvider.appliedFilter;
 
     return Consumer<RideFilterController>(
       builder: (context, filterModel, _) => Column(
@@ -26,7 +26,7 @@ class FilterRangeSliders extends StatelessWidget {
             initialSpan: _appliedFilter.selectedDistance,
             callback: (range) => _rideFilterProvider.updateDistance(range),
             units: "km",
-            currentValues: filterModel.getCurrentFilter().selectedDistance,
+            currentValues: filterModel.currentFilter.selectedDistance,
           ),
           SizedBox(height: 20),
           MediumText("Climbing"),
@@ -35,7 +35,7 @@ class FilterRangeSliders extends StatelessWidget {
             initialSpan: _appliedFilter.selectedClimbing,
             callback: (range) => _rideFilterProvider.updateClimbing(range),
             units: "m",
-            currentValues: filterModel.getCurrentFilter().selectedClimbing,
+            currentValues: filterModel.currentFilter.selectedClimbing,
           ),
           SizedBox(height: 20),
           MediumText("Duration"),
@@ -44,7 +44,7 @@ class FilterRangeSliders extends StatelessWidget {
             initialSpan: _appliedFilter.selectedDuration,
             callback: (range) => _rideFilterProvider.updateDuration(range),
             units: "h",
-            currentValues: filterModel.getCurrentFilter().selectedDuration,
+            currentValues: filterModel.currentFilter.selectedDuration,
           ),
           SizedBox(height: 20),
           MediumText("Expected average speed"),
@@ -53,7 +53,7 @@ class FilterRangeSliders extends StatelessWidget {
             initialSpan: _appliedFilter.selectedAvgSpeed,
             callback: (range) => _rideFilterProvider.updateAvgSpeed(range),
             units: "km/h",
-            currentValues: filterModel.getCurrentFilter().selectedAvgSpeed,
+            currentValues: filterModel.currentFilter.selectedAvgSpeed,
           ),
           SizedBox(height: 20),
           MediumText("Participants"),
@@ -62,7 +62,7 @@ class FilterRangeSliders extends StatelessWidget {
             initialSpan: _appliedFilter.selectedNrParticipants,
             callback: (range) => _rideFilterProvider.updateNrParticipants(range),
             units: "",
-            currentValues: filterModel.getCurrentFilter().selectedNrParticipants,
+            currentValues: filterModel.currentFilter.selectedNrParticipants,
           ),
         ],
       ),

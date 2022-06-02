@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:rxdart/streams.dart';
 import 'package:ride_with_me/data_layer/apis/rides_api.dart';
 
 import '../dtos/ride.dart';
+import '../utils.dart';
 
 
 /// {@template local_storage_rides_api}
@@ -15,27 +18,29 @@ class FirestoreRidesApi implements RidesApi {
   FirestoreRidesApi();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // final _rideStreamController = BehaviorSubject<List<Ride>>.seeded(const []);
-  // final StreamController _streamController = StreamController<Ride>.broadcast();
-  
+
+  CollectionReference<Map<String, dynamic>> _getRidesCollection() => _firestore.collection('rides');
+  Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => snapshotsToDtos(snapshots, Ride.fromJson);
+
   @override
-  Stream<List<Ride>> getRides() => _firestore
-      .collection('rides')
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => Ride.fromJson(doc.data())).toList())
-      .asBroadcastStream(); // TODO: AsReusableStream from Rx ?
+  Stream<List<Ride>> getRides() => _snapshotsToDtos(_getRidesCollection().snapshots());
+  // Stream<List<Ride>> getRides() {
+  //   return _firestore.collection('rides')
+  // }
 
-  // Ride getRide(String id) => firestore
-  //     .collection('rides')
-  //     .where("id", isEqualTo: id)
-  //     .snapshots().
-
+  @override
+  Stream<List<Ride>> getRidesFromCollection(List<String> ridesIds) {
+    return _snapshotsToDtos(_getRidesCollection()
+        // can't be empty
+        .where('id', whereIn: ridesIds.isNotEmpty ? ridesIds : [""])
+        .snapshots()
+    );
+  }
 
   // TODO: should have 'then' and 'catchError' / 'onError' ?
   @override
   Future<void> updateRide(Ride ride) async {
-    await _firestore
-        .collection('rides')
+    await _getRidesCollection()
         .doc(ride.id)
         .update(ride.toJson())
         .then((value) => null)
@@ -45,21 +50,13 @@ class FirestoreRidesApi implements RidesApi {
 
   @override
   Future<void> createRide(Ride ride) async {
-    await _firestore
-        .collection('rides')
-        .add(ride.toJson())
-        .then((value) => null)
-        .catchError((error) => null);
 
-    // final rides = [..._rideStreamController.value];
-    // final rideIndex = rides.indexWhere((t) => t.id == ride.id);
-    // if (rideIndex >= 0) {
-    //   rides[rideIndex] = ride;
-    // } else {
-    //   rides.add(ride);
-    // }
+    // sets id to Uuid().v4() that we generated ourselves
+    // await _getRidesCollection().doc(ride.id).set(ride.toJson());
 
-    // _rideStreamController.add(rides);
+    // ID is created by Firebase, then we update ride's ID to this ID
+    final newRide = await _getRidesCollection().add(ride.toJson());
+    await newRide.update({'id': newRide.id});
   }
 
   @override

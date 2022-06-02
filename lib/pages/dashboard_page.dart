@@ -7,7 +7,7 @@ import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/utils/ride/rides_stream_builder.dart';
 import '../domain_layer/db_repository.dart';
-import '../utils/filters.dart';
+import '../domain_layer/filters.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -18,8 +18,8 @@ class DashboardPage extends StatelessWidget {
     final ridesRepository = dbRepository.ridesRepository;
 
     return Consumer<RideFilterController>(builder: (context, filterController, child) {
-      final ridesFilter = filterController.getAppliedFilter();
-      final ridesStream = ridesRepository.getFullRides(Filters.passesRidesFilter(ridesFilter));
+
+      final filteredRidesStream = ridesRepository.getFilteredRides(filterController.appliedFilter);
 
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Row(
@@ -33,9 +33,10 @@ class DashboardPage extends StatelessWidget {
                   callback: () async {
                     Navigator.push(
                       context,
-                      // MaterialPageRoute(builder: (context) => FilterRidesPage()),
-                      MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider.value(value: filterController, child: FilterRidesPage())),
+                      MaterialPageRoute(builder: (context) => FilterRidesPage()),
+                      // TODO: changed before testing, might cause issues
+                      // MaterialPageRoute(
+                      //     builder: (context) => ChangeNotifierProvider.value(value: filterController, child: FilterRidesPage())),
                     );
                   },
                 ),
@@ -47,7 +48,7 @@ class DashboardPage extends StatelessWidget {
           // child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
-            child: RidesStreamBuilder(ridesStream: ridesStream),
+            child: RidesStreamBuilder(ridesStream: filteredRidesStream),
           ),
           // ),
         ),
@@ -61,8 +62,10 @@ class DashboardPage extends StatelessWidget {
                   child: SubmitButton(
                     value: "ADD RIDE",
                     callback: () => Navigator.of(context).push(MaterialPageRoute(
-                        // builder: (_) => RideViewPage()
-                        builder: (context) => ChangeNotifierProvider.value(value: userController, child: RideViewPage()))),
+                        builder: (_) => RideViewPage(),
+                    )),
+              // TODO: changed before testing
+                        // builder: (context) => ChangeNotifierProvider.value(value: userController, child: RideViewPage()))),
                   ),
                 ),
               );

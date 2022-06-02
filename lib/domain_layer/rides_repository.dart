@@ -3,10 +3,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/data_layer/apis/rides_api.dart';
+import 'package:ride_with_me/domain_layer/utils.dart';
 
 import '../data_layer/apis/users_api.dart';
+import '../models/filter_model.dart';
 import '../models/ride_model.dart';
 import '../models/user_model.dart';
+import 'filters.dart';
 
 /// {@template rides_repository}
 /// A repository that handles ride related requests.
@@ -27,23 +30,20 @@ class RidesRepository {
   /// Provides a [Stream] of all rides.
   /// If filter is null, we keep all rides.
   Stream<List<RideModel>> getRides([bool Function(RideModel)? filter]) {
-    // var users = _usersApi.getUsers();
-    return _ridesApi
-        .getRides()
-        .map((rides) {
-          return rides
-              .map((ride) => RideModel.fromDto(ride))
-              .where(filter ?? (_) => true)
-              .toList();
-        })
-        .asBroadcastStream();
+    return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, filter));
   }
 
-  /// Provides a [Stream] of all rides with author and participants.
-  Stream<List<RideModel>> getFullRides([bool Function(RideModel)? filter]) async* {
-    var ridesStream = getRides(filter);
-    List<RideModel> fullRides = [];
+  Stream<List<RideModel>> getRidesFromCollection(List<String> ridesIds) {
+    return getFullRides(transformStream(_ridesApi.getRidesFromCollection(ridesIds), RideModel.fromDto));
+  }
 
+  Stream<List<RideModel>> getFilteredRides(FilterModel filter) {
+    return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.passesRidesFilter(filter)));
+  }
+  
+  /// Provides a [Stream] of all rides with author included.
+  Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) async* {
+    List<RideModel> fullRides = [];
     await for (var rides in ridesStream) {
       for (var ride in rides) {
         var author = await _usersApi.getUserById(ride.authorId);
@@ -68,9 +68,7 @@ class RidesRepository {
                 ride.author = UserModel.fromDto(author);
                 return ride;
               })
-              // .whereType<Future<RideModel>>()
               .whereType()
-              // .where((ride) => ride != null).toList()
         )
     );
   }
@@ -104,9 +102,6 @@ class RidesRepository {
     await _ridesApi.createRide(ride.toDto());
     await _usersApi.createRide(ride.id, ride.authorId);
 
-    // TODO: if ride.participantsIds is being set to [userId (=authorId)], we can omit the call to API
-    // if participants already contains userId, nothing will happen (? - shouldn't be added twice),
-    //   otherwise userId will be added to ride.participantsIds
     // await _ridesApi.joinRide(ride.id, ride.authorId);
   }
 
