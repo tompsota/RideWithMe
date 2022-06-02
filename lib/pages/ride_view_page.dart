@@ -48,6 +48,9 @@ class RideViewPage extends StatelessWidget {
       final ridesRepository = dbRepository.ridesRepository;
 
       return Consumer<NewRideController>(builder: (context, newRideController, _) {
+        if (!isBeingCreated) {
+          newRideController.ride = ride!;
+        }
         return Scaffold(
           appBar: AppBar(
               toolbarHeight: 80,
