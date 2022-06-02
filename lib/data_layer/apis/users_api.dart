@@ -13,6 +13,8 @@ abstract class UsersApi {
   /// Returns user or null, if user with given email does not exist.
   Future<User?> getUserByEmail(String email);
 
+  Stream<User> getUserStreamById(String id);
+
   /// Returns user or null, if user with given id does not exist.
   Future<User?> getUserById(String id);
 

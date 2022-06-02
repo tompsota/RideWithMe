@@ -8,6 +8,8 @@ import 'package:ride_with_me/data_layer/apis/users_api.dart';
 
 import '../dtos/user.dart';
 
+typedef QuerySnapshots = Stream<QuerySnapshot<Map<String, dynamic>>>;
+typedef DocumentSnapshots = Stream<DocumentSnapshot<Map<String, dynamic>>>;
 
 /// {@template local_storage_users_api}
 /// A Flutter implementation of the [UsersApi] that uses local storage.
@@ -18,36 +20,32 @@ class FirestoreUsersApi implements UsersApi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> _getUsersCollection() => _firestore.collection('users');
-  Stream<List<User>> _snapshotsToStream(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => snapshotsToDtos(snapshots, User.fromJson);
+  Stream<List<User>> _querySnapshotsToDtos(QuerySnapshots snapshots) => querySnapshotsToDtos(snapshots, User.fromJson);
+  Stream<User> _documentSnapshotsToDtos(DocumentSnapshots snapshots) => documentSnapshotsToDtos(snapshots, User.fromJson);
+  
 
   @override
-  Stream<List<User>> getUsers() => _snapshotsToStream(_getUsersCollection().snapshots());
+  Stream<List<User>> getUsers() => _querySnapshotsToDtos(_getUsersCollection().snapshots());
 
   @override
   Future<void> updateUser(User user) async {
     await _getUsersCollection().doc(user.id).update(user.toJson());
   }
 
-
-  // TODO: make a 'getUserProfile' method, which returns a Map<String, object>
-  // or as a util, since DTOs should be 'dumb' ?
-  // don't update any IDs
   Future<void> updateUserProfile(User user) async {
     await _getUsersCollection().doc(user.id).update(getUserInfo(user));
   }
 
-  // either create doc with id = Uuid().v4() that we generated ourselves before,
-  // or use Firebase's generated ID and update the model
   @override
   Future<String> createUser(User user) async {
-
-    // sets id to Uuid().v4() that we generated ourselves
-    // await _getUsersCollection().doc(user.id).set(user.toJson());
-    
     // ID is created by Firebase, then we update user's ID to this ID
     final newUser = await _getUsersCollection().add(user.toJson());
     await newUser.update({'id': newUser.id});
     return newUser.id;
+  }
+
+  Stream<User> getUserStreamById(String id) {
+    return _documentSnapshotsToDtos(_getUsersCollection().doc(id).snapshots());
   }
 
   @override
@@ -59,7 +57,6 @@ class FirestoreUsersApi implements UsersApi {
     if (snapshot.docs.length != 1) {
       return null;
     }
-
     return User.fromJson(snapshot.docs.single.data());
   }
 
@@ -104,7 +101,7 @@ class FirestoreUsersApi implements UsersApi {
   }
 
   Stream<List<User>> getParticipants(List<String> participantsIds) {
-    return _snapshotsToStream(_getUsersCollection()
+    return _querySnapshotsToDtos(_getUsersCollection()
         .where('id', whereIn: participantsIds)
         .snapshots());
   }

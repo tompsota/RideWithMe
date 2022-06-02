@@ -26,11 +26,11 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserStateController>(context, listen: false).user.id;
     final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
-    final userStream = usersRepository.getUserStream(userId);
+    final userStream = usersRepository.getUserStreamById(userId);
 
-    return StreamBuilder<List<UserModel>>(
+    return StreamBuilder<UserModel>(
       stream: userStream,
-      builder: (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong!');
         }
@@ -39,11 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
           return Text("Loading profile ...");
         }
 
-        if (!snapshot.hasData || snapshot.data?.length != 1) {
+        if (!snapshot.hasData) {
           return Text("Profile can't be displayed.");
         }
 
-        final user = snapshot.data![0];
+        final user = snapshot.data!;
 
         final aboutMeController = TextEditingController(text: user.aboutMe);
         final facebookController = TextEditingController(text: ' ' + user.facebookAccount);

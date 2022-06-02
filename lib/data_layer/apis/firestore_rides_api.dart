@@ -20,7 +20,7 @@ class FirestoreRidesApi implements RidesApi {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> _getRidesCollection() => _firestore.collection('rides');
-  Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => snapshotsToDtos(snapshots, Ride.fromJson);
+  Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => querySnapshotsToDtos(snapshots, Ride.fromJson);
 
   @override
   Stream<List<Ride>> getRides() => _snapshotsToDtos(_getRidesCollection().snapshots());

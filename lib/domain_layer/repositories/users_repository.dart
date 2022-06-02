@@ -97,14 +97,11 @@ class UsersRepository {
       return null;
     }
 
-    // TODO: what if DB can't fetch valid user with given email - will our new user overwrite the current one?
-    //
     final user = await getUserByEmail(authUser!.email!);
 
     if (user != null) {
       return user;
     } else {
-
       // create new user
       var userNames = _getUserNames();
       var userFirstName = userNames.item1;
@@ -124,16 +121,9 @@ class UsersRepository {
       await createUser(newUser);
     }
 
-    // TODO: do we want to retrieve the user directly from the createUser call ??
-    //   since this call return null possibly? but that adds complexity to createUser method
     return getUserByEmail(email);
   }
 
-  // TODO: WARNING - if we update also ___RidesIds, then we might overwrite the result,
-  //   since the UserStateController.user doesn't get updated when we create ride, join a ride etc.
-  //   therefore we would ideally only update things that can be update from the user profile,
-  // such as 'About me', links etc. (user is not able to update ___RidesIds by himself,
-  // therefore they should be excluded from the update
   Future<void> updateUser(UserModel user) async {
       await _usersApi.updateUser(user.toDto());
   }
@@ -142,8 +132,11 @@ class UsersRepository {
     await _usersApi.updateUserProfile(user.toDto());
   }
 
-  Stream<List<UserModel>> getUserStream(String id) {
-    return getUsers(Filters.userHasGivenId(id));
+  Stream<UserModel> getUserStreamById(String id) {
+    return _usersApi
+        .getUserStreamById(id)
+        .map(UserModel.fromDto)
+        .asBroadcastStream();
   }
 
 }

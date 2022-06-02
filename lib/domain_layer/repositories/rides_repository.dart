@@ -78,7 +78,6 @@ class RidesRepository {
   }
 
   /// Creates a [ride].
-  ///
   /// If a [ride] with the same id already exists, it will be replaced.
   Future<void> createRide(RideModel ride) async {
 
