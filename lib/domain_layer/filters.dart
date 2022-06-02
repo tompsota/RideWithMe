@@ -48,7 +48,7 @@ class Filters {
         passesAvgSpeed,
         passesDistance,
         passesClimbing,
-        passesDuration,
+        // passesDuration,
 
       ];
 

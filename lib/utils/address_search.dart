@@ -40,9 +40,9 @@ class _AddressSearchState extends State<AddressSearch> {
 
   void getSuggestion(String input) async {
     String kPLACESAPIKEY = kGoogleApiKey;
-    // String type = '(regions)'; //TODO maybe add this to query
+    // consider adding the following to the query: String type = '(regions)';
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    // TODO: if we want to filters cities only then add '&types=%28cities%29' to request
+    // if we want to filters cities only, then add '&types=%28cities%29' to request
     String request =
         '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken';
     final response = await http.get(Uri.parse(request), headers: {

@@ -1,3 +1,4 @@
+import 'package:ride_with_me/domain_layer/models/ride_model.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../data_layer/dtos/user.dart';
@@ -20,6 +21,10 @@ class UserModel {
   final List<String> joinedRidesIds;
   final List<String> completedRidesIds;
 
+  late List<RideModel> createdRides;
+  late List<RideModel> joinedRides;
+  late List<RideModel> completedRides;
+
   UserModel({
     required this.id,
     required this.email,
@@ -35,6 +40,9 @@ class UserModel {
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
     this.completedRidesIds = const [],
+    this.createdRides = const[],
+    this.joinedRides = const[],
+    this.completedRides = const[],
   });
 
   UserModel.id({
@@ -51,6 +59,9 @@ class UserModel {
     this.createdRidesIds = const [],
     this.joinedRidesIds = const [],
     this.completedRidesIds = const [],
+    this.createdRides = const[],
+    this.joinedRides = const[],
+    this.completedRides = const[],
   }) : id = Uuid().v4();
 
   factory UserModel.fromDto(User user) => UserModel(

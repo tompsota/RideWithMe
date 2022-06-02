@@ -1,14 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:ride_with_me/components/ride/rides_list_view.dart';
 import 'package:tuple/tuple.dart';
 
-import '../../controllers/user_state_controller.dart';
-import '../../domain_layer/repositories/db_repository.dart';
-import '../../domain_layer/filters.dart';
+import '../../domain_layer/models/ride_model.dart';
 import '../../domain_layer/models/user_model.dart';
-import '../ride/rides_stream_builder.dart';
 import '../../utils/text.dart';
+
 
 class ProfileExpansionPanel extends StatefulWidget {
   final UserModel user;
@@ -25,17 +23,16 @@ class _ProfileExpansionPanelState extends State<ProfileExpansionPanel> {
   @override
   Widget build(BuildContext context) {
 
-    final ridesRepository = Provider.of<DbRepository>(context, listen: false).ridesRepository;
     final ridesData = [
-      Tuple2<String, List<String>>('Completed rides', widget.user.completedRidesIds),
-      Tuple2<String, List<String>>('Created rides', widget.user.createdRidesIds),
-      Tuple2<String, List<String>>('Joined rides', widget.user.joinedRidesIds),
+      Tuple2<String, List<RideModel>>('Joined rides', widget.user.joinedRides),
+      Tuple2<String, List<RideModel>>('Created rides', widget.user.createdRides),
+      Tuple2<String, List<RideModel>>('Completed rides', widget.user.completedRides),
     ];
 
     return ExpansionPanelList(
       children: ridesData.mapIndexed((i, data) {
-        final String headerTitle = data.item1;
-        final ridesIds = data.item2;
+        final headerTitle = data.item1;
+        final rides = data.item2;
         return ExpansionPanel(
           headerBuilder: (context, isExpanded) {
             return Padding(
@@ -43,7 +40,7 @@ class _ProfileExpansionPanelState extends State<ProfileExpansionPanel> {
               child: MediumText(headerTitle),
             );
           },
-          body: RidesStreamBuilder(ridesStream: ridesRepository.getRidesFromCollection(ridesIds)),
+          body: RidesListView(rides: rides),
           isExpanded: _isExpanded[i],
           canTapOnHeader: true,
         );

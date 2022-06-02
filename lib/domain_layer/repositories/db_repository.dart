@@ -13,7 +13,7 @@ class DbRepository extends ChangeNotifier {
     required UsersApi usersApi,
   }) :
         ridesRepository = RidesRepository(ridesApi: ridesApi, usersApi: usersApi),
-        usersRepository = UsersRepository(usersApi: usersApi);
+        usersRepository = UsersRepository(ridesApi: ridesApi, usersApi: usersApi);
 
   final RidesRepository ridesRepository;
   final UsersRepository usersRepository;

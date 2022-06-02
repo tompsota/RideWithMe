@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserStateController>(context, listen: false).user.id;
     final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
-    final userStream = usersRepository.getUserStreamById(userId);
+    final userStream = usersRepository.getFullUserStreamById(userId);
 
     return StreamBuilder<UserModel>(
       stream: userStream,
@@ -85,11 +85,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MediumText('Created rides'),
-                          Text(user.createdRidesIds.length.toString()),
-                          SizedBox(height: 7),
                           MediumText('Joined rides'),
                           Text(user.joinedRidesIds.length.toString()),
+                          SizedBox(height: 7),
+                          MediumText('Created rides'),
+                          Text(user.createdRidesIds.length.toString()),
                           SizedBox(height: 7),
                           MediumText('Completed rides'),
                           Text(user.completedRidesIds.length.toString()),

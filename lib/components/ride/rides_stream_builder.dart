@@ -16,15 +16,15 @@ class RidesStreamBuilder extends StatelessWidget {
       stream: ridesStream,
       builder: (BuildContext context, AsyncSnapshot<List<RideModel>> snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Something went wrong!'));
+          return Text('Something went wrong!');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: Text("Loading rides ..."));
+          return Text("Loading rides ...");
         }
 
         if (!snapshot.hasData || snapshot.data?.length == 0) {
-          return Center(child: Text("No rides to show."));
+          return Text("No rides to show.");
         }
 
         return RidesListView(rides: snapshot.data);
