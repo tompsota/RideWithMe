@@ -20,7 +20,6 @@ class RideParticipantsIcons extends StatelessWidget {
                 (index) => Positioned(
               left: index * 12,
               child: CircleAvatar(
-                // TODO: change background image to just plain (e.g. black / navy blue / ...) circle ?
                 backgroundImage: index.isEven
                     ? NetworkImage(
                     'https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg')

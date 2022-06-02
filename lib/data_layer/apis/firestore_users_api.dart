@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_with_me/data_layer/utils.dart';
-import 'package:rxdart/subjects.dart';
 import 'package:ride_with_me/data_layer/apis/users_api.dart';
 
 import '../dtos/user.dart';
@@ -11,9 +8,8 @@ import '../dtos/user.dart';
 typedef QuerySnapshots = Stream<QuerySnapshot<Map<String, dynamic>>>;
 typedef DocumentSnapshots = Stream<DocumentSnapshot<Map<String, dynamic>>>;
 
-/// {@template local_storage_users_api}
-/// A Flutter implementation of the [UsersApi] that uses local storage.
-/// {@endtemplate}
+
+/// A Flutter implementation of the UsersApi that uses Firebase Firestore.
 class FirestoreUsersApi implements UsersApi {
   FirestoreUsersApi();
 
@@ -22,7 +18,6 @@ class FirestoreUsersApi implements UsersApi {
   CollectionReference<Map<String, dynamic>> _getUsersCollection() => _firestore.collection('users');
   Stream<List<User>> _querySnapshotsToDtos(QuerySnapshots snapshots) => querySnapshotsToDtos(snapshots, User.fromJson);
   Stream<User> _documentSnapshotsToDtos(DocumentSnapshots snapshots) => documentSnapshotsToDtos(snapshots, User.fromJson);
-  
 
   @override
   Stream<List<User>> getAllUsers() => _querySnapshotsToDtos(_getUsersCollection().snapshots());

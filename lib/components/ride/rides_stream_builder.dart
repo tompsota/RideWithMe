@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/components/ride/rides_list_view.dart';
 
 import '../../domain_layer/models/ride_model.dart';
 
-// TODO: probably rename to something better
+
 class RidesStreamBuilder extends StatelessWidget {
 
   final Stream<List<RideModel>> ridesStream;

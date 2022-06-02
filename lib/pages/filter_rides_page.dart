@@ -7,7 +7,7 @@ import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/utils/text.dart';
 
-//TODO pridat reset tlacitko
+
 class FilterRidesPage extends StatelessWidget {
   FilterRidesPage({Key? key}) : super(key: key);
 

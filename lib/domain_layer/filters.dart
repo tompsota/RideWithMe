@@ -35,9 +35,10 @@ class Filters {
       final passesClimbing = _passesRange(filter.selectedClimbing, ride.climbing);
       final passesAvgSpeed = _passesRange(filter.selectedAvgSpeed, ride.averageSpeed);
 
-      // TODO: add filtering by day? (start - finish)
-      // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
-      // final passesDuration
+      // TODO: start - finish time of day
+      // final passesStartFinishTimes = ride.start >= filter.start && ride.start + ride.duration <= filter.finish;
+      final passesDuration = Duration(hours: filter.selectedDuration.start.toInt()) >= ride.duration
+          && Duration(hours: filter.selectedDuration.end.toInt()) <= ride.duration;
 
       // TODO: add location filtering - only equals or also contains etc.?
       final passesLocation = filter.selectedLocation == ride.rideStartLocationName;
@@ -46,7 +47,9 @@ class Filters {
         passesNrParticipants,
         passesAvgSpeed,
         passesDistance,
-        passesClimbing
+        passesClimbing,
+        passesDuration,
+
       ];
 
       return passesList.every((x) => x);

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:ride_with_me/utils/callback_types.dart';
 
-import '../controllers/ride_filter_controller.dart';
 
 class TwoWaySlider extends StatelessWidget {
   final RangeValuesCallback callback;
   final RangeValues span;
   final RangeValues initialSpan;
-  RangeValues currentValues;
+  final RangeValues currentValues;
   final String units;
 
   TwoWaySlider({
@@ -28,7 +26,7 @@ class TwoWaySlider extends StatelessWidget {
       max: span.end,
       divisions: span.end.toInt(),
       labels: RangeLabels(
-        currentValues.start.round().toString() + " " + units, //TODO find nicer way to do this
+        currentValues.start.round().toString() + " " + units,
         currentValues.end.round().toString() + " " + units,
       ),
       onChanged: (RangeValues values) {

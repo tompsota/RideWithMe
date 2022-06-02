@@ -10,7 +10,6 @@ class NewRideController extends ChangeNotifier {
 
   final RidesRepository ridesRepository;
 
-  // TODO: remove late and add ctor
   RideModel ride = RideModel.id(
     createdAt: DateTime.now(),
     averageSpeed: 0,

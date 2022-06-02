@@ -10,8 +10,6 @@ class RideNumberPicker extends StatelessWidget {
   final ValueChanged<int> callback;
   int currentValue;
 
-  // TODO: change int to double ?
-
   RideNumberPicker(
       {Key? key,
       required this.minValue,
@@ -68,8 +66,8 @@ class RideNumberPicker extends StatelessWidget {
                       minValue: minValue,
                       maxValue: maxValue,
                       onChanged: (value) {
-                        currentValue = value; // to change on widget level state
-                        builderSetState(() => currentValue = value); //* to change on dialog state
+                        currentValue = value;
+                        builderSetState(() => currentValue = value);
                         callback(currentValue);
                       }),
                   MediumText(units),

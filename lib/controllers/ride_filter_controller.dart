@@ -73,8 +73,6 @@ class RideFilterController extends ChangeNotifier {
   FilterModel get appliedFilter => _appliedFilter;
   FilterModel get currentFilter => _currentFilter;
 
-  // TODO: use getters instead of getX()
-
   DateTime getCurrentFilterDate() {
     return _currentFilter.selectedDate;
   }

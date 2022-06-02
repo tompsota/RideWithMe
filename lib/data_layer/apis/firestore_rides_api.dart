@@ -7,14 +7,20 @@ import '../utils.dart';
 
 
 
-/// An implementation of the [RidesApi] that uses Firebase Firestore
+/// An implementation of the RidesApi that uses Firebase Firestore.
 class FirestoreRidesApi implements RidesApi {
+
   FirestoreRidesApi();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> _getRidesCollection() => _firestore.collection('rides');
-  Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => querySnapshotsToDtos(snapshots, Ride.fromJson);
+  CollectionReference<Map<String, dynamic>> _getRidesCollection() {
+    return _firestore.collection('rides');
+  }
+
+  Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) {
+    return querySnapshotsToDtos(snapshots, Ride.fromJson);
+  }
 
   @override
   Stream<List<Ride>> getAllRides() => _snapshotsToDtos(_getRidesCollection().snapshots());
@@ -28,7 +34,6 @@ class FirestoreRidesApi implements RidesApi {
     );
   }
 
-  // TODO: should have 'then' and 'catchError' / 'onError' ?
   @override
   Future<void> updateRide(Ride ride) async {
     await _getRidesCollection()
@@ -38,13 +43,8 @@ class FirestoreRidesApi implements RidesApi {
         .catchError((error) => null);
   }
 
-
   @override
   Future<String> createRide(Ride ride) async {
-
-    // sets id to Uuid().v4() that we generated ourselves
-    // await _getRidesCollection().doc(ride.id).set(ride.toJson());
-
     // ID is created by Firebase, then we update ride's ID to this ID
     final newRide = await _getRidesCollection().add(ride.toJson());
     await newRide.update({'id': newRide.id});

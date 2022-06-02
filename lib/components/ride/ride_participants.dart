@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/components/ride/ride_list_tile.dart';
 import 'package:ride_with_me/components/ride/ride_participants_icons.dart';
 
-import '../../domain_layer/models/ride_model.dart';
 import '../../domain_layer/models/user_model.dart';
 
-// TODO: rename to something better ?
+
 class RideParticipants extends StatelessWidget {
 
   final Stream<List<UserModel>>? participantsStream;
