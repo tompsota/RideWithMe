@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const kGoogleApiKey = "";
+const kGoogleApiKey = "AIzaSyAEH9flzcuhDan-Yl0eITjhdWLcgRNnYmE";
 
 class AddressSearch extends StatefulWidget {
   final callback;
