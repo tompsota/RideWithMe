@@ -27,8 +27,6 @@ class RidesRepository {
   final RidesApi _ridesApi;
   final UsersApi _usersApi;
 
-  // final List<RideModel> fullRides = const [];
-
   /// Provides a [Stream] of all rides.
   /// If filter is null, we keep all rides.
   Stream<List<RideModel>> getRides([bool Function(RideModel)? filter]) {
@@ -36,106 +34,28 @@ class RidesRepository {
   }
 
   Stream<List<RideModel>> getRidesFromCollection(List<String> ridesIds) {
-    // return getFullRides(transformStream(_ridesApi.getRidesFromCollection(ridesIds), RideModel.fromDto));
     return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.isRideFromCollection(ridesIds)));
   }
 
   Stream<List<RideModel>> getFilteredRides(FilterModel filter) {
     return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.passesRidesFilter(filter)));
-    // return transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.passesRidesFilter(filter));
   }
-  
+
   /// Provides a [Stream] of all rides with author included.
-  Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) async* {
-    // fullRides.clear();
-    await for (var rides in ridesStream) {
-      // fullRides.clear();
-      final List<RideModel> fullRides = [];
-      print('getFullRides - rides length: ${rides.length}');
-      for (var ride in rides) {
-        var author = await _usersApi.getUserById(ride.authorId);
-        if (author != null) {
-          ride.author = UserModel.fromDto(author);
-          fullRides.add(ride);
-          // if (!fullRides.map((fullRide) => fullRide.id).contains(ride.id)) {
-          //   fullRides.add(ride);
-          // }
+  Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) {
+    final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
+
+    return Rx.combineLatest2(ridesStream, usersStream, (List<RideModel> rides, List<UserModel> users) {
+      return rides.map((ride) {
+        final authors = users.where((user) => user.id == ride.authorId).toList();
+        if (authors.length != 1) {
+          return null;
         }
-      }
-      // final ids = Set();
-      // fullRides = fullRides.toSet().toList();
-      // fullRides.retainWhere((ride) => ids.add(ride.id));
-      yield fullRides;
-      // fullRides.clear();
-    }
+        ride.author = authors[0];
+        return ride;
+      }).whereType<RideModel>().toList();
+    }).asBroadcastStream();
   }
-
-  Stream<List<RideModel>> getFullRides_1(Stream<List<RideModel>> ridesStream) async* {
-     ridesStream.asyncMap<List<RideModel>>((rides) => Future.wait(
-          rides
-              .map<Future<RideModel?>>((ride) async {
-                var author = await _usersApi.getUserById(ride.authorId);
-                if (author == null) {
-                  print('author is null');
-                  return null;
-                }
-                ride.author = UserModel.fromDto(author);
-                print('author not null');
-                return ride;
-              })
-              .whereType<Future<RideModel>>()
-        )
-    );
-  }
-
-  // Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) async* {
-  //
-  //   final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
-  //   print('here');
-  //   final List<RideModel> fullRides = [];
-  //   // TODO: try to use later
-  //   // fullRides.clear();
-  //   // the problem is 'Latest', since users doesn't emit ?
-  //   Rx.combineLatest2(ridesStream, usersStream, (List<RideModel> rides, List<UserModel> users) {
-  //     print('rides: ${rides.length}, users: ${users.length}');
-  //     for (var ride in rides) {
-  //       for (var user in users) {
-  //         if (user.id == ride.authorId) {
-  //           ride.author = user;
-  //           fullRides.add(ride);
-  //         }
-  //       }
-  //     }
-  //     print(fullRides.length);
-  //     return fullRides;
-  //   }).asBroadcastStream();
-  // }
-
-
-  // Stream<List<RideModel>> getFullRides_Rx2(Stream<List<RideModel>> ridesStream) async* {
-  //
-  //   final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
-  //   print('here');
-  //   // TODO: try to use later
-  //   // fullRides.clear();
-  //   // the problem is 'Latest', since users doesn't emit ?
-  //   Rx.merge([ridesStream, usersStream]).asyncMap((streams) {
-  //     var _ridesStream = streams[0];
-  //     var _usersStream = s
-  //   });
-  //
-  //   // , (List<RideModel> rides, List<UserModel> users) {
-  //   //   print('rides: ${rides.length}, users: ${users.length}');
-  //   //   for (var ride in rides) {
-  //   //     for (var user in users) {
-  //   //       if (user.id == ride.authorId) {
-  //   //         ride.author = user;
-  //   //         fullRides.add(ride);
-  //   //       }
-  //   //     }
-  //   //   }
-  //   //   return fullRides;
-  //   });
 
   Future<void> joinRide(String rideId, String userId) async {
     await _ridesApi.addParticipant(rideId, userId);
