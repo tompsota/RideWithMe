@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:ride_with_me/domain_layer/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -100,4 +101,11 @@ class RideModel {
         rideDate: rideDate,
         rideStartTime: rideStartTime,
       );
+
+  TimeOfDay get startTime {
+    return TimeOfDay(
+        hour: int.parse(rideStartTime.split(":")[0]),
+        minute: int.parse(rideStartTime.split(":")[1])
+    );
+  }
 }

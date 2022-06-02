@@ -27,10 +27,6 @@ class NewRideController extends ChangeNotifier {
     rideStartTime: "0:0",
   );
 
-  TimeOfDay getRideStartTime() {
-    return TimeOfDay(hour: int.parse(ride.rideStartTime.split(":")[0]), minute: int.parse(ride.rideStartTime.split(":")[1]));
-  }
-
   void setRideTitle(String value) {
     ride.title = value;
     notifyListeners();

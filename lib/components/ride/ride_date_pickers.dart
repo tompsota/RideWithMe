@@ -7,7 +7,7 @@ import '../../utils/text.dart';
 import '../../utils/time_picker.dart';
 
 class RideDatePickers extends StatelessWidget {
-  bool canBeEdited;
+  final bool canBeEdited;
 
   RideDatePickers({Key? key, required this.canBeEdited}) : super(key: key);
 
@@ -35,7 +35,7 @@ class RideDatePickers extends StatelessWidget {
                   Expanded(
                     child: TimePicker(
                         callback: (time) => {newRideController.setRideStartTime(time)},
-                        time: newRideController.getRideStartTime(),
+                        time: newRideController.ride.startTime,
                         isEditable: canBeEdited),
                   ),
                   if (canBeEdited) Icon(Icons.edit, color: Colors.grey),

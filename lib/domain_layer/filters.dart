@@ -34,22 +34,20 @@ class Filters {
       final passesDistance = _passesRange(filter.selectedDistance, ride.distance);
       final passesClimbing = _passesRange(filter.selectedClimbing, ride.climbing);
       final passesAvgSpeed = _passesRange(filter.selectedAvgSpeed, ride.averageSpeed);
-
-      // TODO: start - finish time of day
-      // final passesStartFinishTimes = ride.start >= filter.start && ride.start + ride.duration <= filter.finish;
-      final passesDuration = Duration(hours: filter.selectedDuration.start.toInt()) >= ride.duration
-          && Duration(hours: filter.selectedDuration.end.toInt()) <= ride.duration;
-
-      // TODO: add location filtering - only equals or also contains etc.?
-      final passesLocation = filter.selectedLocation == ride.rideStartLocationName;
+      final passesStartTime = _timeOfDayToMinutes(ride.startTime) >= _timeOfDayToMinutes(filter.selectedStartTime);
+      final passesFinishTime = _timeOfDayToMinutes(ride.startTime, ride.duration) <= _timeOfDayToMinutes(filter.selectedFinishTime);
+      final passesDuration = ride.duration.inMinutes >= filter.selectedDuration.start * 60 &&  ride.duration.inMinutes <= filter.selectedDuration.end * 60;
+      final passesLocation = filter.selectedLocation.isEmpty ? true : filter.selectedLocation == ride.rideStartLocationName;
 
       final passesList = [
         passesNrParticipants,
         passesAvgSpeed,
         passesDistance,
         passesClimbing,
-        // passesDuration,
-
+        passesLocation,
+        passesStartTime,
+        passesFinishTime,
+        passesDuration
       ];
 
       return passesList.every((x) => x);
@@ -59,4 +57,9 @@ class Filters {
   static bool _passesRange(RangeValues filterRange, int rideValue) {
     return rideValue >= filterRange.start && rideValue <= filterRange.end;
   }
+
+  static double _timeOfDayToMinutes(TimeOfDay timeOfDay, [Duration duration = const Duration()]) {
+    return timeOfDay.hour.toDouble() * 60 + timeOfDay.minute + duration.inMinutes;
+  }
+
 }
