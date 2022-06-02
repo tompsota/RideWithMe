@@ -14,10 +14,10 @@ abstract class RidesApi {
   /// Saves a [ride].
   ///
   /// If a [ride] with the same id already exists, it will be replaced.
-  Future<void> createRide(Ride ride);
+  Future<String> createRide(Ride ride);
 
-  Future<void> joinRide(String rideId, String userId);
-  Future<void> leaveRide(String rideId, String userId);
+  Future<void> addParticipant(String rideId, String userId);
+  Future<void> removeParticipant(String rideId, String userId);
 
   /// Updates a [ride].
   ///

@@ -27,6 +27,9 @@ class Filters {
       final passesAvgSpeed = _passesRange(filter.selectedAvgSpeed, ride.averageSpeed);
       // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
 
+      // TODO: add this condition ?
+      final passesLocation = filter.selectedLocation == ride.rideStartLocationName;
+
       final passesList = [
         passesNrParticipants,
         passesAvgSpeed,

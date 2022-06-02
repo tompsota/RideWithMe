@@ -19,7 +19,8 @@ abstract class UsersApi {
   /// Saves a [user].
   ///
   /// If a [user] with the same id already exists, it will be replaced.
-  Future<void> createUser(User user);
+  /// Returns [id].
+  Future<String> createUser(User user);
 
   /// Updates a [user].
   ///

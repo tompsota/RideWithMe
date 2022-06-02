@@ -29,6 +29,7 @@ class RideViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // TODO: when author = null, the page doesn't load at all
+    // TODO: rename from rideBeingEdited to 'ride' ?
 
     return Consumer<UserStateController>(builder: (context, userController, child) {
 
@@ -36,6 +37,12 @@ class RideViewPage extends StatelessWidget {
 
       final userId = userController.user.id;
       final isBeingCreated = rideBeingEdited == null;
+
+      // TODO: to remove later
+      if (rideBeingEdited != null && rideBeingEdited?.author == null) {
+        return Text('author cant be null');
+      }
+
       final isAuthor = ride?.authorId == userId;
       final canBeEdited = isBeingCreated || isAuthor;
       final userIsParticipating = ride?.participantsIds.contains(userId) ?? false;

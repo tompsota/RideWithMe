@@ -27,7 +27,10 @@ class _ProfileExpansionPanelState extends State<ProfileExpansionPanel> {
         Tuple2<String, List<String>>('Created rides', user.createdRidesIds),
         Tuple2<String, List<String>>('Joined rides', user.joinedRidesIds),
       ];
-      List<bool> _isExpanded = List.filled(ridesData.length, false);
+
+      // TODO: change to false ? also, ExpansionPanelList probably doesn't work for streams very well
+      // List<bool> _isExpanded = List.filled(ridesData.length, false);
+      List<bool> _isExpanded = List.filled(ridesData.length, true);
 
       return ExpansionPanelList(
         children: ridesData.map((data) {

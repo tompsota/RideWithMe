@@ -50,7 +50,7 @@ class FirestoreUsersApi implements UsersApi {
   // either create doc with id = Uuid().v4() that we generated ourselves before,
   // or use Firebase's generated ID and update the model
   @override
-  Future<void> createUser(User user) async {
+  Future<String> createUser(User user) async {
 
     // sets id to Uuid().v4() that we generated ourselves
     // await _getUsersCollection().doc(user.id).set(user.toJson());
@@ -58,6 +58,7 @@ class FirestoreUsersApi implements UsersApi {
     // ID is created by Firebase, then we update user's ID to this ID
     final newUser = await _getUsersCollection().add(user.toJson());
     await newUser.update({'id': newUser.id});
+    return newUser.id;
   }
 
   @override

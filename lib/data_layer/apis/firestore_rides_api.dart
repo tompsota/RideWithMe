@@ -49,7 +49,7 @@ class FirestoreRidesApi implements RidesApi {
 
 
   @override
-  Future<void> createRide(Ride ride) async {
+  Future<String> createRide(Ride ride) async {
 
     // sets id to Uuid().v4() that we generated ourselves
     // await _getRidesCollection().doc(ride.id).set(ride.toJson());
@@ -57,10 +57,11 @@ class FirestoreRidesApi implements RidesApi {
     // ID is created by Firebase, then we update ride's ID to this ID
     final newRide = await _getRidesCollection().add(ride.toJson());
     await newRide.update({'id': newRide.id});
+    return newRide.id;
   }
 
   @override
-  Future<void> leaveRide(String rideId, String userId) async {
+  Future<void> removeParticipant(String rideId, String userId) async {
     await _firestore
         .collection('rides')
         .doc(rideId)
@@ -68,7 +69,7 @@ class FirestoreRidesApi implements RidesApi {
   }
 
   @override
-  Future<void> joinRide(String rideId, String userId) async {
+  Future<void> addParticipant(String rideId, String userId) async {
     await _firestore
         .collection('rides')
         .doc(rideId)

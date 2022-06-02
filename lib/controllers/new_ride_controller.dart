@@ -86,7 +86,8 @@ class NewRideController extends ChangeNotifier {
     ride.authorId = authorId;
     ride.participantsIds = [authorId];
     await ridesRepository.createRide(ride);
-    notifyListeners();
+    // print('submitted ride');
+    // Future.delayed(Duration(seconds: 2));
   }
 
 // ride.participants.add(currentUser.id);
