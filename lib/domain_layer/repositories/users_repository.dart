@@ -1,19 +1,16 @@
-// handles transformation of data from UsersApi and UserApi,
-// to e.g. provide a stream of Users with authors and participants
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ride_with_me/data_layer/apis/users_api.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../data_layer/apis/users_api.dart';
+import '../models/ride_model.dart';
 import '../models/user_model.dart';
 import '../filters.dart';
 
-/// {@template users_repository}
+
 /// A repository that handles user related requests.
-/// {@endtemplate}
 class UsersRepository {
-  /// {@macro users_repository}
+
   const UsersRepository({
     required UsersApi usersApi,
   }) :
@@ -21,11 +18,10 @@ class UsersRepository {
 
   final UsersApi _usersApi;
 
-  /// Provides a [Stream] of all users.
-  // TODO: rename 'filter' to something else
+  /// Provides a stream of all users, filtered out using filter, if provided.
   Stream<List<UserModel>> getUsers([bool Function(UserModel)? filter]) {
     return _usersApi
-        .getUsers()
+        .getAllUsers()
         .map((users) => users
           .map((user) => UserModel.fromDto(user))
           .where(filter ?? (_) => true)
@@ -33,42 +29,34 @@ class UsersRepository {
         .asBroadcastStream();
   }
 
-  // TODO: change to getUserById or something similar ??
-  // (we don't have access to Id tho, since we use randomly generated Uuid, and not firebaseAuth.user.uid)
+
+  /// Returns UserModel with given email, if such user exists.
   Future<UserModel?> getUserByEmail(String email) async {
     final user = await _usersApi.getUserByEmail(email);
     return user == null ? null : UserModel.fromDto(user);
   }
 
-  /// Provides a [Stream] of all users with author and participants.
-  // Stream<List<UserModel>> getFullUsers(Function filter) {
-  Stream<List<UserModel>> getFullUsers() {
-    // var users = _usersApi.getUsers();
-    return _usersApi
-        .getUsers()
-        .map((users) {
-      return users.map((user) {
-        var userModel = UserModel.fromDto(user);
-        // add author and participants
-        return userModel;
-      }).toList();
-    })
-        .asBroadcastStream();
+  // /// Provides a stream of all users.
+  // Stream<List<UserModel>> getFullUsers() {
+  //   return _usersApi
+  //       .getAllUsers()
+  //       .map((users) => users
+  //       .map((user) => UserModel.fromDto(user)).toList())
+  //       .asBroadcastStream();
+  // }
+
+  /// Creates a user and returns the id that was generated.
+  Future<String> createUser(UserModel user) async {
+    return await _usersApi.createUser(user.toDto());
   }
 
-  /// Saves a [user].
-  ///
-  /// If a [user] with the same id already exists, it will be replaced.
-  Future<void> createUser(UserModel user) async {
-    await _usersApi.createUser(user.toDto());
-  }
-
-  // if user is not signed in or he is signed in as anonymous user (email is null)
   bool _isUserSignedIn() {
     final authUser = FirebaseAuth.instance.currentUser;
     return authUser != null && (authUser.email?.isNotEmpty ?? false);
   }
 
+  /// Returns first name and last name, parsed from information
+  /// about FirebaseAuth user.
   Tuple2<String, String> _getUserNames() {
     final authUser = FirebaseAuth.instance.currentUser;
     
@@ -88,6 +76,9 @@ class UsersRepository {
     return Tuple2(userFirstName, userLastName);
   }
 
+  /// Creates a new user in the database, if a user with given email does not
+  /// exist yet (is signing in for the first time).
+  /// Otherwise retrieve existing user from database.
   Future<UserModel?> ensureUserExists() async {
 
     final authUser = FirebaseAuth.instance.currentUser;
@@ -101,26 +92,25 @@ class UsersRepository {
 
     if (user != null) {
       return user;
-    } else {
-      // create new user
-      var userNames = _getUserNames();
-      var userFirstName = userNames.item1;
-      var userLastName = userNames.item2;
-
-      final newUser = UserModel.id(
-          email: email!,
-          firstName: userFirstName,
-          lastName: userLastName,
-          aboutMe: "No info.",
-          facebookAccount: '',
-          slackAccount: '',
-          instagramAccount: '',
-          stravaAccount: '',
-          googleAccount: '',
-          avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg");
-      await createUser(newUser);
     }
 
+    // create new user
+    var userNames = _getUserNames();
+    var userFirstName = userNames.item1;
+    var userLastName = userNames.item2;
+
+    final newUser = UserModel.id(
+        email: email!,
+        firstName: userFirstName,
+        lastName: userLastName,
+        aboutMe: "No info.",
+        facebookAccount: '',
+        slackAccount: '',
+        instagramAccount: '',
+        stravaAccount: '',
+        googleAccount: '',
+        avatarUrl: authUser.photoURL ?? "https://upload.wikimedia.org/wikipedia/commons/c/c4/Orange-Fruit-Pieces.jpg");
+    await createUser(newUser);
     return getUserByEmail(email);
   }
 
@@ -137,6 +127,10 @@ class UsersRepository {
         .getUserStreamById(id)
         .map(UserModel.fromDto)
         .asBroadcastStream();
+  }
+
+  Stream<List<UserModel>> getParticipants(RideModel ride) {
+    return getUsers(Filters.isParticipant(ride));
   }
 
 }

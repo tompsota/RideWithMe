@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/domain_layer/models/ride_model.dart';
 
 import '../../settings/filter_defaults.dart';
 

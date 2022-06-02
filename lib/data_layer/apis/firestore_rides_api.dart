@@ -1,19 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/subjects.dart';
-import 'package:rxdart/streams.dart';
 import 'package:ride_with_me/data_layer/apis/rides_api.dart';
 
 import '../dtos/ride.dart';
 import '../utils.dart';
 
 
-/// {@template local_storage_rides_api}
-/// A Flutter implementation of the [RidesApi] that uses local storage.
-/// {@endtemplate}
+
+/// An implementation of the [RidesApi] that uses Firebase Firestore
 class FirestoreRidesApi implements RidesApi {
   FirestoreRidesApi();
 
@@ -23,10 +17,7 @@ class FirestoreRidesApi implements RidesApi {
   Stream<List<Ride>> _snapshotsToDtos(Stream<QuerySnapshot<Map<String, dynamic>>> snapshots) => querySnapshotsToDtos(snapshots, Ride.fromJson);
 
   @override
-  Stream<List<Ride>> getRides() => _snapshotsToDtos(_getRidesCollection().snapshots());
-  // Stream<List<Ride>> getRides() {
-  //   return _firestore.collection('rides')
-  // }
+  Stream<List<Ride>> getAllRides() => _snapshotsToDtos(_getRidesCollection().snapshots());
 
   @override
   Stream<List<Ride>> getRidesFromCollection(List<String> ridesIds) {

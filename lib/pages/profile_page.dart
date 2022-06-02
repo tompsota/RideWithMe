@@ -32,15 +32,15 @@ class _ProfilePageState extends State<ProfilePage> {
       stream: userStream,
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong!');
+          return Center(child: Text('Something went wrong!'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading profile ...");
+          return Center(child: Text("Loading profile ..."));
         }
 
         if (!snapshot.hasData) {
-          return Text("Profile can't be displayed.");
+          return Center(child: Text("Profile can't be displayed."));
         }
 
         final user = snapshot.data!;

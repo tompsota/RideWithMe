@@ -12,11 +12,9 @@ import '../models/ride_model.dart';
 import '../models/user_model.dart';
 import '../filters.dart';
 
-/// {@template rides_repository}
 /// A repository that handles ride related requests.
-/// {@endtemplate}
 class RidesRepository {
-  /// {@macro rides_repository}
+
   const RidesRepository({
     required RidesApi ridesApi,
     required UsersApi usersApi,
@@ -27,23 +25,22 @@ class RidesRepository {
   final RidesApi _ridesApi;
   final UsersApi _usersApi;
 
-  /// Provides a [Stream] of all rides.
-  /// If filter is null, we keep all rides.
+  /// Provides a stream of all rides, filtered out using filter, if provided.
   Stream<List<RideModel>> getRides([bool Function(RideModel)? filter]) {
-    return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, filter));
+    return getFullRides(transformStream(_ridesApi.getAllRides(), RideModel.fromDto, filter));
   }
 
   Stream<List<RideModel>> getRidesFromCollection(List<String> ridesIds) {
-    return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.isRideFromCollection(ridesIds)));
+    return getFullRides(transformStream(_ridesApi.getAllRides(), RideModel.fromDto, Filters.isRideFromCollection(ridesIds)));
   }
 
   Stream<List<RideModel>> getFilteredRides(FilterModel filter) {
-    return getFullRides(transformStream(_ridesApi.getRides(), RideModel.fromDto, Filters.passesRidesFilter(filter)));
+    return getFullRides(transformStream(_ridesApi.getAllRides(), RideModel.fromDto, Filters.passesRidesFilter(filter)));
   }
 
-  /// Provides a [Stream] of all rides with author included.
+  /// Provides a stream of all rides with author included.
   Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) {
-    final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
+    final usersStream = transformStream(_usersApi.getAllUsers(), UserModel.fromDto);
 
     return Rx.combineLatest2(ridesStream, usersStream, (List<RideModel> rides, List<UserModel> users) {
       return rides.map((ride) {
@@ -77,11 +74,8 @@ class RidesRepository {
     ride.participantsIds.forEach((userId) async => await completeRide(ride.id, userId));
   }
 
-  /// Creates a [ride].
-  /// If a [ride] with the same id already exists, it will be replaced.
+  /// Creates a ride.
   Future<void> createRide(RideModel ride) async {
-
-    // Assumptions: authorId is set, ride.participantsIds = [authorId]
     final newRideId = await _ridesApi.createRide(ride.toDto());
     await _ridesApi.addParticipant(newRideId, ride.authorId);
     await _usersApi.createRide(newRideId, ride.authorId);

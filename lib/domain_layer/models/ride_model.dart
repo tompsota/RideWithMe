@@ -100,7 +100,4 @@ class RideModel {
         rideDate: rideDate,
         rideStartTime: rideStartTime,
       );
-
-// factory RideModel.fromJson(Map<String, dynamic> json) => _$RideModelFromJson(json);
-// Map<String, dynamic> toJson() => _$RideModelToJson(this);
 }

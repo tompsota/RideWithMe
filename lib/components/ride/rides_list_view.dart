@@ -12,12 +12,14 @@ class RidesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (rides == null) {
-      return Text('No rides to show.');
+      return Center(child: Text('No rides to show.'));
     }
 
     return ListView(
         shrinkWrap: true,
-        children: rides!.map((ride) => RideListTile(ride: ride)).toList(),
+        children: rides!
+            .map((ride) => RideListTile(ride: ride))
+            .toList(),
     );
   }
 }

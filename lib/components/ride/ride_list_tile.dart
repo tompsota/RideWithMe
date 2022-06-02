@@ -1,9 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
-
-import '../../controllers/user_state_controller.dart';
 import '../../domain_layer/models/ride_model.dart';
 import '../../pages/ride_view_page.dart';
 

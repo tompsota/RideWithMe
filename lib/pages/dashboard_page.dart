@@ -34,9 +34,6 @@ class DashboardPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => FilterRidesPage()),
-                      // TODO: changed before testing, might cause issues
-                      // MaterialPageRoute(
-                      //     builder: (context) => ChangeNotifierProvider.value(value: filterController, child: FilterRidesPage())),
                     );
                   },
                 ),
@@ -45,12 +42,10 @@ class DashboardPage extends StatelessWidget {
           ],
         ),
         Expanded(
-          // child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 50),
             child: RidesStreamBuilder(ridesStream: filteredRidesStream),
           ),
-          // ),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -61,11 +56,9 @@ class DashboardPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
                   child: SubmitButton(
                     value: "ADD RIDE",
-                    callback: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => RideViewPage(),
+                    callback: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => RideViewPage(),
                     )),
-              // TODO: changed before testing
-                        // builder: (context) => ChangeNotifierProvider.value(value: userController, child: RideViewPage()))),
                   ),
                 ),
               );

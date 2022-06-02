@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../domain_layer/repositories/db_repository.dart';
 import '../../domain_layer/models/ride_model.dart';
-import '../../domain_layer/filters.dart';
 import 'ride_participants.dart';
 import '../../utils/text.dart';
 
+
 class RideParticipantsList extends StatelessWidget {
-  RideModel? ride;
-  bool isBeingCreated;
+  final RideModel? ride;
+  final bool isBeingCreated;
 
   RideParticipantsList({Key? key, required this.ride, required this.isBeingCreated}) : super(key: key);
 
@@ -30,8 +29,7 @@ class RideParticipantsList extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 12),
                   child: ride == null
                       ? RideParticipants(participantsStream: null)
-                      : RideParticipants(participantsStream: usersRepository.getUsers(Filters.isParticipant(ride!)))
-                  // : RideParticipants(participantsStream: usersRepository.getUsers())
+                      : RideParticipants(participantsStream: usersRepository.getParticipants(ride!))
                   )),
         ],
       ],

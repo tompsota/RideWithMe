@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/ride/ride_author_image.dart';
@@ -27,21 +26,11 @@ class RideViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    // TODO: when author = null, the page doesn't load at all
-    // TODO: rename from rideBeingEdited to 'ride' ?
-
     return Consumer<UserStateController>(builder: (context, userController, child) {
 
       final ride = rideBeingEdited;
-
       final userId = userController.user.id;
       final isBeingCreated = rideBeingEdited == null;
-
-      // TODO: to remove later
-      if (rideBeingEdited != null && rideBeingEdited?.author == null) {
-        return Text('author cant be null');
-      }
 
       final isAuthor = ride?.authorId == userId;
       final canBeEdited = isBeingCreated || isAuthor;
@@ -52,6 +41,7 @@ class RideViewPage extends StatelessWidget {
       var rideTitle = isBeingCreated ? "$authorName's ride" : ride?.title ?? "Loading...";
       var titleController = TextEditingController(text: rideTitle);
       // Provider.of<NewRideController>(context, listen: false).setRideTitle(rideTitle);
+      Provider.of<NewRideController>(context, listen: false).ride.title = rideTitle;
       final showCompleteRideButton = isAuthor && (ride != null && !ride.isCompleted);
 
       final dbRepository = Provider.of<DbRepository>(context, listen: false);

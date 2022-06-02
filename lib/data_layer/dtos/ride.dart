@@ -5,28 +5,18 @@ import 'package:uuid/uuid.dart';
 
 part 'ride.g.dart';
 
-// use this command to generate json_serializable stuff:
+// use this command to generate `toJson` and `fromJson` implementations:
 // 'flutter pub run build_runner build'
 
-typedef Unit = int;
-
-// TODO: fix description
-
-/// {@template ride}
 /// A single ride item.
-///
-/// Contains a [title], [id], a [isCompleted] flag, ...
-///
-/// If an [id] is provided, it cannot be empty. If no [id] is provided, one
-/// will be generated.
-///
-/// [Ride]s are immutable and can be copied using [copyWith], in addition to
+/// 
+/// Rides are immutable and can be copied using [copyWith], in addition to
 /// being serialized and deserialized using [toJson] and [fromJson]
 /// respectively.
-/// {@endtemplate}
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Ride {
+
   @JsonKey(name: 'id')
   final String id;
 
@@ -60,15 +50,15 @@ class Ride {
 
   // in km/h
   @JsonKey(name: 'averageSpeed')
-  final Unit averageSpeed;
+  final int averageSpeed;
 
   // in km
   @JsonKey(name: 'distance')
-  final Unit distance;
+  final int distance;
 
   // in meters
   @JsonKey(name: 'climbing')
-  final Unit climbing;
+  final int climbing;
 
   // e.g. 4h 20min
   @JsonKey(name: 'duration')
@@ -97,8 +87,8 @@ class Ride {
   Ride.id({
     required this.title,
     required this.authorId,
-    required this.participantsIds, // could default to [authorId]
-    required this.isCompleted, // could default to false
+    required this.participantsIds,
+    required this.isCompleted,
     required this.averageSpeed,
     required this.distance,
     required this.climbing,
@@ -110,41 +100,6 @@ class Ride {
     required this.rideStartTime,
   })  : id = Uuid().v4(),
         createdAt = DateTime.now();
-
-  /// Returns a copy of this ride with the given values updated.
-  Ride copyWith({
-    String? id,
-    String? title,
-    String? authorId,
-    List<String>? participantsIds,
-    bool? isCompleted,
-    Unit? averageSpeed,
-    Unit? distance,
-    Unit? climbing,
-    Duration? duration,
-    List<String>? tags,
-    String? rideStartLocationName,
-    String? rideMapLink,
-    DateTime? rideDate,
-    String? rideStartTime,
-  }) {
-    return Ride(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      authorId: authorId ?? this.authorId,
-      participantsIds: participantsIds ?? this.participantsIds,
-      isCompleted: isCompleted ?? this.isCompleted,
-      averageSpeed: averageSpeed ?? this.averageSpeed,
-      distance: distance ?? this.distance,
-      climbing: climbing ?? this.climbing,
-      duration: duration ?? this.duration,
-      tags: tags ?? this.tags,
-      rideDate: rideDate ?? this.rideDate,
-      rideMapLink: rideMapLink ?? this.rideMapLink,
-      rideStartLocationName: rideStartLocationName ?? this.rideStartLocationName,
-      rideStartTime: rideStartTime ?? this.rideStartTime,
-    );
-  }
 
   factory Ride.fromJson(Map<String, dynamic> json) => _$RideFromJson(json);
 

@@ -25,7 +25,7 @@ class FirestoreUsersApi implements UsersApi {
   
 
   @override
-  Stream<List<User>> getUsers() => _querySnapshotsToDtos(_getUsersCollection().snapshots());
+  Stream<List<User>> getAllUsers() => _querySnapshotsToDtos(_getUsersCollection().snapshots());
 
   @override
   Future<void> updateUser(User user) async {
