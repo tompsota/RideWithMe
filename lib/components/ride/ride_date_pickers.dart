@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/new_ride_controller.dart';
-import '../utils/date_picker.dart';
-import '../utils/text.dart';
-import '../utils/time_picker.dart';
+import '../../controllers/new_ride_controller.dart';
+import '../../utils/date_picker.dart';
+import '../../utils/text.dart';
+import '../../utils/time_picker.dart';
 
 class RideDatePickers extends StatelessWidget {
   bool canBeEdited;

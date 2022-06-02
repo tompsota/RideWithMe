@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 
-import '../controllers/new_ride_controller.dart';
-import '../domain_layer/models/ride_model.dart';
-import '../domain_layer/models/user_model.dart';
-import '../utils/text.dart';
+import '../../controllers/new_ride_controller.dart';
+import '../../domain_layer/models/ride_model.dart';
+import '../../domain_layer/models/user_model.dart';
+import '../../utils/text.dart';
 
 class RideAuthorImage extends StatelessWidget {
   final UserModel? author;

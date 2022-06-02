@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/new_ride_controller.dart';
-import '../utils/ride_number_picker.dart';
-import '../utils/text.dart';
+import '../../controllers/new_ride_controller.dart';
+import '../../utils/ride_number_picker.dart';
+import '../../utils/text.dart';
 
 class RideNumberPickers extends StatelessWidget {
   bool canBeEdited;

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../controllers/new_ride_controller.dart';
-import '../utils/user_input_field.dart';
+import '../../controllers/new_ride_controller.dart';
+import '../../utils/user_input_field.dart';
 
 class RideMapComponent extends StatelessWidget {
   bool isBeingCreated;

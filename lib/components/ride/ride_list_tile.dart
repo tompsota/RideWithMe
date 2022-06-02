@@ -6,7 +6,6 @@ import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import '../../controllers/user_state_controller.dart';
 import '../../domain_layer/models/ride_model.dart';
 import '../../pages/ride_view_page.dart';
-import '../temp/get_db_repository.dart';
 
 class RideListTile extends StatelessWidget {
 
@@ -23,19 +22,7 @@ class RideListTile extends StatelessWidget {
         subtitle: Text("author: $author, participants: ${ride.participantsIds.length}"),
         onTap: () =>
             Navigator.of(context).push(MaterialPageRoute(
-// builder: (_) => RideViewPage(rideBeingEdited: rideModel)
-                builder: (_) =>
-                    // MultiProvider(
-                    //   providers: [
-                    //     // use listen: false ?
-                    //     ChangeNotifierProvider.value(value: Provider.of<UserStateController>(context)),
-                    //   ],
-                    //   child: RideViewPage(rideBeingEdited: ride,),
-                    // )
-                    ChangeNotifierProvider.value(
-                      value: Provider.of<UserStateController>(context),
-                      child: RideViewPage(rideBeingEdited: ride),
-                    )
+                builder: (_) => RideViewPage(rideBeingEdited: ride),
             ))
     );
   }

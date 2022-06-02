@@ -1,10 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/domain_layer/models/filter_model.dart';
-import 'package:ride_with_me/utils/db/ride.dart';
-
-import '../domain_layer/models/ride_model.dart';
 
 
 class RideFilterController extends ChangeNotifier {
@@ -59,7 +54,6 @@ class RideFilterController extends ChangeNotifier {
 
   Future<void> applyFilter() async {
     _appliedFilter.update(_currentFilter);
-    // await refreshRides();
     notifyListeners();
   }
 
@@ -86,11 +80,6 @@ class RideFilterController extends ChangeNotifier {
   }
 
   String getFilterLocation() {
-    return _appliedFilter.selectedLocation == null ? "" : _appliedFilter.selectedLocation;
+    return _appliedFilter.selectedLocation;
   }
-
-  // bool _passesFilter(RideModel ride) => _appliedFilter.passes(ride)
-  //   return ride.participantsIds.length >= _appliedFilter.selectedNrParticipants.start
-  //     && ride.participantsIds.length <= _appliedFilter.selectedNrParticipants.end;
-  // }
 }

@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_with_me/components/ride_author_image.dart';
-import 'package:ride_with_me/components/ride_date_pickers.dart';
-import 'package:ride_with_me/components/ride_map_component.dart';
-import 'package:ride_with_me/components/ride_number_pickers.dart';
-import 'package:ride_with_me/components/ride_participants_list.dart';
-import 'package:ride_with_me/components/ride_submit_handler.dart';
-import 'package:ride_with_me/components/user_contact_icons.dart';
+import 'package:ride_with_me/components/ride/ride_author_image.dart';
+import 'package:ride_with_me/components/ride/ride_date_pickers.dart';
+import 'package:ride_with_me/components/ride/ride_map_component.dart';
+import 'package:ride_with_me/components/ride/ride_number_pickers.dart';
+import 'package:ride_with_me/components/ride/ride_participants_list.dart';
+import 'package:ride_with_me/components/ride/ride_submit_handler.dart';
+import 'package:ride_with_me/components/user/user_contact_icons.dart';
 import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import 'package:ride_with_me/controllers/new_ride_controller.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 
-import '../components/ride_title_bar.dart';
+import '../components/ride/ride_title_bar.dart';
 import '../controllers/user_state_controller.dart';
 import '../domain_layer/models/ride_model.dart';
 import '../utils/address_search.dart';

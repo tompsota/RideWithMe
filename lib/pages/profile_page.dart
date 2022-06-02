@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_with_me/components/profile_expansion_panel.dart';
+import 'package:ride_with_me/components/user/profile_expansion_panel.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import 'package:ride_with_me/utils/prefix_text_input_field.dart';
 import 'package:ride_with_me/utils/text.dart';
 
-import '../components/user_contact_icons.dart';
+import '../components/user/user_contact_icons.dart';
 import '../domain_layer/models/user_model.dart';
 import '../utils/button.dart';
 

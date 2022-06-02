@@ -27,11 +27,13 @@ class Filters {
       final passesNrParticipants = _passesRange(filter.selectedNrParticipants, ride.participantsIds.length);
       final passesDistance = _passesRange(filter.selectedDistance, ride.distance);
       final passesClimbing = _passesRange(filter.selectedClimbing, ride.climbing);
-      // final passesDuration = _passesRange(selectedDuration, ride.duration);
       final passesAvgSpeed = _passesRange(filter.selectedAvgSpeed, ride.averageSpeed);
-      // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
 
-      // TODO: add this condition ?
+      // TODO: add filtering by day? (start - finish)
+      // final passesStartFinishTimes = ride.startTime => selectedStartTime && ride.startTime <= selectedFinishTime;
+      // final passesDuration
+
+      // TODO: add location filtering - only equals or also contains etc.?
       final passesLocation = filter.selectedLocation == ride.rideStartLocationName;
 
       final passesList = [
@@ -39,18 +41,13 @@ class Filters {
         passesAvgSpeed,
         passesDistance,
         passesClimbing
-        // passesDuration
       ];
-      // print(passesList);
-      final passes = passesList.every((x) => x);
-      // print('Passes: $passes');
-      return passes;
+
+      return passesList.every((x) => x);
     };
   }
 
-  // what about double accuracy?
-  // check: https://pub.dev/documentation/dart_numerics/latest/dart_numerics/almostEqualNumbersBetween.html
-  static bool _passesRange(RangeValues filterRange, dynamic rideValue) {
+  static bool _passesRange(RangeValues filterRange, int rideValue) {
     return rideValue >= filterRange.start && rideValue <= filterRange.end;
   }
 }

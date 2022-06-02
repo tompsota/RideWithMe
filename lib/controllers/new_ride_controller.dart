@@ -5,7 +5,7 @@ import 'package:ride_with_me/domain_layer/repositories/rides_repository.dart';
 import '../domain_layer/models/ride_model.dart';
 
 class NewRideController extends ChangeNotifier {
-  // TODO: maybe use ridesRepository instead of dbRepository ?
+
   NewRideController({required this.ridesRepository});
 
   final RidesRepository ridesRepository;
@@ -86,9 +86,5 @@ class NewRideController extends ChangeNotifier {
     ride.authorId = authorId;
     ride.participantsIds = [authorId];
     await ridesRepository.createRide(ride);
-    // print('submitted ride');
-    // Future.delayed(Duration(seconds: 2));
   }
-
-// ride.participants.add(currentUser.id);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_with_me/components/filter_date_pickers.dart';
-import 'package:ride_with_me/components/filter_range_sliders.dart';
+import 'package:ride_with_me/components/filter/filter_date_pickers.dart';
+import 'package:ride_with_me/components/filter/filter_range_sliders.dart';
 import 'package:ride_with_me/utils/address_search.dart';
 import 'package:ride_with_me/utils/button.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';

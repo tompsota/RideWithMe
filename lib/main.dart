@@ -6,12 +6,9 @@ import 'package:ride_with_me/pages/google_sign_in_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/new_ride_controller.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'data_layer/apis/firestore_rides_api.dart';
 import 'data_layer/apis/firestore_users_api.dart';
-import 'data_layer/apis/users_api.dart';
-import 'domain_layer/repositories/rides_repository.dart';
 import 'firebase_options.dart';
 
 void main() async {

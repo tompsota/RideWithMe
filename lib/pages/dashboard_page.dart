@@ -5,7 +5,7 @@ import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/pages/filter_rides_page.dart';
 import 'package:ride_with_me/pages/ride_view_page.dart';
 import 'package:ride_with_me/utils/button.dart';
-import 'package:ride_with_me/utils/ride/rides_stream_builder.dart';
+import 'package:ride_with_me/components/ride/rides_stream_builder.dart';
 import '../domain_layer/repositories/db_repository.dart';
 import '../domain_layer/filters.dart';
 

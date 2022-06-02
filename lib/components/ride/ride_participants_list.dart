@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../domain_layer/repositories/db_repository.dart';
-import '../domain_layer/models/ride_model.dart';
-import '../domain_layer/filters.dart';
-import '../utils/ride/ride_participants.dart';
-import '../utils/text.dart';
+import '../../domain_layer/repositories/db_repository.dart';
+import '../../domain_layer/models/ride_model.dart';
+import '../../domain_layer/filters.dart';
+import 'ride_participants.dart';
+import '../../utils/text.dart';
 
 class RideParticipantsList extends StatelessWidget {
   RideModel? ride;

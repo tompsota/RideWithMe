@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/new_ride_controller.dart';
-import '../utils/title_button.dart';
+import '../../controllers/new_ride_controller.dart';
+import '../../utils/title_button.dart';
 
 class RideTitleBar extends StatelessWidget {
   const RideTitleBar({

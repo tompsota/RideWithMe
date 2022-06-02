@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/utils/ride/rides_list_view.dart';
+import 'package:ride_with_me/components/ride/rides_list_view.dart';
 
 import '../../domain_layer/models/ride_model.dart';
 
