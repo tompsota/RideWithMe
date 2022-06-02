@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../models/user_model.dart';
+import '../domain_layer/models/user_model.dart';
 import '../utils/ride_icon_button.dart';
 
 class UserContactIcons extends StatelessWidget {

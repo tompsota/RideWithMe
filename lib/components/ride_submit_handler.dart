@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/new_ride_controller.dart';
-import '../domain_layer/db_repository.dart';
-import '../models/ride_model.dart';
+import '../domain_layer/repositories/db_repository.dart';
+import '../domain_layer/models/ride_model.dart';
 import '../utils/button.dart';
 
 class RideSubmitHandler extends StatelessWidget {

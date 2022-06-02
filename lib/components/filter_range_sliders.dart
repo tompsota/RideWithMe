@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/ride_filter_controller.dart';
-import '../models/filter_model.dart';
+import '../domain_layer/models/filter_model.dart';
 import '../settings/filter_defaults.dart';
 import '../utils/text.dart';
 import '../utils/two_way_slider.dart';

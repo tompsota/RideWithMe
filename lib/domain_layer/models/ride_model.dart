@@ -1,7 +1,7 @@
-import 'package:ride_with_me/models/user_model.dart';
+import 'package:ride_with_me/domain_layer/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 
-import '../data_layer/dtos/ride.dart';
+import '../../data_layer/dtos/ride.dart';
 
 typedef Unit = int;
 

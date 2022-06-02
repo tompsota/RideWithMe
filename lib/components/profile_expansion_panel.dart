@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../controllers/user_state_controller.dart';
-import '../domain_layer/db_repository.dart';
+import '../domain_layer/repositories/db_repository.dart';
 import '../domain_layer/filters.dart';
-import '../models/user_model.dart';
+import '../domain_layer/models/user_model.dart';
 import '../utils/ride/rides_stream_builder.dart';
 import '../utils/text.dart';
 

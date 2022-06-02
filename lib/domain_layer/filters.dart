@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/filter_model.dart';
-import '../models/ride_model.dart';
-import '../models/user_model.dart';
+import 'models/filter_model.dart';
+import 'models/ride_model.dart';
+import 'models/user_model.dart';
 
 
 typedef UserModelFilter = bool Function(UserModel user);

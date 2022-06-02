@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/ride_with_me_title.dart';
 import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import 'package:ride_with_me/utils/timed_alert_dialog.dart';
 
 import '../utils/button.dart';

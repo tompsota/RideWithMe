@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../data_layer/dtos/user.dart';
+import '../../data_layer/dtos/user.dart';
 
 class UserModel {
   final String id;

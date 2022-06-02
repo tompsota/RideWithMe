@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/utils/ride/ride_list_tile.dart';
 
-import '../../models/ride_model.dart';
+import '../../domain_layer/models/ride_model.dart';
 
 class RidesListView extends StatelessWidget {
 

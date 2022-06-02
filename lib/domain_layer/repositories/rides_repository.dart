@@ -6,11 +6,11 @@ import 'package:ride_with_me/data_layer/apis/rides_api.dart';
 import 'package:ride_with_me/domain_layer/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../data_layer/apis/users_api.dart';
+import '../../data_layer/apis/users_api.dart';
 import '../models/filter_model.dart';
 import '../models/ride_model.dart';
 import '../models/user_model.dart';
-import 'filters.dart';
+import '../filters.dart';
 
 /// {@template rides_repository}
 /// A repository that handles ride related requests.

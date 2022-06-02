@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/data_layer/apis/firestore_users_api.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 
 import '../../data_layer/apis/firestore_rides_api.dart';
 

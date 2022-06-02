@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ride_with_me/models/ride_model.dart';
+import 'package:ride_with_me/domain_layer/models/ride_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'user.g.dart';

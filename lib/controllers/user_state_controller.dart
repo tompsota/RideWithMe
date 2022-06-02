@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/domain_layer/users_repository.dart';
+import 'package:ride_with_me/domain_layer/repositories/users_repository.dart';
 
-import '../models/user_model.dart';
+import '../domain_layer/models/user_model.dart';
 
 class UserStateController extends ChangeNotifier {
   // we retrieve UserModel from DB
