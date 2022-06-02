@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
-import 'package:ride_with_me/domain_layer/rides_repository.dart';
-import '../models/ride_model.dart';
+import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
+import 'package:ride_with_me/domain_layer/repositories/rides_repository.dart';
+import '../domain_layer/models/ride_model.dart';
 
 class NewRideController extends ChangeNotifier {
-  // TODO: maybe use ridesRepository instead of dbRepository ?
+
   NewRideController({required this.ridesRepository});
 
   final RidesRepository ridesRepository;
 
-  // TODO: remove late and add ctor
   RideModel ride = RideModel.id(
     createdAt: DateTime.now(),
     averageSpeed: 0,
@@ -27,10 +26,6 @@ class NewRideController extends ChangeNotifier {
     rideDate: DateTime.now(),
     rideStartTime: "0:0",
   );
-
-  TimeOfDay getRideStartTime() {
-    return TimeOfDay(hour: int.parse(ride.rideStartTime.split(":")[0]), minute: int.parse(ride.rideStartTime.split(":")[1]));
-  }
 
   void setRideTitle(String value) {
     ride.title = value;
@@ -86,9 +81,5 @@ class NewRideController extends ChangeNotifier {
     ride.authorId = authorId;
     ride.participantsIds = [authorId];
     await ridesRepository.createRide(ride);
-    // TODO: notifyListeners() is possibly useless here / has no effect ?
-    notifyListeners();
   }
-
-// ride.participants.add(currentUser.id);
 }

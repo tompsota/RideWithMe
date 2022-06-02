@@ -1,20 +1,19 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_with_me/components/ride_author_image.dart';
-import 'package:ride_with_me/components/ride_date_pickers.dart';
-import 'package:ride_with_me/components/ride_map_component.dart';
-import 'package:ride_with_me/components/ride_number_pickers.dart';
-import 'package:ride_with_me/components/ride_participants_list.dart';
-import 'package:ride_with_me/components/ride_submit_handler.dart';
-import 'package:ride_with_me/components/user_contact_icons.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
+import 'package:ride_with_me/components/ride/ride_author_image.dart';
+import 'package:ride_with_me/components/ride/ride_date_pickers.dart';
+import 'package:ride_with_me/components/ride/ride_map_component.dart';
+import 'package:ride_with_me/components/ride/ride_number_pickers.dart';
+import 'package:ride_with_me/components/ride/ride_participants_list.dart';
+import 'package:ride_with_me/components/ride/ride_submit_handler.dart';
+import 'package:ride_with_me/components/user/user_contact_icons.dart';
+import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import 'package:ride_with_me/controllers/new_ride_controller.dart';
 import 'package:ride_with_me/utils/checkbox_dialog.dart';
 
-import '../components/ride_title_bar.dart';
+import '../components/ride/ride_title_bar.dart';
 import '../controllers/user_state_controller.dart';
-import '../models/ride_model.dart';
+import '../domain_layer/models/ride_model.dart';
 import '../utils/address_search.dart';
 import '../utils/button.dart';
 import '../utils/duration_picker.dart';
@@ -27,23 +26,22 @@ class RideViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // NewRideController _newRideProvider = Provider.of<NewRideController>(context, listen: false);
-    // RideFilterController _rideFilterProvider = Provider.of<RideFilterController>(context, listen: false);
-
     return Consumer<UserStateController>(builder: (context, userController, child) {
-      // final ride = snapshot.data;
-      final ride = rideBeingEdited;
 
+      final ride = rideBeingEdited;
       final userId = userController.user.id;
       final isBeingCreated = rideBeingEdited == null;
+
       final isAuthor = ride?.authorId == userId;
-      // ride can be edited by author and when it's being created (we can remove author later)
       final canBeEdited = isBeingCreated || isAuthor;
       final userIsParticipating = ride?.participantsIds.contains(userId) ?? false;
 
+      final author = isBeingCreated ? userController.user : ride?.author;
       final authorName = isBeingCreated ? userController.user.getFullName() : ride?.author?.getFullName() ?? "Unknown author";
       var rideTitle = isBeingCreated ? "$authorName's ride" : ride?.title ?? "Loading...";
       var titleController = TextEditingController(text: rideTitle);
+      // Provider.of<NewRideController>(context, listen: false).setRideTitle(rideTitle);
+      Provider.of<NewRideController>(context, listen: false).ride.title = rideTitle;
       final showCompleteRideButton = isAuthor && (ride != null && !ride.isCompleted);
 
       final dbRepository = Provider.of<DbRepository>(context, listen: false);
@@ -63,7 +61,7 @@ class RideViewPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RideAuthorImage(ride: ride, authorName: authorName),
+                  RideAuthorImage(author: author, authorName: authorName),
                   RideMapComponent(isBeingCreated: isBeingCreated),
                   RideParticipantsList(ride: ride, isBeingCreated: isBeingCreated),
                   RideDatePickers(canBeEdited: canBeEdited),
@@ -99,8 +97,8 @@ class RideViewPage extends StatelessWidget {
                     MediumText("Contact host"),
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: UserContactIcons(user: userController.user) //todo chcelo by to model autora, nie toho co je prihlaseny
-                        ),
+                        child: UserContactIcons(user: ride!.author!),
+                    ),
                   ],
                   if (showCompleteRideButton)
                     Container(

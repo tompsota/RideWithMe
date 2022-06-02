@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/ride_with_me_title.dart';
-import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
-import 'package:ride_with_me/domain_layer/db_repository.dart';
-
-import '../utils/button.dart';
+import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
+import 'package:ride_with_me/utils/timed_alert_dialog.dart';
 import 'main_page.dart';
 
 class GoogleSignInPage extends StatelessWidget {
@@ -62,68 +60,40 @@ class GoogleSignInPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () async {
-                    // TODO: should provide userCredential to MainPage (as a part of state / using provider) ?
-                    // TODO: there has to be a better way to distinguish between web and native
-                    const bool isWeb = kIsWeb;
-                    // final platform = DefaultTargetPlatform.platform;
-                    // final platform = defaultTargetPlatform;
 
-                    // TODO: uncomment after testing
-                    final userCredential = isWeb ? await signInWithGoogleWeb() : await signInWithGoogleNative();
+                    final userCredential = kIsWeb ? await _signInWithGoogleWeb() : await _signInWithGoogleNative();
 
-                    // // we can't create the controller inside ChangeNotifierProvider.create callback
-                    // TODO: could first check, if there exists a document in 'users' collection with id = authUser.email
-                    //   - if not, user has to input his first/last name etc., otherwise can just feed it into UserStateController
+                    if (userCredential.user == null) {
+                      showTimedAlertDialogError(context, title: 'Sign-in failed', content: 'Need to sign in before you can continue!');
+                      return;
+                    }
 
-                    // TODO: add 'ensureCreated' that returns UserModel (creates new document if there is not a document with authUser.email)
+                    final usersRepository = Provider.of<DbRepository>(context, listen: false).usersRepository;
+                    final user = await usersRepository.ensureUserExists();
 
-                    // final rides = await getAllRides();
-                    final ridesFilterController = RideFilterController();
-                    // await ridesFilterController.refreshRides();
-                    // ridesFilterController.filteredRides = rides;
-                    // ridesFilterController.visibleRides = rides;
+                    if (user == null) {
+                      showTimedAlertDialogError(context, content: 'Something went wrong! Please try again...');
+                      return;
+                    }
 
-                    final dbRepository = Provider.of<DbRepository>(context, listen: false);
-                    final userStateController = await UserStateController.create(dbRepository.usersRepository);
-
+                    Provider.of<UserStateController>(context, listen: false).user = user;
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          // builder: (context) => ChangeNotifierProvider.value(value: userStateController, child: const MainPage())),
-                          builder: (context) => MultiProvider(providers: [
-                                ChangeNotifierProvider.value(value: dbRepository),
-                                ChangeNotifierProvider.value(value: userStateController),
-                                ChangeNotifierProvider.value(value: ridesFilterController)
-                              ], child: const MainPage())),
-                      (_) => false,
-                    );
-
-                    // Navigator.pushAndRemoveUntil(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => const MainPage()),
-                    //       (_) => false,
-                    // );
-                  }),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 50),
-              child: SubmitButton(
-                  value: "use password instead",
-                  callback: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MainPage()),
-                      (_) => false,
+                          builder: (context) => const MainPage(),
+                      ),
+                          (_) => false,
                     );
                   }),
             ),
+            SizedBox(height:100),
           ],
         ),
       ),
     );
   }
 
-  Future<UserCredential> signInWithGoogleNative() async {
+  Future<UserCredential> _signInWithGoogleNative() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -140,7 +110,7 @@ class GoogleSignInPage extends StatelessWidget {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithGoogleWeb() async {
+  Future<UserCredential> _signInWithGoogleWeb() async {
     // Create a new provider
     GoogleAuthProvider googleProvider = GoogleAuthProvider();
 
@@ -149,8 +119,5 @@ class GoogleSignInPage extends StatelessWidget {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithPopup(googleProvider);
-
-    // Or use signInWithRedirect
-    // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
   }
 }

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RideIconButton extends StatelessWidget {
-  IconData icon;
-  String serviceName;
-  String accountLink;
+  final IconData icon;
+  final String serviceName;
+  final String accountLink;
 
-  // TODO: add link to ctor and use it in onPressed
   RideIconButton({Key? key, required this.icon, required this.serviceName, required this.accountLink}) : super(key: key);
 
   @override

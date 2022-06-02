@@ -1,37 +1,31 @@
 import '../dtos/ride.dart';
 
-/// {@template rides_api}
-/// The interface for an API that provides access to a list of rides.
-/// {@endtemplate}
+
+/// The interface for an API that provides access for accessing and
+/// manipulating rides.
 abstract class RidesApi {
-  /// {@macro rides_api}
+
   const RidesApi();
 
-  /// Provides a [Stream] of all rides.
-  Stream<List<Ride>> getRides();
+  /// Provides a stream of all rides.
+  Stream<List<Ride>> getAllRides();
 
-  /// Saves a [ride].
-  ///
-  /// If a [ride] with the same id already exists, it will be replaced.
-  Future<void> createRide(Ride ride);
+  /// Provides a stream of rides with specified id's
+  /// Use: retrieve user's created, joined and completed rides
+  Stream<List<Ride>> getRidesFromCollection(List<String> ridesIds);
 
-  Future<void> joinRide(String rideId, String userId);
-  Future<void> leaveRide(String rideId, String userId);
+  /// Creates a ride.
+  Future<String> createRide(Ride ride);
 
-  /// Updates a [ride].
-  ///
-  /// If a [ride] with given id does not exist, it will be created.
+  /// Adds user's id to a list of participants.
+  Future<void> addParticipant(String rideId, String userId);
+
+  /// Remove user's id from a list of participants.
+  Future<void> removeParticipant(String rideId, String userId);
+
+  /// Updates a ride.
   Future<void> updateRide(Ride ride);
 
-  /// Deletes the ride with the given id.
-  ///
-  /// If no ride with the given id exists, a [RideNotFoundException] error is
-  /// thrown.
-  // Future<void> deleteRide(String id);
-
+  /// Sets 'isComplete' to true.
   Future<void> markRideAsCompleted(String rideId);
-
 }
-
-/// Error thrown when a [Ride] with a given id is not found.
-class RideNotFoundException implements Exception {}

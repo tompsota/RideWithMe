@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_with_me/models/filter_model.dart';
+import 'package:ride_with_me/domain_layer/models/filter_model.dart';
 import '../controllers/ride_filter_controller.dart';
 import 'callback_types.dart';
 

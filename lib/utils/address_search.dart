@@ -7,8 +7,8 @@ const kGoogleApiKey = "";
 
 class AddressSearch extends StatefulWidget {
   final callback;
-  String initialValue;
-  bool isEditable;
+  final String initialValue;
+  final bool isEditable;
 
   AddressSearch({Key? key, required this.callback, required this.isEditable, required this.initialValue}) : super(key: key);
 
@@ -40,10 +40,11 @@ class _AddressSearchState extends State<AddressSearch> {
 
   void getSuggestion(String input) async {
     String kPLACESAPIKEY = kGoogleApiKey;
-    // String type = '(regions)'; //TODO maybe add this to query
+    // consider adding the following to the query: String type = '(regions)';
     String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    // if we want to filters cities only, then add '&types=%28cities%29' to request
     String request =
-        '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken'; //TOdo if we want to filters cities only then add '&types=%28cities%29' to request
+        '$baseURL?input=$input&key=$kPLACESAPIKEY&sessiontoken=$_sessionToken';
     final response = await http.get(Uri.parse(request), headers: {
       "Accept": "application/json",
       "Access-Control_Allow_Origin": "*",

@@ -1,17 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:ride_with_me/models/ride_model.dart';
 import 'package:uuid/uuid.dart';
 
 part 'user.g.dart';
 
+/// A single user item.
+///
+/// Users are immutable and can be copied using [copyWith], in addition to
+/// being serialized and deserialized using [toJson] and [fromJson]
+/// respectively.
 @immutable
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
+
   @JsonKey(name: 'id')
   final String id;
 
@@ -30,32 +32,30 @@ class User {
   @JsonKey(name: 'aboutMe')
   final String aboutMe;
 
-  @JsonKey(name: 'facebook')
+  @JsonKey(name: 'facebookAccount')
   final String facebookAccount;
 
-  @JsonKey(name: 'strava')
+  @JsonKey(name: 'stravaAccount')
   final String stravaAccount;
 
-  @JsonKey(name: 'instagram')
+  @JsonKey(name: 'instagramAccount')
   final String instagramAccount;
 
-  @JsonKey(name: 'google')
+  @JsonKey(name: 'googleAccount')
   final String googleAccount;
 
-  @JsonKey(name: 'slack')
+  @JsonKey(name: 'slackAccount')
   final String slackAccount;
 
   // ID's of rides that a user has created
   final List<String> createdRidesIds;
 
-  // ID's of rides the user took part in
-  // > the user can click the 'I'll participate button' in RideDetail,
-  //   and the ride's ID will be added to this list
+  // ID's of rides the user is currently participating in
+  // once a ride has been completed, the id is removed from the list
   final List<String> joinedRidesIds;
 
-  // ID's of rides the uer has finished
-  // > ride has to be marked as 'Completed' by the author - ride's ID will
-  //   be removed from joinedRidesIds, and added to completedRidesIds
+  // ID's of rides the user has finished - rides that a user had joined and
+  // that had been completed (marked as completed by the author)
   final List<String> completedRidesIds;
 
   User({
@@ -91,46 +91,7 @@ class User {
     this.completedRidesIds = const [],
   }) : id = Uuid().v4();
 
-  /// Returns a copy of this user with the given values updated.
-  // TODO: might be a useless method for User
-  User copyWith({
-    String? id,
-    String? email,
-    String? firstName,
-    String? lastName,
-    String? avatarUrl,
-    String? aboutMe,
-    String? emailAccount,
-    String? facebookAccount,
-    String? googleAccount,
-    String? instagramAccount,
-    String? slackAccount,
-    String? stravaAccount,
-    List<String>? createdRidesIds,
-    List<String>? joinedRidesIds,
-    List<String>? completedRidesIds,
-  }) {
-    return User(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      aboutMe: aboutMe ?? this.aboutMe,
-      facebookAccount: facebookAccount ?? this.facebookAccount,
-      googleAccount: googleAccount ?? this.googleAccount,
-      instagramAccount: instagramAccount ?? this.instagramAccount,
-      slackAccount: slackAccount ?? this.slackAccount,
-      stravaAccount: stravaAccount ?? this.stravaAccount,
-      createdRidesIds: createdRidesIds ?? this.createdRidesIds,
-      joinedRidesIds: joinedRidesIds ?? this.joinedRidesIds,
-      completedRidesIds: completedRidesIds ?? this.completedRidesIds,
-    );
-  }
-
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
-
-  String getFullName() => firstName + " " + lastName;
 }

@@ -1,32 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:ride_with_me/models/filter_model.dart';
-import 'package:ride_with_me/utils/db/ride.dart';
-
-import '../models/ride_model.dart';
+import 'package:ride_with_me/domain_layer/models/filter_model.dart';
 
 
 class RideFilterController extends ChangeNotifier {
-
-  // final List<RideModel> _allRides = [];
-  // List<RideModel> get visibleRides => List.unmodifiable(_allRides.where(_appliedFilter.passesFilter));
-  // List<RideModel> filteredRides = [];
-  //
-  // Future<void> refreshRides() async {
-  //   // _allRides = await getAllRides();
-  //   // TODO: remove after testing
-  //   // await Future.delayed(Duration(seconds: 1));
-  //   // sleep(Duration(seconds:1));
-  //   final currentRides = await getAllRides();
-  //   _allRides.clear();
-  //   _allRides.addAll(currentRides);
-  //   // print('refresh: ${_allRides.length}');
-  //   // filteredRides = _allRides.where(_appliedFilter.passesFilter).toList();
-  //   // print('refresh - all rides: ${_allRides.length}');
-  //   // print('refresh - filtered rides: ${filteredRides.length}');
-  //   notifyListeners();
-  // }
 
   final FilterModel _currentFilter = FilterModel();
   final FilterModel _appliedFilter = FilterModel();
@@ -78,7 +54,6 @@ class RideFilterController extends ChangeNotifier {
 
   Future<void> applyFilter() async {
     _appliedFilter.update(_currentFilter);
-    // await refreshRides();
     notifyListeners();
   }
 
@@ -95,24 +70,14 @@ class RideFilterController extends ChangeNotifier {
     notifyListeners();
   }
 
-  FilterModel getAppliedFilter() {
-    return _appliedFilter;
-  }
-
-  FilterModel getCurrentFilter() {
-    return _currentFilter;
-  }
+  FilterModel get appliedFilter => _appliedFilter;
+  FilterModel get currentFilter => _currentFilter;
 
   DateTime getCurrentFilterDate() {
     return _currentFilter.selectedDate;
   }
 
   String getFilterLocation() {
-    return _appliedFilter.selectedLocation == null ? "" : _appliedFilter.selectedLocation;
+    return _appliedFilter.selectedLocation;
   }
-
-  // bool _passesFilter(RideModel ride) => _appliedFilter.passes(ride)
-  //   return ride.participantsIds.length >= _appliedFilter.selectedNrParticipants.start
-  //     && ride.participantsIds.length <= _appliedFilter.selectedNrParticipants.end;
-  // }
 }
