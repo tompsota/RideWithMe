@@ -30,19 +30,19 @@ class User {
   @JsonKey(name: 'aboutMe')
   final String aboutMe;
 
-  @JsonKey(name: 'facebook')
+  @JsonKey(name: 'facebookAccount')
   final String facebookAccount;
 
-  @JsonKey(name: 'strava')
+  @JsonKey(name: 'stravaAccount')
   final String stravaAccount;
 
-  @JsonKey(name: 'instagram')
+  @JsonKey(name: 'instagramAccount')
   final String instagramAccount;
 
-  @JsonKey(name: 'google')
+  @JsonKey(name: 'googleAccount')
   final String googleAccount;
 
-  @JsonKey(name: 'slack')
+  @JsonKey(name: 'slackAccount')
   final String slackAccount;
 
   // ID's of rides that a user has created
@@ -90,43 +90,6 @@ class User {
     this.joinedRidesIds = const [],
     this.completedRidesIds = const [],
   }) : id = Uuid().v4();
-
-  /// Returns a copy of this user with the given values updated.
-  // TODO: might be a useless method for User
-  User copyWith({
-    String? id,
-    String? email,
-    String? firstName,
-    String? lastName,
-    String? avatarUrl,
-    String? aboutMe,
-    String? emailAccount,
-    String? facebookAccount,
-    String? googleAccount,
-    String? instagramAccount,
-    String? slackAccount,
-    String? stravaAccount,
-    List<String>? createdRidesIds,
-    List<String>? joinedRidesIds,
-    List<String>? completedRidesIds,
-  }) {
-    return User(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      aboutMe: aboutMe ?? this.aboutMe,
-      facebookAccount: facebookAccount ?? this.facebookAccount,
-      googleAccount: googleAccount ?? this.googleAccount,
-      instagramAccount: instagramAccount ?? this.instagramAccount,
-      slackAccount: slackAccount ?? this.slackAccount,
-      stravaAccount: stravaAccount ?? this.stravaAccount,
-      createdRidesIds: createdRidesIds ?? this.createdRidesIds,
-      joinedRidesIds: joinedRidesIds ?? this.joinedRidesIds,
-      completedRidesIds: completedRidesIds ?? this.completedRidesIds,
-    );
-  }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

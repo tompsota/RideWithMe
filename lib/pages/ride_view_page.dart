@@ -107,7 +107,7 @@ class RideViewPage extends StatelessWidget {
                     MediumText("Contact host"),
                     Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: UserContactIcons(user: ride!.author!), //todo chcelo by to model autora, nie toho co je prihlaseny - check if the change is successful
+                        child: UserContactIcons(user: ride!.author!),
                     ),
                   ],
                   if (showCompleteRideButton)

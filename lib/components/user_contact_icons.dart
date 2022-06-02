@@ -16,18 +16,18 @@ class UserContactIcons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (user.facebookAccount != '')
+          if (user.facebookAccount.isNotEmpty)
             RideIconButton(icon: FontAwesomeIcons.facebook, accountLink: 'facebook.com/' + user.facebookAccount, serviceName: 'Facebook'),
-          if (user.stravaAccount != '')
+          if (user.stravaAccount.isNotEmpty)
             RideIconButton(icon: FontAwesomeIcons.strava, accountLink: 'strava.com/' + user.stravaAccount, serviceName: 'Strava'),
-          if (user.instagramAccount != '')
+          if (user.instagramAccount.isNotEmpty)
             RideIconButton(
                 icon: FontAwesomeIcons.instagram, accountLink: 'instagram.com/' + user.instagramAccount, serviceName: 'Instagram'),
-          if (user.googleAccount != '')
+          if (user.googleAccount.isNotEmpty)
             RideIconButton(icon: FontAwesomeIcons.google, accountLink: 'google.com/' + user.googleAccount, serviceName: 'Google'),
-          if (user.slackAccount != '')
+          if (user.slackAccount.isNotEmpty)
             RideIconButton(icon: FontAwesomeIcons.slack, accountLink: 'slack.com/' + user.slackAccount, serviceName: 'Slack'),
-          if (user.email != '') RideIconButton(icon: FontAwesomeIcons.envelope, accountLink: user.email, serviceName: 'Email'),
+          if (user.email.isNotEmpty) RideIconButton(icon: FontAwesomeIcons.envelope, accountLink: user.email, serviceName: 'Email'),
         ],
       ),
     );

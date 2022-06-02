@@ -14,6 +14,10 @@ class Filters {
     return (UserModel user) => ride.participantsIds.contains(user.id);
   }
 
+  static UserModelFilter userHasGivenId(String id) {
+    return (UserModel user) => user.id == id;
+  }
+
   static RideModelFilter isRideFromCollection(List<String> ridesIds) {
     return (RideModel ride) => ridesIds.contains(ride.id);
   }

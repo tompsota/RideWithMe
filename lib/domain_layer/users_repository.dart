@@ -7,6 +7,7 @@ import 'package:tuple/tuple.dart';
 
 import '../data_layer/apis/users_api.dart';
 import '../models/user_model.dart';
+import 'filters.dart';
 
 /// {@template users_repository}
 /// A repository that handles user related requests.
@@ -139,6 +140,10 @@ class UsersRepository {
 
   Future<void> updateUserProfile(UserModel user) async {
     await _usersApi.updateUserProfile(user.toDto());
+  }
+
+  Stream<List<UserModel>> getUserStream(String id) {
+    return getUsers(Filters.userHasGivenId(id));
   }
 
 }

@@ -10,11 +10,11 @@ class UserModel {
   final String avatarUrl;
   final String aboutMe;
 
-  String facebookAccount;
-  String googleAccount;
-  String instagramAccount;
-  String slackAccount;
-  String stravaAccount;
+  final String facebookAccount;
+  final String googleAccount;
+  final String instagramAccount;
+  final String slackAccount;
+  final String stravaAccount;
 
   final List<String> createdRidesIds;
   final List<String> joinedRidesIds;
@@ -84,6 +84,42 @@ class UserModel {
       createdRidesIds: createdRidesIds,
       joinedRidesIds: joinedRidesIds,
       completedRidesIds: completedRidesIds);
+
+  /// Returns a copy of this UserModel with the given values updated.
+  UserModel copyWith({
+    String? id,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? avatarUrl,
+    String? aboutMe,
+    String? emailAccount,
+    String? facebookAccount,
+    String? googleAccount,
+    String? instagramAccount,
+    String? slackAccount,
+    String? stravaAccount,
+    List<String>? createdRidesIds,
+    List<String>? joinedRidesIds,
+    List<String>? completedRidesIds,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      aboutMe: aboutMe ?? this.aboutMe,
+      facebookAccount: facebookAccount ?? this.facebookAccount,
+      googleAccount: googleAccount ?? this.googleAccount,
+      instagramAccount: instagramAccount ?? this.instagramAccount,
+      slackAccount: slackAccount ?? this.slackAccount,
+      stravaAccount: stravaAccount ?? this.stravaAccount,
+      createdRidesIds: createdRidesIds ?? this.createdRidesIds,
+      joinedRidesIds: joinedRidesIds ?? this.joinedRidesIds,
+      completedRidesIds: completedRidesIds ?? this.completedRidesIds,
+    );
+  }
 
   String getFullName() => firstName + " " + lastName;
 }

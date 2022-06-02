@@ -27,7 +27,7 @@ class RidesRepository {
   final RidesApi _ridesApi;
   final UsersApi _usersApi;
 
-  final List<RideModel> fullRides = const [];
+  // final List<RideModel> fullRides = const [];
 
   /// Provides a [Stream] of all rides.
   /// If filter is null, we keep all rides.
@@ -88,26 +88,29 @@ class RidesRepository {
     );
   }
 
-  Stream<List<RideModel>> getFullRides_Rx1(Stream<List<RideModel>> ridesStream) async* {
+  // Stream<List<RideModel>> getFullRides(Stream<List<RideModel>> ridesStream) async* {
+  //
+  //   final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
+  //   print('here');
+  //   final List<RideModel> fullRides = [];
+  //   // TODO: try to use later
+  //   // fullRides.clear();
+  //   // the problem is 'Latest', since users doesn't emit ?
+  //   Rx.combineLatest2(ridesStream, usersStream, (List<RideModel> rides, List<UserModel> users) {
+  //     print('rides: ${rides.length}, users: ${users.length}');
+  //     for (var ride in rides) {
+  //       for (var user in users) {
+  //         if (user.id == ride.authorId) {
+  //           ride.author = user;
+  //           fullRides.add(ride);
+  //         }
+  //       }
+  //     }
+  //     print(fullRides.length);
+  //     return fullRides;
+  //   }).asBroadcastStream();
+  // }
 
-    final usersStream = transformStream(_usersApi.getUsers(), UserModel.fromDto);
-    print('here');
-    // TODO: try to use later
-    // fullRides.clear();
-    // the problem is 'Latest', since users doesn't emit ?
-    Rx.combineLatest2(ridesStream, usersStream, (List<RideModel> rides, List<UserModel> users) {
-      print('rides: ${rides.length}, users: ${users.length}');
-      for (var ride in rides) {
-        for (var user in users) {
-          if (user.id == ride.authorId) {
-            ride.author = user;
-            fullRides.add(ride);
-          }
-        }
-      }
-      return fullRides;
-    });
-  }
 
   // Stream<List<RideModel>> getFullRides_Rx2(Stream<List<RideModel>> ridesStream) async* {
   //
@@ -162,8 +165,8 @@ class RidesRepository {
     // Assumptions: authorId is set, ride.participantsIds = [authorId]
     final newRideId = await _ridesApi.createRide(ride.toDto());
     await _ridesApi.addParticipant(newRideId, ride.authorId);
-    await _usersApi.createRide(ride.id, ride.authorId);
-    await _usersApi.joinRide(ride.id, ride.authorId);
+    await _usersApi.createRide(newRideId, ride.authorId);
+    await _usersApi.joinRide(newRideId, ride.authorId);
   }
 
 }

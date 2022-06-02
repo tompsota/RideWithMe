@@ -33,18 +33,7 @@ class FirestoreUsersApi implements UsersApi {
   // or as a util, since DTOs should be 'dumb' ?
   // don't update any IDs
   Future<void> updateUserProfile(User user) async {
-    await _getUsersCollection().doc(user.id).update({
-      'firstName': user.firstName,
-      'lastName': user.lastName,
-      'email': user.email,
-      'avatarUrl': user.avatarUrl,
-      'aboutMe': user.aboutMe,
-      'facebookAccount': user.facebookAccount,
-      'googleAccount': user.googleAccount,
-      'instagramAccount': user.instagramAccount,
-      'slackAccount': user.slackAccount,
-      'stravaAccount': user.stravaAccount
-    });
+    await _getUsersCollection().doc(user.id).update(getUserInfo(user));
   }
 
   // either create doc with id = Uuid().v4() that we generated ourselves before,
