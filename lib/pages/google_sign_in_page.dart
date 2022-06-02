@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_with_me/components/ride_with_me_title.dart';
-import 'package:ride_with_me/controllers/ride_filter_controller.dart';
 import 'package:ride_with_me/controllers/user_state_controller.dart';
 import 'package:ride_with_me/domain_layer/repositories/db_repository.dart';
 import 'package:ride_with_me/utils/timed_alert_dialog.dart';
-
-import '../utils/button.dart';
 import 'main_page.dart';
 
 class GoogleSignInPage extends StatelessWidget {
@@ -89,18 +86,7 @@ class GoogleSignInPage extends StatelessWidget {
                     );
                   }),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(8, 8, 8, 50),
-            //   child: SubmitButton(
-            //       value: "use password instead",
-            //       callback: () {
-            //         Navigator.pushAndRemoveUntil(
-            //           context,
-            //           MaterialPageRoute(builder: (context) => const MainPage()),
-            //           (_) => false,
-            //         );
-            //       }),
-            // ),
+            SizedBox(height:100),
           ],
         ),
       ),

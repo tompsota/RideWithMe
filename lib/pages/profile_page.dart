@@ -130,7 +130,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.only(top: 20, bottom: 10),
                       child: UserContactIcons(user: user),
                     ),
-                  ProfileExpansionPanel(user: user),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: ProfileExpansionPanel(user: user),
+                  ),
                 ],
               ),
             ),
