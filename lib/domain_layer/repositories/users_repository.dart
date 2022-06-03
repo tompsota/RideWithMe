@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ride_with_me/data_layer/apis/users_api.dart';
+import 'package:ride_with_me/domain_layer/repositories/rides_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuple/tuple.dart';
 
@@ -14,15 +15,17 @@ import '../utils.dart';
 /// A repository that handles user related requests.
 class UsersRepository {
 
-  const UsersRepository({
+  UsersRepository({
     required UsersApi usersApi,
     required RidesApi ridesApi,
   }) :
         _usersApi = usersApi,
-        _ridesApi = ridesApi;
+        _ridesApi = ridesApi,
+        _ridesRepository = RidesRepository(usersApi: usersApi, ridesApi: ridesApi);
 
   final UsersApi _usersApi;
   final RidesApi _ridesApi;
+  final RidesRepository _ridesRepository;
 
   /// Provides a stream of all users, filtered out using filter, if provided.
   Stream<List<UserModel>> getUsers([bool Function(UserModel)? filter]) {
@@ -41,15 +44,6 @@ class UsersRepository {
     final user = await _usersApi.getUserByEmail(email);
     return user == null ? null : UserModel.fromDto(user);
   }
-
-  // /// Provides a stream of all users.
-  // Stream<List<UserModel>> getFullUsers() {
-  //   return _usersApi
-  //       .getAllUsers()
-  //       .map((users) => users
-  //       .map((user) => UserModel.fromDto(user)).toList())
-  //       .asBroadcastStream();
-  // }
 
   /// Creates a user and returns the id that was generated.
   Future<String> createUser(UserModel user) async {
@@ -139,7 +133,7 @@ class UsersRepository {
   /// Use: Gets rid of the the need to obtain each ridesStream individually,
   ///      making ProfileExpansionPanel more responsive as well.
   Stream<UserModel> getFullUserStreamById(String id) {
-    final ridesStream = transformStream(_ridesApi.getAllRides(), RideModel.fromDto);
+    final ridesStream = _ridesRepository.getRides();
     final userStream = getUserStreamById(id);
 
     return Rx.combineLatest2(userStream, ridesStream, (UserModel user, List<RideModel> rides) {
