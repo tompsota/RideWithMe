@@ -91,6 +91,7 @@ class _AddressSearchState extends State<AddressSearch> {
                 ),
                 onSubmitted: (value) {
                   _isVisibleListview = false;
+                  widget.callback(value);
                 },
               ),
             ),
